@@ -53,7 +53,7 @@ export default async function CollectionPage({ params, searchParams }: Props) {
     <div>
       <div className="relative flex h-48 items-end overflow-hidden bg-charcoal md:h-64">
         <Image
-          src={collection.heroImage}
+          src={`/images/categories/${collection.slug}-banner.webp`}
           alt={collection.title}
           fill
           sizes="100vw"

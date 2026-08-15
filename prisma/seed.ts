@@ -399,7 +399,7 @@ async function main() {
         slug: c.slug,
         title: c.title,
         description: c.description,
-        heroImage: `/images/categories/${c.slug}-banner.webp`,
+        heroImage: `/images/categories/${c.slug}.webp`,
         position: index,
       },
     });
