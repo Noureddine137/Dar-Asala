@@ -2,11 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // Product images are DB-driven (ProductImage.url) and editable from
-    // /admin without code changes, including pointing at an external host
-    // before a real object-storage provider is wired up. Once one is
-    // chosen, narrow this to that provider's hostname.
-    remotePatterns: [{ protocol: "https", hostname: "**" }],
+    // Product photos are uploaded to Vercel Blob (Admin → Product → Images)
+    // and served from its public storage domain — one random subdomain
+    // segment per Blob store, hence the single-level wildcard. Locked to
+    // this provider only; no open "any host" wildcard.
+    remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
   },
 };
 

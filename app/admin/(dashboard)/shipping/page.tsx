@@ -4,15 +4,18 @@ import { ConfirmSubmitButton } from "@/components/admin/confirm-submit";
 
 export default async function AdminShippingPage() {
   const zones = await prisma.shippingZone.findMany({ orderBy: { position: "asc" } });
+  const activeCount = zones.filter((z) => z.active).length;
 
   return (
     <div className="max-w-3xl">
       <h1 className="font-serif-display text-3xl">Shipping</h1>
       <p className="mt-1 text-sm text-muted">
-        Regions shown here drive the storefront&rsquo;s Shipping page and product-page shipping
-        table. Checkout itself still uses a single flat rate from Stripe Checkout — wiring these
-        per-region rates into the actual charge is a follow-up beyond this admin pass; for now,
-        keep this table and the Stripe Checkout configuration in sync manually.
+        These zones are live at checkout: each active zone becomes a shipping option in Stripe
+        Checkout, priced here on the server (free once the cart reaches that zone&rsquo;s
+        threshold), and the customer selects the one matching their address. Stripe allows at
+        most 5 shipping options per checkout, so only the first 5 active zones (by position) are
+        used{activeCount > 5 ? ` — you currently have ${activeCount} active, so ${activeCount - 5} won't appear at checkout` : ""}.
+        Countries entered below also control which delivery addresses Stripe accepts.
       </p>
 
       <div className="mt-8 space-y-4">

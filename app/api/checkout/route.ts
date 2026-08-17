@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import type Stripe from "stripe";
 import { prisma } from "@/lib/db/prisma";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/client";
+import { getCheckoutShippingConfig } from "@/lib/commerce/shipping";
 import { colorLabel, sizeLabel } from "@/lib/utils/format";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -41,10 +43,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "No valid items in cart." }, { status: 400 });
   }
 
+  // Shipping amounts must be computed server-side from the real cart total —
+  // never trust a subtotal or shipping amount supplied by the browser.
+  let subtotal = 0;
   const lineItems = parsed.data.items.flatMap((item) => {
     const variant = variants.find((v) => v.id === item.variantId);
     if (!variant) return [];
     const unitPrice = variant.priceOverride ? Number(variant.priceOverride) : Number(variant.product.price);
+    subtotal += unitPrice * item.quantity;
     const image = variant.product.images[0];
     return [
       {
@@ -66,17 +72,27 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "No valid items in cart." }, { status: 400 });
   }
 
+  const currency = variants[0].product.currency;
+  const shippingConfig = await getCheckoutShippingConfig(subtotal, currency);
+  if (!shippingConfig) {
+    return NextResponse.json(
+      { error: "Shipping is not configured. Add at least one active shipping zone in Admin → Shipping." },
+      { status: 503 }
+    );
+  }
+
   const stripe = getStripe();
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     line_items: lineItems,
     payment_method_types: ["card"],
     shipping_address_collection: {
-      allowed_countries: ["DE", "FR", "NL", "BE", "AT", "ES", "IT", "PT", "LU", "IE", "GB", "US", "CH"],
+      // Dynamic, admin-configured country codes vs. Stripe's closed literal
+      // union type for this field — validated at runtime by parseCountryCodes()
+      // (2-letter alpha codes only) rather than against Stripe's exact list.
+      allowed_countries: shippingConfig.allowedCountries as Stripe.Checkout.SessionCreateParams.ShippingAddressCollection.AllowedCountry[],
     },
-    shipping_options: [
-      { shipping_rate_data: { type: "fixed_amount", fixed_amount: { amount: 0, currency: "eur" }, display_name: "Standard Shipping (5-8 days)" } },
-    ],
+    shipping_options: shippingConfig.shippingOptions,
     metadata: {
       cart: JSON.stringify(parsed.data.items).slice(0, 490),
     },

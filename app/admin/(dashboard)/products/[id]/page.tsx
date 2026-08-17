@@ -24,6 +24,7 @@ import {
   STRAP_TYPES,
 } from "@/lib/admin/constants";
 import { ConfirmSubmitButton } from "@/components/admin/confirm-submit";
+import { ImageUploadForm } from "@/components/admin/image-upload-form";
 import { colorLabel, sizeLabel, hardwareLabel, strapLabel, formatPrice } from "@/lib/utils/format";
 
 type Props = { params: Promise<{ id: string }> };
@@ -329,10 +330,8 @@ export default async function EditProductPage({ params }: Props) {
       <div className="mt-12">
         <h2 className="mb-1 font-serif-display text-xl">Images</h2>
         <p className="mb-4 text-xs text-muted">
-          Order, alt text, kind and primary status are editable below — pointing <code>url</code> at a new
-          file (uploaded to <code>/public/images</code> or an external host) replaces the photo with no code
-          changes. No upload pipeline is wired up yet: connect an object storage provider (S3, Cloudinary,
-          Vercel Blob) to upload directly from this screen.
+          Upload photos directly below, or add by URL for an existing asset. Order, alt text, kind
+          and primary status are all editable — no code changes needed to replace a photo.
         </p>
 
         <div className="space-y-4">
@@ -405,7 +404,19 @@ export default async function EditProductPage({ params }: Props) {
         </div>
 
         <div className="mt-6 rounded-sm border border-dashed border-sand p-4">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted">Add Image</p>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted">Upload Image</p>
+          <ImageUploadForm productId={product.id} />
+        </div>
+
+        <details className="mt-3 rounded-sm border border-sand p-4">
+          <summary className="cursor-pointer text-xs font-semibold uppercase tracking-wide text-muted">
+            Add by URL instead
+          </summary>
+          <p className="mb-3 mt-3 text-[11px] text-muted">
+            Use a local path (<code>/images/...</code>) or a URL already on an allowed host — external
+            hosts other than the upload provider above won&rsquo;t render via Next/Image unless added
+            to <code>next.config.ts</code>.
+          </p>
           <form action={addProductImage.bind(null, product.id)} className="grid grid-cols-1 gap-3 sm:grid-cols-4">
             <input name="url" placeholder="/images/products/... or https://..." required className="input sm:col-span-2" />
             <input name="alt" placeholder="Alt text" required className="input" />
@@ -416,11 +427,11 @@ export default async function EditProductPage({ params }: Props) {
                 </option>
               ))}
             </select>
-            <button type="submit" className="rounded-sm bg-charcoal px-4 py-2 text-sm text-ivory sm:col-span-4 sm:w-fit">
+            <button type="submit" className="rounded-sm border border-charcoal px-4 py-2 text-sm text-charcoal sm:col-span-4 sm:w-fit">
               Add Image
             </button>
           </form>
-        </div>
+        </details>
       </div>
     </div>
   );

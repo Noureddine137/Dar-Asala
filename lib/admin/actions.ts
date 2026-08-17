@@ -6,6 +6,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
 import { requireAdminSession } from "@/lib/admin/guard";
 import { CUSTOM_ORDER_STATUSES } from "@/lib/admin/constants";
+import { uploadProductImageFile, deleteBlobIfUnreferenced } from "@/lib/admin/image-storage";
 import type { ProductStatus, OrderStatus, LeatherColor, BagSize, HardwareFinish, StrapType } from "@prisma/client";
 
 function slugify(value: string) {
@@ -190,10 +191,35 @@ export async function deleteVariant(variantId: string, productId: string) {
 }
 
 // ---------------------------------------------------------------------------
-// Product images — kept URL-based (no upload pipeline configured yet), but
-// fully editable: add, reorder, re-tag, delete, and set a specific image as
-// primary. The lowest `position` is always the primary/card image.
+// Product images — real upload (Vercel Blob) is the primary path; adding by
+// URL directly still works too (e.g. an existing static asset or external
+// CDN link). Fully editable: add, reorder, re-tag, delete, and set a
+// specific image as primary. The lowest `position` is always the
+// primary/card image.
 // ---------------------------------------------------------------------------
+
+export async function uploadProductImage(productId: string, formData: FormData) {
+  await requireAdminSession();
+  const file = formData.get("file");
+  const alt = String(formData.get("alt") ?? "").trim();
+  const kind = String(formData.get("kind") ?? "front");
+  if (!alt) throw new Error("Alt text is required.");
+  if (!(file instanceof File)) throw new Error("No file was received. Please choose an image and try again.");
+
+  const url = await uploadProductImageFile(productId, file);
+
+  const maxPosition = await prisma.productImage.aggregate({
+    where: { productId },
+    _max: { position: true },
+  });
+
+  await prisma.productImage.create({
+    data: { productId, url, alt, kind, position: (maxPosition._max.position ?? -1) + 1 },
+  });
+
+  revalidatePath(`/admin/products/${productId}`);
+  revalidatePath("/");
+}
 
 export async function addProductImage(productId: string, formData: FormData) {
   await requireAdminSession();
@@ -235,11 +261,18 @@ export async function updateProductImageMeta(imageId: string, productId: string,
 
 export async function deleteProductImage(imageId: string, productId: string) {
   await requireAdminSession();
+  const image = await prisma.productImage.findUnique({ where: { id: imageId } });
+  if (!image) return;
+
   await prisma.$transaction([
     // Variants pointing at this image fall back to the product's default (primary) image.
     prisma.productVariant.updateMany({ where: { imageId }, data: { imageId: null } }),
     prisma.productImage.delete({ where: { id: imageId } }),
   ]);
+
+  // Only removes the underlying Blob object if it's one of ours and no
+  // other ProductImage row still references the same URL.
+  await deleteBlobIfUnreferenced(image.url);
 
   revalidatePath(`/admin/products/${productId}`);
   revalidatePath("/");
