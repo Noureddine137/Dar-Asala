@@ -1,14 +1,17 @@
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { CollectionDTO } from "@/lib/commerce/types";
 
-export function CategoryRail({ collections }: { collections: CollectionDTO[] }) {
+export async function CategoryRail({ collections }: { collections: CollectionDTO[] }) {
+  const t = await getTranslations("home");
+
   return (
     <section className="bg-cream py-10 md:py-16">
       <div className="container-page mb-5 flex items-end justify-between md:mb-8">
-        <h2 className="font-serif-display text-2xl text-charcoal md:text-4xl">Shop by Category</h2>
+        <h2 className="font-serif-display text-2xl text-charcoal md:text-4xl">{t("shopByCategory")}</h2>
         <Link href="/collections/all" className="text-xs font-semibold uppercase tracking-wide text-leather md:text-sm">
-          View All
+          {t("viewAll")}
         </Link>
       </div>
 

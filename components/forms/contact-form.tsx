@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 
 export function ContactForm() {
+  const t = useTranslations("forms");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState("");
 
@@ -21,29 +23,25 @@ export function ContactForm() {
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        throw new Error(body.error ?? "Something went wrong.");
+        throw new Error(body.error ?? t("genericError"));
       }
       setStatus("success");
       form.reset();
     } catch (err) {
       setStatus("error");
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setError(err instanceof Error ? err.message : t("genericError"));
     }
   }
 
   if (status === "success") {
-    return (
-      <p className="rounded-sm bg-cream p-6 text-sm text-charcoal">
-        Thank you — your message has been received. We typically reply within 1–2 business days.
-      </p>
-    );
+    return <p className="rounded-sm bg-cream p-6 text-sm text-charcoal">{t("contactSuccess")}</p>;
   }
 
   return (
     <form onSubmit={handleSubmit} className="max-w-lg space-y-5">
       <div>
         <label htmlFor="name" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted">
-          Name
+          {t("name")}
         </label>
         <input
           id="name"
@@ -54,7 +52,7 @@ export function ContactForm() {
       </div>
       <div>
         <label htmlFor="email" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted">
-          Email
+          {t("email")}
         </label>
         <input
           id="email"
@@ -66,7 +64,7 @@ export function ContactForm() {
       </div>
       <div>
         <label htmlFor="message" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted">
-          Message
+          {t("message")}
         </label>
         <textarea
           id="message"
@@ -78,7 +76,7 @@ export function ContactForm() {
       </div>
       {status === "error" && <p className="text-xs text-terracotta">{error}</p>}
       <Button type="submit" disabled={status === "loading"}>
-        {status === "loading" ? "Sending…" : "Send Message"}
+        {status === "loading" ? t("sending") : t("send")}
       </Button>
     </form>
   );

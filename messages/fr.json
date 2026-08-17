@@ -251,8 +251,26 @@
     "genericError": "Une erreur s'est produite. Veuillez réessayer.",
     "contactSuccess": "Merci — votre message a bien été reçu. Nous répondons généralement sous 1 à 2 jours ouvrés.",
     "newsletterSuccess": "Vous êtes inscrit(e). Bienvenue dans l'atelier.",
-    "newsletterDisclaimer": "En vous inscrivant, vous acceptez de recevoir des e-mails marketing. Désinscription possible à tout moment. Voir notre {privacyLink}.",
-    "privacyPolicy": "Politique de Confidentialité"
+    "newsletterDisclaimer": "En vous inscrivant, vous acceptez de recevoir des e-mails marketing. Désinscription possible à tout moment. Voir notre <privacyLink>politique de confidentialité</privacyLink>.",
+    "privacyPolicy": "Politique de Confidentialité",
+    "leatherColor": "Couleur de cuir préférée",
+    "leatherColorPlaceholder": "p. ex. Cognac",
+    "dimensions": "Dimensions",
+    "dimensionsPlaceholder": "p. ex. 30 x 22 x 10 cm",
+    "strapLength": "Longueur de la bandoulière",
+    "strapLengthPlaceholder": "p. ex. réglable, 60–120 cm",
+    "initials": "Initiales brodées",
+    "initialsPlaceholder": "p. ex. A.B.",
+    "lining": "Doublure intérieure",
+    "liningPlaceholder": "p. ex. sergé de coton naturel",
+    "hardware": "Finition de la quincaillerie",
+    "hardwarePlaceholder": "p. ex. laiton vieilli",
+    "phoneOptional": "Facultatif",
+    "startingFromProduct": "À partir d'un produit existant ?",
+    "startingFromProductPlaceholder": "Facultatif — p. ex. Sac à épaule Riad",
+    "tellUsAboutPiece": "Parlez-nous de la pièce que vous avez en tête",
+    "submitRequest": "Envoyer la demande",
+    "customOrderSuccess": "Merci — votre demande de commande sur mesure a bien été reçue. Un spécialiste de l'atelier vous recontactera par e-mail sous 2 à 3 jours ouvrés pour discuter des options et du tarif."
   },
   "general": {
     "filter": "Filtrer",
@@ -294,11 +312,19 @@
       "Initiales brodées",
       "Doublure intérieure",
       "Finition de la quincaillerie"
-    ]
+    ],
+    "atelierSelection": "La sélection de l'atelier",
+    "atelierSelectionSubtitle": "Pièces phares, choisies pour la saison.",
+    "viewAll": "Tout voir",
+    "craftsmanshipTagline": "Cinq étapes. Un artisan. Aucun raccourci.",
+    "handmadeInMorocco": "Fabriqué à la main au Maroc",
+    "genuineLeather": "Cuir véritable",
+    "smallBatchProduction": "Production en petites séries",
+    "securePayments": "Paiements sécurisés"
   },
   "cookieConsent": {
     "label": "Consentement aux cookies",
-    "body": "Nous utilisons des cookies essentiels au fonctionnement de ce site, ainsi que des cookies d'analyse facultatifs pour comprendre son utilisation. Les cookies non essentiels ne sont activés qu'avec votre consentement. Voir notre {cookiePolicyLink}.",
+    "body": "Nous utilisons des cookies essentiels au fonctionnement de ce site, ainsi que des cookies d'analyse facultatifs pour comprendre son utilisation. Les cookies non essentiels ne sont activés qu'avec votre consentement. Voir notre <cookiePolicyLink>politique de cookies</cookiePolicyLink>.",
     "cookiePolicy": "Politique relative aux Cookies",
     "reject": "Refuser les Non-Essentiels",
     "accept": "Tout Accepter"

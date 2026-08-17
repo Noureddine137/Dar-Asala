@@ -1,13 +1,16 @@
 import { Heart, Award, Package, ShieldCheck } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
-const ITEMS = [
-  { icon: Heart, label: "Handmade in Morocco" },
-  { icon: Award, label: "Genuine Leather" },
-  { icon: Package, label: "Small-Batch Production" },
-  { icon: ShieldCheck, label: "Secure Payments" },
-];
+export async function TrustStrip() {
+  const t = await getTranslations("home");
 
-export function TrustStrip() {
+  const ITEMS = [
+    { icon: Heart, label: t("handmadeInMorocco") },
+    { icon: Award, label: t("genuineLeather") },
+    { icon: Package, label: t("smallBatchProduction") },
+    { icon: ShieldCheck, label: t("securePayments") },
+  ];
+
   return (
     <section className="border-b border-sand bg-cream py-6 md:py-8">
       <div className="container-page grid grid-cols-4 gap-2 md:gap-6">

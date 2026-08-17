@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 const FEATURES = [
@@ -22,11 +23,13 @@ const FEATURES = [
   },
 ];
 
-export function Editorial() {
+export async function Editorial() {
+  const t = await getTranslations("home");
+
   return (
     <section className="border-t border-sand bg-cream py-16 md:py-24">
       <div className="container-page mb-8 md:mb-10">
-        <h2 className="font-serif-display text-3xl text-charcoal md:text-4xl">From the Journal</h2>
+        <h2 className="font-serif-display text-3xl text-charcoal md:text-4xl">{t("fromTheJournal")}</h2>
       </div>
       <div className="container-page grid gap-6 md:grid-cols-3">
         {FEATURES.map((f) => (

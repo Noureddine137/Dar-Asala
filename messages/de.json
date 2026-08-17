@@ -251,8 +251,26 @@
     "genericError": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
     "contactSuccess": "Vielen Dank — Ihre Nachricht ist bei uns eingegangen. Wir antworten in der Regel innerhalb von 1–2 Werktagen.",
     "newsletterSuccess": "Sie sind angemeldet. Willkommen im Atelier.",
-    "newsletterDisclaimer": "Mit der Anmeldung erklären Sie sich mit dem Erhalt von Marketing-E-Mails einverstanden. Jederzeit abbestellbar. Siehe unsere {privacyLink}.",
-    "privacyPolicy": "Datenschutzerklärung"
+    "newsletterDisclaimer": "Mit der Anmeldung erklären Sie sich mit dem Erhalt von Marketing-E-Mails einverstanden. Jederzeit abbestellbar. Siehe unsere <privacyLink>Datenschutzerklärung</privacyLink>.",
+    "privacyPolicy": "Datenschutzerklärung",
+    "leatherColor": "Bevorzugte Lederfarbe",
+    "leatherColorPlaceholder": "z. B. Cognac",
+    "dimensions": "Maße",
+    "dimensionsPlaceholder": "z. B. 30 x 22 x 10 cm",
+    "strapLength": "Riemenlänge",
+    "strapLengthPlaceholder": "z. B. verstellbar, 60–120 cm",
+    "initials": "Monogramm-Initialen",
+    "initialsPlaceholder": "z. B. A.B.",
+    "lining": "Innenfutter",
+    "liningPlaceholder": "z. B. natürlicher Baumwoll-Twill",
+    "hardware": "Beschlagfinish",
+    "hardwarePlaceholder": "z. B. Antikmessing",
+    "phoneOptional": "Optional",
+    "startingFromProduct": "Ausgehend von einem Produkt?",
+    "startingFromProductPlaceholder": "Optional – z. B. Riad Schultertasche",
+    "tellUsAboutPiece": "Erzählen Sie uns von dem Stück, das Sie sich vorstellen",
+    "submitRequest": "Anfrage senden",
+    "customOrderSuccess": "Vielen Dank — Ihre Anfrage für eine Sonderanfertigung ist eingegangen. Ein Atelier-Spezialist meldet sich innerhalb von 2–3 Werktagen per E-Mail, um Optionen und Preise zu besprechen."
   },
   "general": {
     "filter": "Filter",
@@ -294,11 +312,19 @@
       "Monogramm-Initialen",
       "Innenfutter",
       "Beschlagfinish"
-    ]
+    ],
+    "atelierSelection": "Die Atelier-Auswahl",
+    "atelierSelectionSubtitle": "Ausgewählte Stücke der Saison.",
+    "viewAll": "Alle ansehen",
+    "craftsmanshipTagline": "Fünf Schritte. Ein Handwerker. Keine Abkürzungen.",
+    "handmadeInMorocco": "Handgefertigt in Marokko",
+    "genuineLeather": "Echtes Leder",
+    "smallBatchProduction": "Kleinserienproduktion",
+    "securePayments": "Sichere Zahlungen"
   },
   "cookieConsent": {
     "label": "Cookie-Einwilligung",
-    "body": "Wir verwenden essenzielle Cookies für den Betrieb dieser Website sowie optionale Analyse-Cookies, um zu verstehen, wie sie genutzt wird. Nicht essenzielle Cookies werden nur mit Ihrer Zustimmung aktiviert. Siehe unsere {cookiePolicyLink}.",
+    "body": "Wir verwenden essenzielle Cookies für den Betrieb dieser Website sowie optionale Analyse-Cookies, um zu verstehen, wie sie genutzt wird. Nicht essenzielle Cookies werden nur mit Ihrer Zustimmung aktiviert. Siehe unsere <cookiePolicyLink>Cookie-Richtlinie</cookiePolicyLink>.",
     "cookiePolicy": "Cookie-Richtlinie",
     "reject": "Nur essenzielle Cookies",
     "accept": "Alle akzeptieren"

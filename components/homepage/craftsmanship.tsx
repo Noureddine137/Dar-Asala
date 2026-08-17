@@ -1,14 +1,15 @@
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 import { CRAFTSMANSHIP_STEPS } from "@/lib/content/craftsmanship";
 
-export function Craftsmanship() {
+export async function Craftsmanship() {
+  const [t, tProduct] = await Promise.all([getTranslations("home"), getTranslations("product")]);
+
   return (
     <section className="bg-forest py-16 text-ivory md:py-24">
       <div className="container-page mb-12 max-w-xl md:mb-16">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-brass">Craftsmanship</p>
-        <h2 className="font-serif-display text-3xl leading-tight md:text-4xl">
-          Five steps. One artisan. Zero shortcuts.
-        </h2>
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-brass">{tProduct("craftsmanship")}</p>
+        <h2 className="font-serif-display text-3xl leading-tight md:text-4xl">{t("craftsmanshipTagline")}</h2>
       </div>
 
       <div className="container-page flex flex-col gap-16 md:gap-24">

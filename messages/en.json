@@ -251,8 +251,26 @@
     "genericError": "Something went wrong. Please try again.",
     "contactSuccess": "Thank you — your message has been received. We typically reply within 1–2 business days.",
     "newsletterSuccess": "You're on the list. Welcome to the atelier.",
-    "newsletterDisclaimer": "By signing up you agree to receive marketing emails. Unsubscribe anytime. See our {privacyLink}.",
-    "privacyPolicy": "Privacy Policy"
+    "newsletterDisclaimer": "By signing up you agree to receive marketing emails. Unsubscribe anytime. See our <privacyLink>Privacy Policy</privacyLink>.",
+    "privacyPolicy": "Privacy Policy",
+    "leatherColor": "Preferred Leather Color",
+    "leatherColorPlaceholder": "e.g. Cognac",
+    "dimensions": "Dimensions",
+    "dimensionsPlaceholder": "e.g. 30 x 22 x 10 cm",
+    "strapLength": "Strap Length",
+    "strapLengthPlaceholder": "e.g. Adjustable, 60–120cm",
+    "initials": "Monogram Initials",
+    "initialsPlaceholder": "e.g. A.B.",
+    "lining": "Interior Lining",
+    "liningPlaceholder": "e.g. Natural cotton twill",
+    "hardware": "Hardware Finish",
+    "hardwarePlaceholder": "e.g. Antique brass",
+    "phoneOptional": "Optional",
+    "startingFromProduct": "Starting From a Product?",
+    "startingFromProductPlaceholder": "Optional — e.g. Riad Shoulder Bag",
+    "tellUsAboutPiece": "Tell us about the piece you have in mind",
+    "submitRequest": "Submit Request",
+    "customOrderSuccess": "Thank you — your custom order request has been received. An atelier specialist will follow up by email within 2–3 business days to discuss options and pricing."
   },
   "general": {
     "filter": "Filter",
@@ -294,11 +312,19 @@
       "Monogram initials",
       "Interior lining",
       "Hardware finish"
-    ]
+    ],
+    "atelierSelection": "The Atelier Selection",
+    "atelierSelectionSubtitle": "Featured pieces, chosen for the season.",
+    "viewAll": "View All",
+    "craftsmanshipTagline": "Five steps. One artisan. Zero shortcuts.",
+    "handmadeInMorocco": "Handmade in Morocco",
+    "genuineLeather": "Genuine Leather",
+    "smallBatchProduction": "Small-Batch Production",
+    "securePayments": "Secure Payments"
   },
   "cookieConsent": {
     "label": "Cookie consent",
-    "body": "We use essential cookies to run this site, and optional analytics cookies to understand how it's used. Non-essential cookies are only enabled with your consent. See our {cookiePolicyLink}.",
+    "body": "We use essential cookies to run this site, and optional analytics cookies to understand how it's used. Non-essential cookies are only enabled with your consent. See our <cookiePolicyLink>Cookie Policy</cookiePolicyLink>.",
     "cookiePolicy": "Cookie Policy",
     "reject": "Reject Non-Essential",
     "accept": "Accept All"
