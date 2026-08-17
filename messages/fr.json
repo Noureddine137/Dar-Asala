@@ -427,5 +427,10 @@
     "noValidItems": "Aucun article valide dans le panier.",
     "shippingNotConfigured": "La livraison n'est pas configurée. Ajoutez au moins une zone de livraison active dans Admin → Livraison.",
     "shippingUnavailable": "La livraison est actuellement indisponible pour cette destination."
+  },
+  "seo": {
+    "siteTitle": "Dar Asala — Sacs en cuir marocains fabriqués à la main",
+    "siteDescription": "Dar Asala fabrique en petites séries des sacs en cuir faits main pour femmes, façonnés par l'artisanat marocain en cuir pleine fleur véritable.",
+    "ogDescription": "Sacs en cuir faits main en petites séries pour femmes, façonnés par l'artisanat marocain."
   }
 }

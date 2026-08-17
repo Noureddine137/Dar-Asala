@@ -427,5 +427,10 @@
     "noValidItems": "Keine gültigen Artikel im Warenkorb.",
     "shippingNotConfigured": "Der Versand ist nicht konfiguriert. Fügen Sie mindestens eine aktive Versandzone im Admin → Versand hinzu.",
     "shippingUnavailable": "Der Versand ist für dieses Ziel derzeit nicht verfügbar."
+  },
+  "seo": {
+    "siteTitle": "Dar Asala — Handgefertigte marokkanische Ledertaschen",
+    "siteDescription": "Dar Asala fertigt in Kleinserie handgefertigte Ledertaschen für Frauen, geprägt von marokkanischer Handwerkskunst in echtem Vollnarbenleder.",
+    "ogDescription": "In Kleinserie handgefertigte Ledertaschen für Frauen, geprägt von marokkanischer Handwerkskunst."
   }
 }

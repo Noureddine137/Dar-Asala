@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Playfair_Display, Inter } from "next/font/google";
 import { routing, type Locale } from "@/i18n/routing";
+import { OG_LOCALES } from "@/lib/utils/seo";
 import "../globals.css";
 
 const playfair = Playfair_Display({
@@ -23,8 +24,6 @@ const inter = Inter({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
-const OG_LOCALES: Record<Locale, string> = { en: "en_US", de: "de_DE", fr: "fr_FR" };
-
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
@@ -35,22 +34,22 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const safeLocale = hasLocale(routing.locales, locale) ? locale : routing.defaultLocale;
+  const safeLocale = (hasLocale(routing.locales, locale) ? locale : routing.defaultLocale) as Locale;
+  const t = await getTranslations({ locale: safeLocale, namespace: "seo" });
 
   return {
     metadataBase: new URL(siteUrl),
     title: {
-      default: "Dar Asala — Handcrafted Moroccan Leather Bags",
+      default: t("siteTitle"),
       template: "%s | Dar Asala",
     },
-    description:
-      "Dar Asala crafts small-batch, handmade leather bags for women, shaped by Moroccan artisanship in genuine full-grain leather.",
+    description: t("siteDescription"),
     openGraph: {
-      title: "Dar Asala — Handcrafted Moroccan Leather Bags",
-      description: "Small-batch, handmade leather bags for women, shaped by Moroccan artisanship.",
+      title: t("siteTitle"),
+      description: t("ogDescription"),
       url: `${siteUrl}/${safeLocale}`,
       siteName: "Dar Asala",
-      locale: OG_LOCALES[safeLocale as Locale],
+      locale: OG_LOCALES[safeLocale],
       type: "website",
     },
     robots: { index: true, follow: true },

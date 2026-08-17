@@ -5,6 +5,7 @@ import { SortSelect } from "@/components/collection/sort-select";
 import { CollectionFilterSidebar, CollectionFilterTrigger } from "@/components/collection/collection-filters";
 import { ProductGrid } from "@/components/collection/product-grid";
 import { getCollectionBySlug, type SortOption } from "@/lib/commerce/collections";
+import { buildAlternates, OG_LOCALES, localizedUrl } from "@/lib/utils/seo";
 import type { Locale } from "@/i18n/routing";
 
 type Props = {
@@ -21,13 +22,19 @@ function toArray(value: string | string[] | undefined): string[] {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug, locale } = await params;
-  const data = await getCollectionBySlug(slug, locale as Locale);
+  const safeLocale = locale as Locale;
+  const data = await getCollectionBySlug(slug, safeLocale);
   if (!data) return {};
   return {
     title: data.collection.seoTitle,
     description: data.collection.seoDescription,
-    alternates: { canonical: `/collections/${slug}` },
-    openGraph: { title: data.collection.seoTitle, description: data.collection.seoDescription },
+    alternates: buildAlternates(safeLocale, `/collections/${slug}`),
+    openGraph: {
+      title: data.collection.seoTitle,
+      description: data.collection.seoDescription,
+      url: localizedUrl(safeLocale, `/collections/${slug}`),
+      locale: OG_LOCALES[safeLocale],
+    },
   };
 }
 

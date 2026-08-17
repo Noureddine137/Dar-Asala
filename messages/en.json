@@ -427,5 +427,10 @@
     "noValidItems": "No valid items in cart.",
     "shippingNotConfigured": "Shipping is not configured. Add at least one active shipping zone in Admin → Shipping.",
     "shippingUnavailable": "Shipping is currently unavailable for this destination."
+  },
+  "seo": {
+    "siteTitle": "Dar Asala — Handcrafted Moroccan Leather Bags",
+    "siteDescription": "Dar Asala crafts small-batch, handmade leather bags for women, shaped by Moroccan artisanship in genuine full-grain leather.",
+    "ogDescription": "Small-batch, handmade leather bags for women, shaped by Moroccan artisanship."
   }
 }
