@@ -419,5 +419,13 @@
   "materialsPage": {
     "whatWeUse": "Was wir verwenden",
     "careGuideHeading": "Pflegehinweise"
+  },
+  "checkoutApi": {
+    "notConfigured": "Checkout ist noch nicht konfiguriert. Fügen Sie STRIPE_SECRET_KEY hinzu, um Zahlungen zu aktivieren.",
+    "selectDestination": "Bitte wählen Sie vor dem Bezahlen ein Versandziel aus.",
+    "invalidCart": "Ungültiger Warenkorb.",
+    "noValidItems": "Keine gültigen Artikel im Warenkorb.",
+    "shippingNotConfigured": "Der Versand ist nicht konfiguriert. Fügen Sie mindestens eine aktive Versandzone im Admin → Versand hinzu.",
+    "shippingUnavailable": "Der Versand ist für dieses Ziel derzeit nicht verfügbar."
   }
 }

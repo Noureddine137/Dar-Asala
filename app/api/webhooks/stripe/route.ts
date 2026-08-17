@@ -54,6 +54,10 @@ export async function POST(request: NextRequest) {
     // never auto-cancelled or refunded.
     const selectedCountry = session.metadata?.shippingCountry ?? null;
     const actualCountry = session.customer_details?.address?.country ?? null;
+    // Storefront locale active when the order was placed (see
+    // Order.locale) — stored so a future transactional-email system could
+    // send confirmations in the customer's language.
+    const locale = session.metadata?.locale ?? null;
     const shippingCountryMismatch = Boolean(selectedCountry && actualCountry && selectedCountry !== actualCountry);
     if (shippingCountryMismatch) {
       console.warn(
@@ -98,6 +102,7 @@ export async function POST(request: NextRequest) {
           shippingCountry: actualCountry,
           selectedShippingCountry: selectedCountry,
           shippingCountryMismatch,
+          locale,
           items: { create: validItems },
         },
       });

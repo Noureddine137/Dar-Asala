@@ -419,5 +419,13 @@
   "materialsPage": {
     "whatWeUse": "What we use",
     "careGuideHeading": "Care Guide"
+  },
+  "checkoutApi": {
+    "notConfigured": "Checkout is not yet configured. Add STRIPE_SECRET_KEY to enable payments.",
+    "selectDestination": "Please select a shipping destination before checking out.",
+    "invalidCart": "Invalid cart.",
+    "noValidItems": "No valid items in cart.",
+    "shippingNotConfigured": "Shipping is not configured. Add at least one active shipping zone in Admin → Shipping.",
+    "shippingUnavailable": "Shipping is currently unavailable for this destination."
   }
 }

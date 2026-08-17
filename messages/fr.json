@@ -419,5 +419,13 @@
   "materialsPage": {
     "whatWeUse": "Ce que nous utilisons",
     "careGuideHeading": "Guide d'entretien"
+  },
+  "checkoutApi": {
+    "notConfigured": "Le paiement n'est pas encore configuré. Ajoutez STRIPE_SECRET_KEY pour activer les paiements.",
+    "selectDestination": "Veuillez sélectionner une destination de livraison avant de passer au paiement.",
+    "invalidCart": "Panier invalide.",
+    "noValidItems": "Aucun article valide dans le panier.",
+    "shippingNotConfigured": "La livraison n'est pas configurée. Ajoutez au moins une zone de livraison active dans Admin → Livraison.",
+    "shippingUnavailable": "La livraison est actuellement indisponible pour cette destination."
   }
 }
