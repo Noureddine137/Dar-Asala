@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Star, Heart, Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { colorLabel, colorSwatchHex, formatPrice, hardwareLabel, sizeLabel, strapLabel } from "@/lib/utils/format";
@@ -9,6 +9,7 @@ import { useCartStore } from "@/lib/store/cart-store";
 import { useUIStore } from "@/lib/store/ui-store";
 import { useWishlistStore } from "@/lib/store/wishlist-store";
 import { Button } from "@/components/ui/button";
+import { StickyMobileCartBar } from "./sticky-cart-bar";
 import type { ProductDetailDTO } from "@/lib/commerce/types";
 
 export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
@@ -20,6 +21,22 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
   const isWishlisted = useWishlistStore((s) => s.has(product.slug));
   const toggleWishlist = useWishlistStore((s) => s.toggle);
   const [justAdded, setJustAdded] = useState(false);
+  const [showSticky, setShowSticky] = useState(false);
+  const ctaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const target = ctaRef.current;
+    if (!target) return;
+    // Only show the sticky bar once the CTA has been scrolled *above* the
+    // viewport (top < 0) — not while it simply hasn't been reached yet on
+    // initial load (top > 0, still below the fold).
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowSticky(!entry.isIntersecting && entry.boundingClientRect.top < 0),
+      { rootMargin: "-72px 0px 0px 0px" }
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
 
   const variant = findVariant(product.variants, selection);
   const image = product.images.find((img) => img.id === variant.imageId) ?? product.primaryImage ?? product.images[0];
@@ -28,6 +45,13 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
     available && !variant.isMadeToOrder
       ? "In stock — ships in 1–3 business days"
       : "Made to order — handcrafted in 7–14 business days";
+
+  const steps: string[] = [];
+  if (options.colors.length > 1) steps.push("color");
+  if (options.sizes.length > 1) steps.push("size");
+  if (options.straps.length > 1) steps.push("strap");
+  if (options.hardwares.length > 1) steps.push("hardware");
+  const stepNumber = (key: string) => steps.indexOf(key) + 1;
 
   function handleAddToCart() {
     addItem(
@@ -40,6 +64,8 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
         imageAlt: image?.alt ?? product.name,
         color: variant.color,
         size: variant.size,
+        strap: strapLabel(variant.strap),
+        hardware: hardwareLabel(variant.hardware),
         price: variant.price,
         currency: product.currency,
         isMadeToOrder: variant.isMadeToOrder,
@@ -88,7 +114,8 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
         {options.colors.length > 1 && (
           <div>
             <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted">
-              Color — <span className="normal-case tracking-normal text-charcoal">{colorLabel(selection.color)}</span>
+              {stepNumber("color")}. Color —{" "}
+              <span className="normal-case tracking-normal text-charcoal">{colorLabel(selection.color)}</span>
             </p>
             <div className="flex flex-wrap gap-2.5">
               {options.colors.map((c) => (
@@ -111,7 +138,9 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
 
         {options.sizes.length > 1 && (
           <div>
-            <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted">Size</p>
+            <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted">
+              {stepNumber("size")}. Size
+            </p>
             <div className="flex flex-wrap gap-2">
               {options.sizes.map((s) => (
                 <button
@@ -133,33 +162,11 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
           </div>
         )}
 
-        {options.hardwares.length > 1 && (
-          <div>
-            <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted">Hardware</p>
-            <div className="flex flex-wrap gap-2">
-              {options.hardwares.map((h) => (
-                <button
-                  key={h}
-                  type="button"
-                  onClick={() => setSelection((sel) => ({ ...sel, hardware: h }))}
-                  aria-pressed={selection.hardware === h}
-                  className={cn(
-                    "rounded-sm border px-4 py-2 text-sm",
-                    selection.hardware === h
-                      ? "border-charcoal bg-charcoal text-ivory"
-                      : "border-sand text-charcoal hover:border-charcoal"
-                  )}
-                >
-                  {hardwareLabel(h)}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
         {options.straps.length > 1 && (
           <div>
-            <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted">Strap</p>
+            <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted">
+              {stepNumber("strap")}. Strap
+            </p>
             <div className="flex flex-wrap gap-2">
               {options.straps.map((s) => (
                 <button
@@ -168,7 +175,7 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
                   onClick={() => setSelection((sel) => ({ ...sel, strap: s }))}
                   aria-pressed={selection.strap === s}
                   className={cn(
-                    "rounded-sm border px-4 py-2 text-sm",
+                    "rounded-sm border px-4 py-2.5 text-sm",
                     selection.strap === s
                       ? "border-charcoal bg-charcoal text-ivory"
                       : "border-sand text-charcoal hover:border-charcoal"
@@ -180,17 +187,42 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
             </div>
           </div>
         )}
+
+        {options.hardwares.length > 1 && (
+          <div>
+            <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted">
+              {stepNumber("hardware")}. Hardware
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {options.hardwares.map((h) => (
+                <button
+                  key={h}
+                  type="button"
+                  onClick={() => setSelection((sel) => ({ ...sel, hardware: h }))}
+                  aria-pressed={selection.hardware === h}
+                  className={cn(
+                    "rounded-sm border px-4 py-2.5 text-sm",
+                    selection.hardware === h
+                      ? "border-charcoal bg-charcoal text-ivory"
+                      : "border-sand text-charcoal hover:border-charcoal"
+                  )}
+                >
+                  {hardwareLabel(h)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
-      <p className={cn("mt-6 text-sm", variant.isMadeToOrder ? "text-olive" : "text-charcoal/80")}>{statusLabel}</p>
-
-      <div className="mt-5 flex items-stretch gap-3">
+      <div className="mt-6 flex items-center gap-3">
+        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">Quantity</span>
         <div className="flex items-center rounded-sm border border-sand">
           <button
             type="button"
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
             aria-label="Decrease quantity"
-            className="flex h-14 w-11 items-center justify-center text-charcoal"
+            className="flex h-11 w-10 items-center justify-center text-charcoal"
           >
             <Minus className="h-4 w-4" />
           </button>
@@ -201,14 +233,16 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
             type="button"
             onClick={() => setQuantity((q) => q + 1)}
             aria-label="Increase quantity"
-            className="flex h-14 w-11 items-center justify-center text-charcoal"
+            className="flex h-11 w-10 items-center justify-center text-charcoal"
           >
             <Plus className="h-4 w-4" />
           </button>
         </div>
+      </div>
 
+      <div ref={ctaRef} className="mt-4 flex items-stretch gap-3">
         <Button size="lg" onClick={handleAddToCart} className="flex-1">
-          {justAdded ? "Added" : "Add to Cart"}
+          {justAdded ? "Added to Cart" : `Add to Cart — ${formatPrice(variant.price * quantity, product.currency)}`}
         </Button>
 
         <button
@@ -221,6 +255,20 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
           <Heart className={cn("h-5 w-5", isWishlisted && "fill-terracotta text-terracotta")} />
         </button>
       </div>
+
+      <p className={cn("mt-4 text-sm", variant.isMadeToOrder ? "text-olive" : "text-charcoal/80")}>{statusLabel}</p>
+
+      <StickyMobileCartBar
+        show={showSticky}
+        image={image?.url ?? ""}
+        imageAlt={image?.alt ?? product.name}
+        name={product.name}
+        optionsLabel={[colorLabel(variant.color), sizeLabel(variant.size)].join(" / ")}
+        price={variant.price * quantity}
+        currency={product.currency}
+        justAdded={justAdded}
+        onAdd={handleAddToCart}
+      />
     </div>
   );
 }

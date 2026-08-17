@@ -10,6 +10,8 @@ export type CartItem = {
   imageAlt: string;
   color: string;
   size: string;
+  strap?: string;
+  hardware?: string;
   price: number;
   currency: string;
   quantity: number;

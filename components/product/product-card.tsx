@@ -76,11 +76,10 @@ export function ProductCard({
         />
       </button>
 
-      <Link href={`/products/${product.slug}`} className="mt-3 flex flex-1 flex-col">
-        <h3 className="font-serif-display text-lg leading-snug text-charcoal">{product.name}</h3>
-        <p className="mt-0.5 line-clamp-1 text-sm text-muted">{product.shortDescription}</p>
+      <Link href={`/products/${product.slug}`} className="mt-2.5 flex flex-1 flex-col">
+        <h3 className="font-serif-display text-base leading-snug text-charcoal md:text-lg">{product.name}</h3>
 
-        <div className="mt-2 flex items-center justify-between">
+        <div className="mt-1.5 flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             <span className="text-sm font-medium text-charcoal">{formatPrice(product.price, product.currency)}</span>
             {product.compareAtPrice && (

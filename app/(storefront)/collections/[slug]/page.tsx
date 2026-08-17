@@ -1,7 +1,5 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import type { Metadata } from "next";
-import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { SortSelect } from "@/components/collection/sort-select";
 import { CollectionFilterSidebar, CollectionFilterTrigger } from "@/components/collection/collection-filters";
 import { ProductGrid } from "@/components/collection/product-grid";
@@ -50,43 +48,20 @@ export default async function CollectionPage({ params, searchParams }: Props) {
   const { collection, products } = data;
 
   return (
-    <div>
-      <div className="relative flex h-48 items-end overflow-hidden bg-charcoal md:h-64">
-        <Image
-          src={`/images/categories/${collection.slug}-banner.webp`}
-          alt={collection.title}
-          fill
-          sizes="100vw"
-          className="object-cover opacity-70"
-          priority
-        />
-        <div className="container-page relative z-10 pb-6 md:pb-8">
-          <h1 className="font-serif-display text-3xl text-ivory md:text-4xl">{collection.title}</h1>
-        </div>
-      </div>
+    <div className="bg-cream">
+      <div className="container-page pb-6 pt-8 md:pt-12">
+        <h1 className="font-serif-display text-3xl text-charcoal md:text-4xl">{collection.title}</h1>
+        <p className="mt-2 max-w-xl text-sm text-charcoal/75 md:text-base">{collection.description}</p>
+        <p className="mt-3 text-xs text-muted md:text-sm">
+          {products.length} {products.length === 1 ? "product" : "products"}
+        </p>
 
-      <div className="container-page py-8 md:py-12">
-        <Breadcrumb
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Collections", href: "/collections/all" },
-            { label: collection.title },
-          ]}
-        />
-
-        <p className="mt-4 max-w-2xl text-sm text-charcoal/80 md:text-base">{collection.description}</p>
-
-        <div className="mt-6 flex items-center justify-between border-y border-sand/70 py-4">
-          <p className="text-sm text-muted">
-            {products.length} {products.length === 1 ? "piece" : "pieces"}
-          </p>
-          <div className="flex items-center gap-3">
-            <CollectionFilterTrigger />
-            <SortSelect current={sort} />
-          </div>
+        <div className="mt-5 flex items-center justify-between gap-3 border-y border-sand py-3">
+          <CollectionFilterTrigger />
+          <SortSelect current={sort} />
         </div>
 
-        <div className="mt-8 flex gap-10">
+        <div className="mt-6 flex gap-10 pb-16 md:mt-8 md:pb-24">
           <CollectionFilterSidebar />
           <ProductGrid products={products} />
         </div>

@@ -89,11 +89,11 @@ export function CollectionFilterTrigger() {
         <Dialog.Trigger asChild>
           <button
             type="button"
-            className="flex items-center gap-2 rounded-sm border border-sand px-4 py-2 text-sm text-charcoal"
+            className="flex items-center gap-2 rounded-sm border border-sand bg-ivory px-4 py-2 text-xs font-semibold uppercase tracking-wide text-charcoal sm:text-sm"
           >
             <SlidersHorizontal className="h-4 w-4" />
             Filter
-            {activeCount > 0 && <span className="text-xs text-muted">({activeCount})</span>}
+            {activeCount > 0 && <span className="font-normal normal-case text-muted">({activeCount})</span>}
           </button>
         </Dialog.Trigger>
         <Dialog.Portal>

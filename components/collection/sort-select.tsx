@@ -25,12 +25,12 @@ export function SortSelect({ current }: { current: string }) {
   }
 
   return (
-    <label className="flex items-center gap-2 text-sm">
-      <span className="hidden text-muted sm:inline">Sort by</span>
+    <label className="flex items-center gap-2 text-xs sm:text-sm">
+      <span className="hidden font-semibold uppercase tracking-wide text-muted sm:inline">Sort by</span>
       <select
         value={current}
         onChange={(e) => handleChange(e.target.value)}
-        className="border-b border-charcoal/30 bg-transparent py-1.5 pr-1 text-charcoal focus:outline-none"
+        className="rounded-sm border border-sand bg-ivory px-3 py-2 text-charcoal focus:border-charcoal focus:outline-none"
       >
         {OPTIONS.map((o) => (
           <option key={o.value} value={o.value}>

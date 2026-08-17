@@ -3,12 +3,17 @@ import type { Metadata } from "next";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { ProductGallery } from "@/components/product/gallery";
 import { PurchasePanel } from "@/components/product/purchase-panel";
-import { ProductAccordions } from "@/components/product/product-accordions";
+import { TrustList } from "@/components/product/trust-list";
+import { CustomOrderBox } from "@/components/product/custom-order-box";
 import { ProductStory } from "@/components/product/product-story";
+import { HowItWorks } from "@/components/product/how-it-works";
+import { DetailsTiles } from "@/components/product/details-tiles";
+import { ProductAccordions } from "@/components/product/product-accordions";
+import { BeforeYouOrder } from "@/components/product/before-you-order";
+import { ShippingInfo } from "@/components/product/shipping-info";
 import { ReviewsSection } from "@/components/product/reviews-section";
 import { RelatedProducts } from "@/components/product/related-products";
-import { StickyMobileCartBar } from "@/components/product/sticky-cart-bar";
-import { getProductBySlug, getRelatedProducts } from "@/lib/commerce/products";
+import { getProductBySlug, getRelatedProducts, getStoreReviewSummary } from "@/lib/commerce/products";
 import { jsonLdScript } from "@/lib/utils/json-ld";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -38,7 +43,7 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const related = await getRelatedProducts(product);
+  const [related, storeReviews] = await Promise.all([getRelatedProducts(product), getStoreReviewSummary()]);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -77,11 +82,11 @@ export default async function ProductPage({ params }: Props) {
   };
 
   return (
-    <div>
+    <div className="bg-cream">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(breadcrumbLd) }} />
 
-      <div className="container-page py-6">
+      <div className="container-page pt-5">
         <Breadcrumb
           items={[
             { label: "Home", href: "/" },
@@ -91,20 +96,60 @@ export default async function ProductPage({ params }: Props) {
         />
       </div>
 
-      <div className="container-page grid gap-10 pb-14 md:grid-cols-2 md:gap-16 md:pb-20">
+      {/* Gallery + purchase panel */}
+      <div className="container-page grid gap-8 pb-10 pt-4 md:grid-cols-2 md:gap-14 md:pb-16">
         <ProductGallery images={product.images} productName={product.name} />
         <PurchasePanel product={product} />
       </div>
 
-      <div className="container-page">
+      {/* Trust / reassurance list */}
+      <div className="container-page border-t border-sand py-10 md:py-14">
+        <TrustList product={product} />
+      </div>
+
+      {/* Custom order box */}
+      <div className="container-page pb-10 md:pb-14">
+        <CustomOrderBox productName={product.name} />
+      </div>
+
+      {/* Lifestyle / craft imagery */}
+      <ProductStory product={product} />
+
+      {/* How it works */}
+      <div className="container-page py-10 md:py-14">
+        <HowItWorks />
+      </div>
+
+      {/* Product details tiles */}
+      <div className="container-page pb-10 md:pb-14">
+        <DetailsTiles product={product} />
+      </div>
+
+      {/* Accordions: description, craftsmanship, materials, dimensions, care, shipping & returns */}
+      <div className="container-page border-t border-sand pt-2">
         <ProductAccordions product={product} />
       </div>
 
-      <ProductStory product={product} />
-      <ReviewsSection reviews={product.reviews} averageRating={product.averageRating} reviewCount={product.reviewCount} />
-      <RelatedProducts title="You May Also Like" products={related} />
+      {/* Before you order */}
+      <div className="container-page py-10 md:py-14">
+        <BeforeYouOrder />
+      </div>
 
-      <StickyMobileCartBar price={product.price} currency={product.currency} />
+      {/* Shipping */}
+      <div className="container-page pb-12 md:pb-16">
+        <ShippingInfo />
+      </div>
+
+      <ReviewsSection
+        reviews={product.reviews}
+        averageRating={product.averageRating}
+        reviewCount={product.reviewCount}
+        storeReviews={storeReviews.reviews}
+        storeAverageRating={storeReviews.averageRating}
+        storeReviewCount={storeReviews.reviewCount}
+      />
+
+      <RelatedProducts title="You May Also Like" products={related} />
     </div>
   );
 }

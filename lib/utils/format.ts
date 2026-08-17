@@ -28,7 +28,7 @@ const HARDWARE_LABELS: Record<string, string> = {
 
 const STRAP_LABELS: Record<string, string> = {
   STANDARD: "Standard",
-  LONG: "Long",
+  LONG: "Long / Crossbody",
   ADJUSTABLE: "Adjustable",
 };
 
@@ -46,13 +46,13 @@ export function strapLabel(value: string) {
 }
 
 const SWATCH_HEX: Record<string, string> = {
-  COGNAC: "#B4865E",
+  COGNAC: "#B98B67",
   DARK_BROWN: "#5A3A24",
-  BLACK: "#27231F",
+  BLACK: "#2C2A26",
   OLIVE: "#4E5741",
-  NATURAL: "#DCCCB7",
+  NATURAL: "#D6C6AD",
 };
 
 export function colorSwatchHex(value: string) {
-  return SWATCH_HEX[value] ?? "#81766A";
+  return SWATCH_HEX[value] ?? "#7A6F62";
 }

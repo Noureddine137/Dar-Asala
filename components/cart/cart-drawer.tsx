@@ -2,7 +2,7 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
-import { X, ShoppingBag } from "lucide-react";
+import { X, ShoppingBag, Lock, RotateCcw } from "lucide-react";
 import { useUIStore } from "@/lib/store/ui-store";
 import { useCartStore, cartSubtotal } from "@/lib/store/cart-store";
 import { useMounted } from "@/lib/hooks/use-mounted";
@@ -56,14 +56,16 @@ export function CartDrawer() {
               </div>
               <div className="space-y-4 border-t border-sand/70 px-5 py-5">
                 <FreeShippingBar subtotal={subtotal} />
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted">Subtotal</span>
-                  <span className="font-medium text-charcoal">{formatPrice(subtotal)}</span>
+                <div className="space-y-1.5 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted">Subtotal</span>
+                    <span className="font-medium text-charcoal">{formatPrice(subtotal)}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted">Shipping</span>
+                    <span className="text-charcoal/80">Calculated at checkout</span>
+                  </div>
                 </div>
-                <p className="text-xs text-muted">Shipping and taxes calculated at checkout.</p>
-                <ButtonLink href="/cart" onClick={close} variant="secondary" className="w-full">
-                  View Bag
-                </ButtonLink>
                 <Button
                   onClick={() => {
                     close();
@@ -74,6 +76,17 @@ export function CartDrawer() {
                 >
                   Checkout
                 </Button>
+                <ButtonLink href="/cart" onClick={close} variant="ghost" className="w-full">
+                  View Bag
+                </ButtonLink>
+                <div className="flex items-center justify-center gap-6 border-t border-sand/70 pt-4 text-center text-xs text-muted">
+                  <span className="flex items-center gap-1.5">
+                    <Lock className="h-3.5 w-3.5" /> Secure Checkout
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <RotateCcw className="h-3.5 w-3.5" /> 14-Day Returns
+                  </span>
+                </div>
               </div>
             </>
           )}

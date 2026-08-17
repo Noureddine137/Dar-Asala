@@ -10,6 +10,7 @@ export const SHOP_LINKS: NavLink[] = [
   { label: "Tote Bags", href: "/collections/tote-bags" },
   { label: "Mini Bags", href: "/collections/mini-bags" },
   { label: "Leather Accessories", href: "/collections/leather-accessories" },
+  { label: "Custom & Made to Order", href: "/custom-orders" },
 ];
 
 export const BRAND_LINKS: NavLink[] = [
@@ -22,7 +23,7 @@ export const BRAND_LINKS: NavLink[] = [
 
 export const HELP_LINKS: NavLink[] = [
   { label: "Shipping", href: "/shipping" },
-  { label: "Returns", href: "/returns" },
+  { label: "Returns & Refunds", href: "/returns" },
   { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },
 ];
@@ -63,7 +64,7 @@ export const FOOTER_COLUMNS = [
     links: [
       { label: "FAQ", href: "/faq" },
       { label: "Shipping", href: "/shipping" },
-      { label: "Returns", href: "/returns" },
+      { label: "Returns & Refunds", href: "/returns" },
       { label: "Contact", href: "/contact" },
       { label: "Care Guide", href: "/about/materials" },
     ],

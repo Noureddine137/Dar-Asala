@@ -1,19 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --color-cream: #f6f0e7;
-  --color-ivory: #fbf8f2;
-  --color-sand: #dcccb7;
-  --color-camel: #b4865e;
+  /* Reference palette (Tissire Atelier visual reference pack) */
+  --color-cream: #f6f1e8;
+  --color-ivory: #faf7f0;
+  --color-sand: #e9dfcf;
+  --color-tan: #d6c6ad;
+  --color-camel: #b98b67;
   --color-leather: #8b5e3c;
   --color-terracotta: #a95f43;
   --color-olive: #4e5741;
-  --color-forest: #25352b;
-  --color-charcoal: #27231f;
+  --color-forest: #3e4638;
+  --color-charcoal: #2c2a26;
   --color-brass: #a78b57;
-  --color-muted: #81766a;
+  --color-muted: #7a6f62;
 
-  --color-background: var(--color-ivory);
+  --color-background: var(--color-cream);
   --color-foreground: var(--color-charcoal);
 }
 
@@ -21,6 +23,7 @@
   --color-cream: var(--color-cream);
   --color-ivory: var(--color-ivory);
   --color-sand: var(--color-sand);
+  --color-tan: var(--color-tan);
   --color-camel: var(--color-camel);
   --color-leather: var(--color-leather);
   --color-terracotta: var(--color-terracotta);
@@ -33,8 +36,8 @@
   --color-background: var(--color-background);
   --color-foreground: var(--color-foreground);
 
-  --font-serif: var(--font-cormorant), "Cormorant Garamond", ui-serif, Georgia, serif;
-  --font-sans: var(--font-dm-sans), "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), "Playfair Display", ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
 
   --container-8xl: 96rem;
 
@@ -98,8 +101,11 @@ body {
   color: var(--color-ivory);
 }
 
-.font-serif-display {
-  font-family: var(--font-serif);
+@layer base {
+  .font-serif-display {
+    font-family: var(--font-serif);
+    font-weight: 600;
+  }
 }
 
 /* Scrollbar-hidden horizontal scroll containers (category rail, thumb rail, etc.) */

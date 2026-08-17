@@ -26,8 +26,13 @@ export function CartLineItem({ item, onNavigate }: { item: CartItem; onNavigate?
               {item.name}
             </Link>
             <p className="mt-0.5 text-xs text-muted">
-              {colorLabel(item.color)} · {sizeLabel(item.size)}
+              {colorLabel(item.color)} / {sizeLabel(item.size)}
             </p>
+            {(item.strap || item.hardware) && (
+              <p className="text-xs text-muted">
+                {[item.strap, item.hardware].filter(Boolean).join(" / ")}
+              </p>
+            )}
             {item.isMadeToOrder && <p className="mt-0.5 text-xs text-olive">Made to order</p>}
           </div>
           <button

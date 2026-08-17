@@ -425,10 +425,12 @@ async function main() {
         productionTime: p.productionTime,
         images: {
           create: [
-            { url: `/images/products/${p.slug}-front.webp`, alt: `${p.name} — front view`, position: 0, kind: "gallery" },
-            { url: `/images/products/${p.slug}-side.webp`, alt: `${p.name} — side view`, position: 1, kind: "gallery" },
-            { url: `/images/products/${p.slug}-detail.webp`, alt: `${p.name} — stitching detail`, position: 2, kind: "detail" },
-            { url: `/images/products/${p.slug}-lifestyle.webp`, alt: `${p.name} — lifestyle`, position: 3, kind: "lifestyle" },
+            { url: `/images/products/${p.slug}-front.webp`, alt: `${p.name} — front view`, position: 0, kind: "front" },
+            { url: `/images/products/${p.slug}-side.webp`, alt: `${p.name} — side view`, position: 1, kind: "side" },
+            { url: `/images/products/${p.slug}-back.webp`, alt: `${p.name} — back view`, position: 2, kind: "back" },
+            { url: `/images/products/${p.slug}-detail-stitching.webp`, alt: `${p.name} — stitching detail`, position: 3, kind: "detail-stitching" },
+            { url: `/images/products/${p.slug}-detail-hardware.webp`, alt: `${p.name} — hardware detail`, position: 4, kind: "detail-hardware" },
+            { url: `/images/products/${p.slug}-lifestyle.webp`, alt: `${p.name} — lifestyle`, position: 5, kind: "lifestyle" },
           ],
         },
       },

@@ -6,7 +6,8 @@ Next.js App Router, TypeScript, Tailwind CSS v4, Prisma/PostgreSQL and Stripe.
 ## Stack
 
 - **Next.js 16** (App Router, Server Components, Turbopack)
-- **TypeScript**, **Tailwind CSS v4** (design tokens in `app/globals.css`)
+- **TypeScript**, **Tailwind CSS v4** (design tokens in `app/globals.css`: Playfair Display +
+  Inter, warm cream/sand/leather palette)
 - **PostgreSQL** via **Prisma ORM**
 - **Stripe Checkout** for payment
 - **Zustand** (with `persist`) for cart, wishlist, UI-overlay and cookie-consent state
@@ -105,3 +106,6 @@ for real photography before launch.
   support.
 - **Legal pages** (`/legal/*`): placeholder copy, explicitly marked for legal review before
   launch.
+- **WhatsApp**: the product page's custom-order box links to `wa.me/<NEXT_PUBLIC_WHATSAPP_NUMBER>`,
+  which defaults to a clearly-placeholder number (`lib/config.ts`) — set the atelier's real
+  WhatsApp Business number before launch.

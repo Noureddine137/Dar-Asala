@@ -175,3 +175,38 @@ export async function searchProducts(query: string): Promise<ProductCardDTO[]> {
   });
   return products.map(toCardDTO);
 }
+
+export type StoreReviewDTO = ReviewDTO & { productName: string; productSlug: string };
+
+export async function getStoreReviewSummary(): Promise<{
+  averageRating: number;
+  reviewCount: number;
+  reviews: StoreReviewDTO[];
+}> {
+  const reviews = await prisma.review.findMany({
+    include: { product: { select: { name: true, slug: true } } },
+    orderBy: { createdAt: "desc" },
+    take: 50,
+  });
+  const reviewCount = reviews.length;
+  const averageRating = reviewCount
+    ? Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount) * 10) / 10
+    : 0;
+
+  return {
+    averageRating,
+    reviewCount,
+    reviews: reviews.map((r) => ({
+      id: r.id,
+      rating: r.rating,
+      title: r.title,
+      content: r.content,
+      author: r.author,
+      country: r.country,
+      verifiedPurchase: r.verifiedPurchase,
+      createdAt: r.createdAt.toISOString(),
+      productName: r.product.name,
+      productSlug: r.product.slug,
+    })),
+  };
+}

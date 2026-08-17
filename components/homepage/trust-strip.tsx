@@ -1,20 +1,20 @@
-import { Hand, Leaf, Package, Truck } from "lucide-react";
+import { Heart, Award, Package, ShieldCheck } from "lucide-react";
 
 const ITEMS = [
-  { icon: Hand, label: "Handmade in Morocco" },
-  { icon: Leaf, label: "Genuine Full-Grain Leather" },
+  { icon: Heart, label: "Handmade in Morocco" },
+  { icon: Award, label: "Genuine Leather" },
   { icon: Package, label: "Small-Batch Production" },
-  { icon: Truck, label: "European Shipping" },
+  { icon: ShieldCheck, label: "Secure Payments" },
 ];
 
 export function TrustStrip() {
   return (
-    <section className="border-b border-sand/70 bg-ivory py-8 md:py-10">
-      <div className="container-page grid grid-cols-2 gap-y-6 md:grid-cols-4 md:gap-6">
+    <section className="border-b border-sand bg-cream py-6 md:py-8">
+      <div className="container-page grid grid-cols-4 gap-2 md:gap-6">
         {ITEMS.map(({ icon: Icon, label }) => (
-          <div key={label} className="flex flex-col items-center gap-2 text-center md:flex-row md:text-left">
-            <Icon className="h-5 w-5 shrink-0 text-camel" strokeWidth={1.5} />
-            <span className="text-xs font-medium uppercase tracking-wide text-charcoal/85 md:text-sm md:normal-case md:tracking-normal">
+          <div key={label} className="flex flex-col items-center gap-2 text-center">
+            <Icon className="h-5 w-5 shrink-0 text-leather" strokeWidth={1.5} />
+            <span className="text-[10px] font-medium leading-tight text-charcoal/80 sm:text-xs">
               {label}
             </span>
           </div>
