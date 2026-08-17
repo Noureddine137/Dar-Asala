@@ -117,6 +117,7 @@ model Collection {
   description String
   heroImage   String
   position    Int     @default(0)
+  active      Boolean @default(true)
 
   products CollectionProduct[]
 
@@ -189,6 +190,7 @@ model Order {
   total             Decimal     @db.Decimal(10, 2)
   currency           String      @default("EUR")
   shippingAddress   Json?
+  trackingNumber    String?
   stripeSessionId   String?     @unique
   stripePaymentIntentId String? @unique
 
@@ -229,6 +231,7 @@ model Review {
   author            String
   country            String
   verifiedPurchase Boolean  @default(true)
+  published         Boolean  @default(true)
   createdAt         DateTime @default(now())
 
   @@index([productId])
@@ -263,16 +266,91 @@ model DiscountCode {
 }
 
 model CustomOrderRequest {
-  id          String   @id @default(cuid())
-  name        String
-  email       String
-  leatherColor String?
-  dimensions  String?
-  strapLength String?
-  initials    String?
-  lining      String?
-  hardware    String?
-  message     String?
-  status      String   @default("new")
-  createdAt   DateTime @default(now())
+  id                  String   @id @default(cuid())
+  name                String
+  email               String
+  phone               String?
+  requestedProductName String?
+  leatherColor        String?
+  dimensions          String?
+  strapLength         String?
+  initials            String?
+  lining              String?
+  hardware            String?
+  message             String?
+  status              String   @default("new")
+  createdAt           DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// Store settings, homepage CMS content, shipping zones, testimonials
+// ---------------------------------------------------------------------------
+
+model StoreSettings {
+  id String @id @default("singleton")
+
+  storeName             String  @default("Dar Asala")
+  contactEmail          String  @default("hello@darasala.example")
+  contactPhone          String?
+  whatsappNumber        String?
+  businessAddress       String?
+  currency              String  @default("EUR")
+  freeShippingThreshold Decimal @db.Decimal(10, 2) @default(250)
+  defaultProductionTime String  @default("Made to order — handcrafted in 7-14 business days")
+  instagramUrl          String?
+  facebookUrl           String?
+  tiktokUrl             String?
+
+  brandOriginCountry     String @default("Morocco")
+  brandWorkshopLocations String @default("Marrakech and Fez")
+  leatherClaim            String @default("full-grain, vegetable-tanned leather")
+  artisanProcessClaim     String @default("hand-cut, hand-stitched and finished by a single artisan from start to finish")
+  productionModelClaim    String @default("small-batch, made to order")
+
+  heroHeadline String @default("Handcrafted in Morocco. Made to last.")
+  heroSubtitle String @default("Timeless leather bags shaped by our artisans, carried by you.")
+  heroImageUrl String @default("/images/hero/hero-main.webp")
+  heroCtaLabel String @default("Shop the Collection")
+  heroCtaHref  String @default("/collections/all")
+
+  brandStoryHeading  String @default("Slow by design.")
+  brandStoryBody     String @default("Each Dar Asala piece is shaped by artisans using techniques rooted in Moroccan leather craftsmanship.")
+  brandStoryImageUrl String @default("/images/brand/story.webp")
+
+  customOrderHeading  String @default("Made for You")
+  customOrderBody     String @default("Choose your leather, color, strap and selected finishing details, and our artisans will hand-build a piece around your choices.")
+  customOrderImageUrl String @default("/images/brand/custom-orders.webp")
+
+  newsletterHeading String @default("Letters from the Atelier")
+  newsletterBody    String @default("New pieces, artisan stories and private releases — straight to your inbox, roughly once a month.")
+
+  updatedAt DateTime @updatedAt
+}
+
+model ShippingZone {
+  id            String   @id @default(cuid())
+  region        String
+  countries     String
+  price         Decimal  @db.Decimal(10, 2) @default(0)
+  freeThreshold Decimal? @db.Decimal(10, 2)
+  estimate      String
+  carrier       String?
+  active        Boolean  @default(true)
+  position      Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Testimonial {
+  id         String  @id @default(cuid())
+  quote      String
+  authorName String
+  country    String
+  rating     Int     @default(5)
+  avatarUrl  String?
+  position   Int     @default(0)
+  active     Boolean @default(true)
+
+  createdAt DateTime @default(now())
 }

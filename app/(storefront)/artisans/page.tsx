@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { PageHeader } from "@/components/layout/page-header";
-import { BRAND_WORKSHOP_LOCATIONS } from "@/lib/content/business-claims";
+import { getStoreSettings } from "@/lib/content/store-settings";
 
 export const metadata: Metadata = {
   title: "Artisans",
@@ -26,12 +26,13 @@ const WORKSHOPS = [
   },
 ];
 
-export default function ArtisansPage() {
+export default async function ArtisansPage() {
+  const settings = await getStoreSettings();
   return (
     <div>
       <PageHeader
         title="Our Artisans"
-        description={`Dar Asala works with a small number of independent leather workshops across ${BRAND_WORKSHOP_LOCATIONS} — we don't publish invented biographies, but every bag is made by real hands, in small batches, start to finish.`}
+        description={`Dar Asala works with a small number of independent leather workshops across ${settings.brandWorkshopLocations} — we don't publish invented biographies, but every bag is made by real hands, in small batches, start to finish.`}
         breadcrumb={[{ label: "Home", href: "/" }, { label: "Artisans" }]}
       />
 

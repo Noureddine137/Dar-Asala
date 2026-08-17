@@ -40,7 +40,7 @@ function toCardDTO(product: ProductWithRelations): ProductCardDTO {
 }
 
 export async function getAllCollections(): Promise<CollectionDTO[]> {
-  const collections = await prisma.collection.findMany({ orderBy: { position: "asc" } });
+  const collections = await prisma.collection.findMany({ where: { active: true }, orderBy: { position: "asc" } });
   return collections;
 }
 
@@ -91,7 +91,7 @@ export async function getCollectionBySlug(
     where = { ...where, isBestSeller: true };
   } else {
     const found = await prisma.collection.findUnique({ where: { slug } });
-    if (!found) return null;
+    if (!found || !found.active) return null;
     collection = found;
     where = { ...where, collections: { some: { collection: { slug } } } };
   }

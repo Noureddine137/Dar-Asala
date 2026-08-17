@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db/prisma";
 import { updateCustomOrderStatus } from "@/lib/admin/actions";
+import { CUSTOM_ORDER_STATUSES, CUSTOM_ORDER_STATUS_LABELS } from "@/lib/admin/constants";
 
 export default async function AdminCustomRequestsPage() {
   const requests = await prisma.customOrderRequest.findMany({ orderBy: { createdAt: "desc" } });
@@ -20,13 +21,16 @@ export default async function AdminCustomRequestsPage() {
                   <div>
                     <p className="font-medium">{r.name}</p>
                     <p className="text-sm text-muted">{r.email}</p>
+                    {r.phone && <p className="text-sm text-muted">{r.phone}</p>}
+                    <p className="text-xs text-muted">{r.createdAt.toLocaleDateString("en-GB")}</p>
                   </div>
                   <form action={boundUpdate} className="flex items-center gap-2">
                     <select name="status" defaultValue={r.status} className="input w-auto">
-                      <option value="new">New</option>
-                      <option value="contacted">Contacted</option>
-                      <option value="in_progress">In Progress</option>
-                      <option value="closed">Closed</option>
+                      {CUSTOM_ORDER_STATUSES.map((s) => (
+                        <option key={s} value={s}>
+                          {CUSTOM_ORDER_STATUS_LABELS[s]}
+                        </option>
+                      ))}
                     </select>
                     <button type="submit" className="text-xs underline">
                       Update
@@ -34,6 +38,12 @@ export default async function AdminCustomRequestsPage() {
                   </form>
                 </div>
                 <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-charcoal/80 sm:grid-cols-3">
+                  {r.requestedProductName && (
+                    <div>
+                      <dt className="text-xs text-muted">Starting From</dt>
+                      <dd>{r.requestedProductName}</dd>
+                    </div>
+                  )}
                   {r.leatherColor && (
                     <div>
                       <dt className="text-xs text-muted">Leather Color</dt>
@@ -42,13 +52,13 @@ export default async function AdminCustomRequestsPage() {
                   )}
                   {r.dimensions && (
                     <div>
-                      <dt className="text-xs text-muted">Dimensions</dt>
+                      <dt className="text-xs text-muted">Size / Dimensions</dt>
                       <dd>{r.dimensions}</dd>
                     </div>
                   )}
                   {r.strapLength && (
                     <div>
-                      <dt className="text-xs text-muted">Strap Length</dt>
+                      <dt className="text-xs text-muted">Strap</dt>
                       <dd>{r.strapLength}</dd>
                     </div>
                   )}

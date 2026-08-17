@@ -14,6 +14,7 @@ import { ShippingInfo } from "@/components/product/shipping-info";
 import { ReviewsSection } from "@/components/product/reviews-section";
 import { RelatedProducts } from "@/components/product/related-products";
 import { getProductBySlug, getRelatedProducts, getStoreReviewSummary } from "@/lib/commerce/products";
+import { getStoreSettings } from "@/lib/content/store-settings";
 import { jsonLdScript } from "@/lib/utils/json-ld";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -43,7 +44,11 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const [related, storeReviews] = await Promise.all([getRelatedProducts(product), getStoreReviewSummary()]);
+  const [related, storeReviews, settings] = await Promise.all([
+    getRelatedProducts(product),
+    getStoreReviewSummary(),
+    getStoreSettings(),
+  ]);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -127,7 +132,12 @@ export default async function ProductPage({ params }: Props) {
 
       {/* Accordions: description, craftsmanship, materials, dimensions, care, shipping & returns */}
       <div className="container-page border-t border-sand pt-2">
-        <ProductAccordions product={product} />
+        <ProductAccordions
+          product={product}
+          originCountry={settings.brandOriginCountry}
+          artisanProcessClaim={settings.artisanProcessClaim}
+          freeShippingThreshold={Number(settings.freeShippingThreshold)}
+        />
       </div>
 
       {/* Before you order */}

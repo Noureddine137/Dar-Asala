@@ -24,10 +24,10 @@ function FacebookIcon({ className }: { className?: string }) {
   );
 }
 
-function PinterestIcon({ className }: { className?: string }) {
+function TikTokIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-      <path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.63 7.86 6.35 9.33-.09-.79-.17-2.01.03-2.88.18-.78 1.18-4.97 1.18-4.97s-.3-.6-.3-1.49c0-1.4.81-2.44 1.82-2.44.86 0 1.27.64 1.27 1.41 0 .86-.55 2.15-.83 3.34-.24 1 .5 1.81 1.48 1.81 1.78 0 3.15-1.87 3.15-4.58 0-2.39-1.72-4.07-4.18-4.07-2.85 0-4.52 2.13-4.52 4.34 0 .86.33 1.78.75 2.28.08.1.09.18.07.28-.08.32-.25 1-.29 1.14-.05.19-.15.23-.35.14-1.32-.61-2.14-2.53-2.14-4.08 0-3.32 2.41-6.37 6.96-6.37 3.65 0 6.49 2.6 6.49 6.08 0 3.63-2.29 6.55-5.46 6.55-1.07 0-2.07-.55-2.42-1.21l-.66 2.5c-.24.92-.88 2.08-1.31 2.78.99.3 2.03.47 3.12.47 5.52 0 10-4.48 10-10S17.52 2 12 2z" />
+      <path d="M16.6 5.82c-.83-.9-1.29-2.07-1.29-3.32h-3.02v13.6a2.6 2.6 0 1 1-1.85-2.49V10.5a5.6 5.6 0 1 0 4.87 5.55V9.1a6.9 6.9 0 0 0 4.02 1.28V7.36c-1-.05-1.94-.6-2.73-1.54z" />
     </svg>
   );
 }
@@ -54,7 +54,13 @@ function Section({ title, links, onNavigate }: { title: string; links: { label: 
   );
 }
 
-export function MobileMenu() {
+type MobileMenuProps = {
+  instagramUrl?: string | null;
+  facebookUrl?: string | null;
+  tiktokUrl?: string | null;
+};
+
+export function MobileMenu({ instagramUrl, facebookUrl, tiktokUrl }: MobileMenuProps) {
   const overlay = useUIStore((s) => s.overlay);
   const close = useUIStore((s) => s.close);
   const open = overlay === "menu";
@@ -89,17 +95,25 @@ export function MobileMenu() {
                 <span>EN / EUR</span>
                 <ChevronRight className="h-3 w-3 rotate-90" />
               </button>
-              <div className="mt-6 flex items-center gap-5">
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-charcoal">
-                  <InstagramIcon className="h-5 w-5" />
-                </a>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-charcoal">
-                  <FacebookIcon className="h-5 w-5" />
-                </a>
-                <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" aria-label="Pinterest" className="text-charcoal">
-                  <PinterestIcon className="h-5 w-5" />
-                </a>
-              </div>
+              {(instagramUrl || facebookUrl || tiktokUrl) && (
+                <div className="mt-6 flex items-center gap-5">
+                  {instagramUrl && (
+                    <a href={instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-charcoal">
+                      <InstagramIcon className="h-5 w-5" />
+                    </a>
+                  )}
+                  {facebookUrl && (
+                    <a href={facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-charcoal">
+                      <FacebookIcon className="h-5 w-5" />
+                    </a>
+                  )}
+                  {tiktokUrl && (
+                    <a href={tiktokUrl} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="text-charcoal">
+                      <TikTokIcon className="h-5 w-5" />
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </Dialog.Content>

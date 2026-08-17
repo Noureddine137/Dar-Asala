@@ -1,5 +1,4 @@
 import { colorLabel, sizeLabel, strapLabel } from "@/lib/utils/format";
-import { BRAND_ORIGIN_COUNTRY } from "@/lib/content/business-claims";
 import type { ProductDetailDTO } from "@/lib/commerce/types";
 
 const DESIGN_BY_CATEGORY: Record<string, string> = {
@@ -22,7 +21,7 @@ export function productDimensionsText(product: ProductDetailDTO): string {
   return sizes.map((s) => `${sizeLabel(s)}: ${DIMENSIONS_BY_SIZE[s] ?? "—"}`).join(" / ");
 }
 
-export function productDetailTiles(product: ProductDetailDTO) {
+export function productDetailTiles(product: ProductDetailDTO, originCountry: string) {
   const straps = Array.from(new Set(product.variants.map((v) => v.strap)));
 
   return [
@@ -32,7 +31,7 @@ export function productDetailTiles(product: ProductDetailDTO) {
     { label: "Dimensions", value: productDimensionsText(product) },
     { label: "Strap", value: straps.map(strapLabel).join(" · ") },
     { label: "Lining", value: "Cotton-twill lining" },
-    { label: "Origin", value: `Handmade in ${BRAND_ORIGIN_COUNTRY}` },
+    { label: "Origin", value: `Handmade in ${originCountry}` },
     { label: "Use", value: "Everyday & occasion" },
   ];
 }

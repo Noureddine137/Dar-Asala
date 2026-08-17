@@ -1,8 +1,10 @@
 import { productDetailTiles } from "@/lib/content/product-details";
+import { getStoreSettings } from "@/lib/content/store-settings";
 import type { ProductDetailDTO } from "@/lib/commerce/types";
 
-export function DetailsTiles({ product }: { product: ProductDetailDTO }) {
-  const tiles = productDetailTiles(product);
+export async function DetailsTiles({ product }: { product: ProductDetailDTO }) {
+  const settings = await getStoreSettings();
+  const tiles = productDetailTiles(product, settings.brandOriginCountry);
 
   return (
     <div>

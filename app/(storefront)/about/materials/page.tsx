@@ -8,8 +8,9 @@ export const metadata: Metadata = {
 
 // DEMO CONTENT — sourcing/process claims below (tannery origin, hardware
 // casting, thread type) are illustrative and unverified. Confirm against
-// your actual suppliers before launch; see lib/content/business-claims.ts
-// for the claims already centralized elsewhere on the site.
+// your actual suppliers before launch. The equivalent claims used elsewhere
+// on the site (origin, workshop locations, leather/process claims) are
+// centralized in Store Settings → Business Claims, editable from /admin.
 const MATERIALS = [
   {
     title: "Full-Grain Leather",

@@ -1,14 +1,17 @@
 import Image from "next/image";
 import { ButtonLink } from "@/components/ui/button";
-import { BRAND_WORKSHOP_LOCATIONS } from "@/lib/content/business-claims";
+import { getStoreSettings } from "@/lib/content/store-settings";
 
-export function BrandStory() {
+export async function BrandStory() {
+  const settings = await getStoreSettings();
+  const paragraphs = settings.brandStoryBody.split("\n").filter(Boolean);
+
   return (
     <section className="border-t border-sand py-16 md:py-24">
       <div className="container-page grid items-center gap-10 md:grid-cols-2 md:gap-16">
         <div className="relative order-2 aspect-[4/3] overflow-hidden rounded-sm md:order-1">
           <Image
-            src="/images/brand/story.webp"
+            src={settings.brandStoryImageUrl}
             alt="Warm, sunlit archway evoking a Moroccan riad workshop."
             fill
             sizes="(min-width: 768px) 45vw, 100vw"
@@ -18,17 +21,13 @@ export function BrandStory() {
         <div className="order-1 md:order-2">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-muted">Our Story</p>
           <h2 className="font-serif-display text-3xl leading-tight text-charcoal md:text-4xl">
-            Slow by design.
+            {settings.brandStoryHeading}
           </h2>
-          <p className="mt-5 text-base leading-relaxed text-charcoal/80">
-            Each Dar Asala piece is shaped by artisans using techniques rooted in Moroccan
-            leather craftsmanship — hand-cut, hand-stitched and finished one bag at a time in
-            small workshops across {BRAND_WORKSHOP_LOCATIONS}.
-          </p>
-          <p className="mt-4 text-base leading-relaxed text-charcoal/80">
-            We work in small batches by choice, not necessity: it is the only way to keep the
-            quality — and the people — behind every bag visible.
-          </p>
+          {paragraphs.map((p, i) => (
+            <p key={i} className="mt-5 text-base leading-relaxed text-charcoal/80 first:mt-5">
+              {p}
+            </p>
+          ))}
           <ButtonLink href="/about" variant="secondary" className="mt-8">
             Discover Our Story
           </ButtonLink>

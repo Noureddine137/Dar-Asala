@@ -12,7 +12,7 @@ const FIELDS = [
   { name: "hardware", label: "Hardware Finish", placeholder: "e.g. Antique brass" },
 ];
 
-export function CustomOrderForm() {
+export function CustomOrderForm({ productNames = [] }: { productNames?: string[] }) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState("");
 
@@ -74,6 +74,43 @@ export function CustomOrderForm() {
             required
             className="w-full border-b border-sand bg-transparent py-2 text-sm text-charcoal focus:border-charcoal focus:outline-none"
           />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <div>
+          <label htmlFor="phone" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted">
+            Phone / WhatsApp
+          </label>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            placeholder="Optional"
+            className="w-full border-b border-sand bg-transparent py-2 text-sm text-charcoal placeholder:text-muted/60 focus:border-charcoal focus:outline-none"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="requestedProductName"
+            className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted"
+          >
+            Starting From a Product?
+          </label>
+          <input
+            id="requestedProductName"
+            name="requestedProductName"
+            list="custom-order-products"
+            placeholder="Optional — e.g. Riad Shoulder Bag"
+            className="w-full border-b border-sand bg-transparent py-2 text-sm text-charcoal placeholder:text-muted/60 focus:border-charcoal focus:outline-none"
+          />
+          {productNames.length > 0 && (
+            <datalist id="custom-order-products">
+              {productNames.map((name) => (
+                <option key={name} value={name} />
+              ))}
+            </datalist>
+          )}
         </div>
       </div>
 

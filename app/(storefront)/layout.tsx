@@ -6,8 +6,11 @@ import { CartDrawer } from "@/components/cart/cart-drawer";
 import { SearchOverlay } from "@/components/navigation/search-overlay";
 import { CookieConsent } from "@/components/analytics/cookie-consent";
 import { AnalyticsScripts } from "@/components/analytics/analytics-scripts";
+import { getStoreSettings } from "@/lib/content/store-settings";
 
-export default function StorefrontLayout({ children }: { children: ReactNode }) {
+export default async function StorefrontLayout({ children }: { children: ReactNode }) {
+  const settings = await getStoreSettings();
+
   return (
     <>
       <a
@@ -17,7 +20,7 @@ export default function StorefrontLayout({ children }: { children: ReactNode }) 
         Skip to content
       </a>
       <Header />
-      <MobileMenu />
+      <MobileMenu instagramUrl={settings.instagramUrl} facebookUrl={settings.facebookUrl} tiktokUrl={settings.tiktokUrl} />
       <SearchOverlay />
       <CartDrawer />
       <main id="main-content" className="flex-1">

@@ -5,6 +5,8 @@ import { prisma } from "@/lib/db/prisma";
 const schema = z.object({
   name: z.string().min(1).max(200),
   email: z.string().email(),
+  phone: z.string().max(60).optional(),
+  requestedProductName: z.string().max(200).optional(),
   leatherColor: z.string().max(200).optional(),
   dimensions: z.string().max(200).optional(),
   strapLength: z.string().max(200).optional(),

@@ -33,7 +33,7 @@ function toCardDTO(product: ProductWithRelations): ProductCardDTO {
 
 function toDetailDTO(
   product: Prisma.ProductGetPayload<{
-    include: { images: true; variants: true; reviews: true };
+    include: { images: true; variants: true; reviews: { where: { published: true } } };
   }>
 ): ProductDetailDTO {
   const images = [...product.images].sort((a, b) => a.position - b.position);
@@ -133,7 +133,7 @@ export async function getBestSellers(): Promise<ProductCardDTO[]> {
 export async function getProductBySlug(slug: string): Promise<ProductDetailDTO | null> {
   const product = await prisma.product.findUnique({
     where: { slug },
-    include: { images: true, variants: true, reviews: true },
+    include: { images: true, variants: true, reviews: { where: { published: true } } },
   });
   if (!product) return null;
   return toDetailDTO(product);
@@ -184,6 +184,7 @@ export async function getStoreReviewSummary(): Promise<{
   reviews: StoreReviewDTO[];
 }> {
   const reviews = await prisma.review.findMany({
+    where: { published: true },
     include: { product: { select: { name: true, slug: true } } },
     orderBy: { createdAt: "desc" },
     take: 50,

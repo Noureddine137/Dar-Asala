@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/layout/page-header";
 import { CustomOrderForm } from "@/components/forms/custom-order-form";
+import { prisma } from "@/lib/db/prisma";
 
 export const metadata: Metadata = {
   title: "Custom Orders",
   description: "Commission a bespoke, hand-built Dar Asala bag — your leather, your details.",
 };
 
-export default function CustomOrdersPage() {
+export default async function CustomOrdersPage() {
+  const products = await prisma.product.findMany({
+    where: { status: "ACTIVE" },
+    select: { name: true },
+    orderBy: { name: "asc" },
+  });
+
   return (
     <div>
       <PageHeader
@@ -21,7 +28,7 @@ export default function CustomOrdersPage() {
           hand-build a piece around your choices. Submit the form below and an atelier specialist
           will follow up with options, timeline and pricing — typically 2–3 business days.
         </p>
-        <CustomOrderForm />
+        <CustomOrderForm productNames={products.map((p) => p.name)} />
       </div>
     </div>
   );

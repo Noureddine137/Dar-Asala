@@ -392,6 +392,8 @@ async function main() {
   await prisma.collection.deleteMany();
   await prisma.address.deleteMany();
   await prisma.customer.deleteMany();
+  await prisma.testimonial.deleteMany();
+  await prisma.shippingZone.deleteMany();
 
   for (const [index, c] of COLLECTIONS.entries()) {
     await prisma.collection.create({
@@ -478,6 +480,124 @@ async function main() {
   await prisma.newsletterSubscriber.createMany({
     data: [{ email: "demo@darasala.example", consented: true }],
     skipDuplicates: true,
+  });
+
+  // Store settings singleton — seeded once from the values that used to be hardcoded across
+  // components (lib/config.ts, lib/content/business-claims.ts, hero/brand-story/etc.). Re-running
+  // the seed will NOT overwrite admin edits, since this is an upsert that only creates on first run.
+  await prisma.storeSettings.upsert({
+    where: { id: "singleton" },
+    update: {},
+    create: {
+      id: "singleton",
+      heroHeadline: "Handcrafted in Morocco.\nMade to last.",
+      heroSubtitle: "Timeless leather bags shaped by our artisans, carried by you.",
+      heroImageUrl: "/images/hero/hero-main.webp",
+      heroCtaLabel: "Shop the Collection",
+      heroCtaHref: "/collections/all",
+      brandStoryHeading: "Slow by design.",
+      brandStoryBody:
+        "Each Dar Asala piece is shaped by artisans using techniques rooted in Moroccan leather craftsmanship — hand-cut, hand-stitched and finished one bag at a time in small workshops across Marrakech and Fez.\nWe work in small batches by choice, not necessity: it is the only way to keep the quality — and the people — behind every bag visible.",
+      brandStoryImageUrl: "/images/brand/story.webp",
+      customOrderHeading: "Made for You",
+      customOrderBody:
+        "Choose your leather, color, strap and selected finishing details, and our artisans will hand-build a piece around your choices.",
+      customOrderImageUrl: "/images/brand/custom-orders.webp",
+      newsletterHeading: "Letters from the Atelier",
+      newsletterBody:
+        "New pieces, artisan stories and private releases — straight to your inbox, roughly once a month.",
+    },
+  });
+
+  await prisma.shippingZone.createMany({
+    data: [
+      {
+        region: "European Union",
+        countries: "DE, FR, NL, BE, AT, ES, IT, PT, LU, IE",
+        price: 12,
+        freeThreshold: 250,
+        estimate: "3-7 business days",
+        carrier: "DHL Express",
+        active: true,
+        position: 0,
+      },
+      {
+        region: "United Kingdom",
+        countries: "GB",
+        price: 15,
+        freeThreshold: 250,
+        estimate: "4-8 business days",
+        carrier: "DHL Express",
+        active: true,
+        position: 1,
+      },
+      {
+        region: "United States",
+        countries: "US",
+        price: 20,
+        freeThreshold: 250,
+        estimate: "5-10 business days",
+        carrier: "DHL Express",
+        active: true,
+        position: 2,
+      },
+      {
+        region: "Switzerland",
+        countries: "CH",
+        price: 18,
+        freeThreshold: 250,
+        estimate: "4-8 business days",
+        carrier: "DHL Express",
+        active: true,
+        position: 3,
+      },
+    ],
+  });
+
+  await prisma.testimonial.createMany({
+    data: [
+      {
+        quote:
+          "The leather is even richer in person and the stitching is immaculate. This is the kind of bag you buy once and keep for a decade.",
+        rating: 5,
+        authorName: "Sophie B.",
+        country: "France",
+        avatarUrl: "/images/avatars/s-b.webp",
+        position: 0,
+      },
+      {
+        quote: "Structured but not stiff, and the size is perfect for daily use without ever feeling bulky.",
+        rating: 5,
+        authorName: "Laura M.",
+        country: "Germany",
+        avatarUrl: "/images/avatars/l-m.webp",
+        position: 1,
+      },
+      {
+        quote: "You can feel that it's handmade — small, honest details you just don't get from mass-produced bags.",
+        rating: 5,
+        authorName: "Amel K.",
+        country: "Belgium",
+        avatarUrl: "/images/avatars/a-k.webp",
+        position: 2,
+      },
+      {
+        quote: "Fits my laptop and still looks elegant for dinner afterwards. My most-used bag by far.",
+        rating: 4,
+        authorName: "Nora H.",
+        country: "Netherlands",
+        avatarUrl: "/images/avatars/n-h.webp",
+        position: 3,
+      },
+      {
+        quote: "Ordered a made-to-order piece and the wait was completely worth it. Beautifully packaged too.",
+        rating: 5,
+        authorName: "Elise R.",
+        country: "France",
+        avatarUrl: "/images/avatars/e-r.webp",
+        position: 4,
+      },
+    ],
   });
 
   console.log(`Seeded ${PRODUCTS.length} products across ${COLLECTIONS.length} collections.`);
