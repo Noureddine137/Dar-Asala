@@ -84,28 +84,40 @@ export async function POST(request: NextRequest) {
 
     const validItems = orderItemsData.filter((i) => i.productId);
     if (validItems.length > 0) {
-      await prisma.order.create({
-        data: {
-          orderNumber,
-          email: session.customer_details?.email ?? "unknown@darasala.example",
-          status: "PAID",
-          subtotal,
-          shipping,
-          total,
-          currency: (session.currency ?? "eur").toUpperCase(),
-          stripeSessionId: session.id,
-          stripePaymentIntentId:
-            typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id,
-          shippingAddress: session.customer_details?.address
-            ? JSON.parse(JSON.stringify(session.customer_details.address))
-            : undefined,
-          shippingCountry: actualCountry,
-          selectedShippingCountry: selectedCountry,
-          shippingCountryMismatch,
-          locale,
-          items: { create: validItems },
-        },
-      });
+      try {
+        await prisma.order.create({
+          data: {
+            orderNumber,
+            email: session.customer_details?.email ?? "unknown@darasala.example",
+            status: "PAID",
+            subtotal,
+            shipping,
+            total,
+            currency: (session.currency ?? "eur").toUpperCase(),
+            stripeSessionId: session.id,
+            stripePaymentIntentId:
+              typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id,
+            shippingAddress: session.customer_details?.address
+              ? JSON.parse(JSON.stringify(session.customer_details.address))
+              : undefined,
+            shippingCountry: actualCountry,
+            selectedShippingCountry: selectedCountry,
+            shippingCountryMismatch,
+            locale,
+            items: { create: validItems },
+          },
+        });
+      } catch (err) {
+        // stripeSessionId is @unique — a concurrent delivery of the same
+        // event (Stripe's own retries can arrive close together) can lose
+        // the findUnique race above and hit the DB constraint instead. That
+        // still guarantees only one Order row per session; treat it the
+        // same as the early-return above rather than surfacing a 500 that
+        // would just trigger another identical retry.
+        const isDuplicate =
+          typeof err === "object" && err !== null && "code" in err && (err as { code?: string }).code === "P2002";
+        if (!isDuplicate) throw err;
+      }
     }
   }
 

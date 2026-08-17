@@ -17,14 +17,12 @@ import { getTranslations } from "next-intl/server";
 import { getProductBySlug, getRelatedProducts, getStoreReviewSummary } from "@/lib/commerce/products";
 import { getLocalizedStoreSettings } from "@/lib/content/store-settings";
 import { jsonLdScript } from "@/lib/utils/json-ld";
-import { buildAlternates, OG_LOCALES, localizedUrl } from "@/lib/utils/seo";
+import { buildAlternates, OG_LOCALES, localizedUrl, absoluteImageUrl } from "@/lib/utils/seo";
 import type { Locale } from "@/i18n/routing";
 
 type Props = { params: Promise<{ slug: string; locale: string }> };
 
 export const revalidate = 60;
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug, locale } = await params;
@@ -63,7 +61,7 @@ export default async function ProductPage({ params }: Props) {
     "@type": "Product",
     name: product.name,
     description: product.shortDescription,
-    image: product.images.map((img) => `${siteUrl}${img.url}`),
+    image: product.images.map((img) => absoluteImageUrl(img.url)),
     sku: product.variants[0]?.sku,
     brand: { "@type": "Brand", name: "Dar Asala" },
     offers: {

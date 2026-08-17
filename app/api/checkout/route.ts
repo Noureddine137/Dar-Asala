@@ -7,6 +7,7 @@ import { prisma } from "@/lib/db/prisma";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/client";
 import { getShippingQuoteForCountry } from "@/lib/commerce/shipping";
 import { colorLabel, sizeLabel } from "@/lib/utils/format";
+import { absoluteImageUrl } from "@/lib/utils/seo";
 import { routing, type Locale } from "@/i18n/routing";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -78,7 +79,7 @@ export async function POST(request: NextRequest) {
           unit_amount: Math.round(unitPrice * 100),
           product_data: {
             name: `${variant.product.name} — ${colorLabel(variant.color, locale)} / ${sizeLabel(variant.size, locale)}`,
-            images: image ? [`${siteUrl}${image.url}`] : undefined,
+            images: image ? [absoluteImageUrl(image.url)] : undefined,
             metadata: { productId: variant.productId, variantId: variant.id },
           },
         },

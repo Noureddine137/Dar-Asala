@@ -95,17 +95,21 @@ for real photography before launch.
 ## What's stubbed / needs production setup
 
 - **Payments**: Stripe Checkout Sessions are fully wired (`/api/checkout`,
-  `/api/webhooks/stripe`), but need real `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` /
-  `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` values and a webhook endpoint registered in Stripe.
+  `/api/webhooks/stripe`), but need real `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` values
+  and a webhook endpoint registered in Stripe (see the production readiness checkpoint report
+  for the exact event list). `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` is declared but currently
+  unused — Checkout is a hosted redirect, not Stripe.js/Elements.
 - **Transactional email**: contact form and custom-order requests are stored/logged; wiring a
   real provider (e.g. Resend) only requires `RESEND_API_KEY`.
-- **Image uploads**: the admin product editor renders existing images but has no upload UI —
-  connect an object storage provider (S3, Cloudinary, Vercel Blob) to add one.
+- **Image uploads**: wired to Vercel Blob (`lib/admin/image-storage.ts`) — set
+  `BLOB_READ_WRITE_TOKEN` to enable uploads from the admin product editor; without it, images
+  can still be added by pasting a URL.
 - **Customer accounts**: no authentication system yet. Wishlist works via `localStorage`
   without an account; `/account` is a placeholder pointing at that and at order lookup via
   support.
 - **Legal pages** (`/legal/*`): placeholder copy, explicitly marked for legal review before
-  launch.
-- **WhatsApp**: the product page's custom-order box links to `wa.me/<NEXT_PUBLIC_WHATSAPP_NUMBER>`,
-  which defaults to a clearly-placeholder number (`lib/config.ts`) — set the atelier's real
-  WhatsApp Business number before launch.
+  launch. Also true of translated (DE/FR) legal, journal, and long-form editorial content —
+  those fall back to English with an on-page notice.
+- **Business/brand claims and contact details**: origin, artisan-process, and leather claims
+  (Admin → Settings) and the store's contact email/phone/social links/WhatsApp number
+  (Admin → Settings) are demo/placeholder values — confirm or replace before launch.

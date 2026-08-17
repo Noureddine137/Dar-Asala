@@ -11,6 +11,18 @@ export function localizedUrl(locale: Locale, path = "") {
 }
 
 /**
+ * Stored image URLs are either a relative static asset path (seeded demo
+ * catalog, e.g. "/images/products/...") or an already-absolute Vercel Blob
+ * URL (real admin-uploaded product photos, e.g.
+ * "https://xyz.public.blob.vercel-storage.com/..."). Only the former needs
+ * `siteUrl` prefixed — naively concatenating it onto an already-absolute
+ * URL produces a malformed string Stripe/JSON-LD both reject.
+ */
+export function absoluteImageUrl(url: string) {
+  return /^https?:\/\//i.test(url) ? url : `${siteUrl}${url}`;
+}
+
+/**
  * hreflang alternates for a Metadata `alternates` field: canonical points at
  * the current locale's own URL (never a different locale — each locale's
  * page is a first-class, independently indexable URL, not a redirect

@@ -4,7 +4,14 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // DATABASE_URL: Neon's *pooled* connection string (PgBouncer, transaction
+  // mode — hostname contains "-pooler") for normal query traffic from
+  // serverless functions. The direct (unpooled) URL used by `prisma migrate
+  // deploy`/`migrate dev` is configured in prisma.config.ts's
+  // `datasource.directUrl`, not here — schema-level `env("DIRECT_URL")`
+  // would hard-require that var for every Prisma CLI command, breaking
+  // local dev where a single, already-unpooled Postgres URL is enough.
+  url = env("DATABASE_URL")
 }
 
 // ---------------------------------------------------------------------------
