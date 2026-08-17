@@ -10,6 +10,7 @@ export default async function AdminNewsletterPage() {
           <h1 className="font-serif-display text-3xl">Newsletter Subscribers</h1>
           <p className="mt-1 text-sm text-muted">{subscribers.length} total</p>
         </div>
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- CSV file download, not a page navigation */}
         <a href="/admin/newsletter/export" className="rounded-sm border border-sand px-4 py-2 text-sm">
           Export CSV
         </a>
