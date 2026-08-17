@@ -1,18 +1,21 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-
-const OPTIONS = [
-  { value: "featured", label: "Featured" },
-  { value: "newest", label: "Newest" },
-  { value: "price-asc", label: "Price: Low to High" },
-  { value: "price-desc", label: "Price: High to Low" },
-];
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { usePathname, useRouter } from "@/i18n/navigation";
 
 export function SortSelect({ current }: { current: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const t = useTranslations("general");
+
+  const OPTIONS = [
+    { value: "featured", label: t("featured") },
+    { value: "newest", label: t("newest") },
+    { value: "price-asc", label: t("priceLowToHigh") },
+    { value: "price-desc", label: t("priceHighToLow") },
+  ];
 
   function handleChange(value: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -26,7 +29,7 @@ export function SortSelect({ current }: { current: string }) {
 
   return (
     <label className="flex items-center gap-2 text-xs sm:text-sm">
-      <span className="hidden font-semibold uppercase tracking-wide text-muted sm:inline">Sort by</span>
+      <span className="hidden font-semibold uppercase tracking-wide text-muted sm:inline">{t("sortBy")}</span>
       <select
         value={current}
         onChange={(e) => handleChange(e.target.value)}

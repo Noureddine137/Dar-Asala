@@ -1,13 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { useCartStore, cartSubtotal } from "@/lib/store/cart-store";
 import { useMounted } from "@/lib/hooks/use-mounted";
 import { formatPrice } from "@/lib/utils/format";
 import { ButtonLink } from "@/components/ui/button-link";
+import type { Locale } from "@/i18n/routing";
 
 export default function CheckoutPage() {
+  const locale = useLocale() as Locale;
+  const t = useTranslations("checkout");
   const items = useCartStore((s) => s.items);
   const shippingCountry = useCartStore((s) => s.shippingCountry);
   const router = useRouter();
@@ -33,15 +37,16 @@ export default function CheckoutPage() {
       body: JSON.stringify({
         items: items.map((i) => ({ variantId: i.variantId, quantity: i.quantity })),
         country: shippingCountry,
+        locale,
       }),
     })
       .then(async (res) => {
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? "Unable to start checkout.");
+        if (!res.ok) throw new Error(data.error ?? t("genericError"));
         window.location.href = data.url;
       })
       .catch((err) => {
-        setError(err instanceof Error ? err.message : "Unable to start checkout.");
+        setError(err instanceof Error ? err.message : t("genericError"));
         started.current = false;
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,9 +55,9 @@ export default function CheckoutPage() {
   if (error) {
     return (
       <div className="container-page flex flex-col items-center gap-4 py-24 text-center">
-        <h1 className="font-serif-display text-2xl text-charcoal">Checkout is unavailable</h1>
+        <h1 className="font-serif-display text-2xl text-charcoal">{t("unavailableTitle")}</h1>
         <p className="max-w-md text-sm text-muted">{error}</p>
-        <ButtonLink href="/cart">Back to Bag</ButtonLink>
+        <ButtonLink href="/cart">{t("backToBag")}</ButtonLink>
       </div>
     );
   }
@@ -60,11 +65,9 @@ export default function CheckoutPage() {
   if (mounted && items.length > 0 && !shippingCountry) {
     return (
       <div className="container-page flex flex-col items-center gap-4 py-24 text-center">
-        <h1 className="font-serif-display text-2xl text-charcoal">Select a shipping destination</h1>
-        <p className="max-w-md text-sm text-muted">
-          Please choose your delivery country in your bag before checking out.
-        </p>
-        <ButtonLink href="/cart">Back to Bag</ButtonLink>
+        <h1 className="font-serif-display text-2xl text-charcoal">{t("selectDestinationTitle")}</h1>
+        <p className="max-w-md text-sm text-muted">{t("selectDestinationBody")}</p>
+        <ButtonLink href="/cart">{t("backToBag")}</ButtonLink>
       </div>
     );
   }
@@ -72,10 +75,10 @@ export default function CheckoutPage() {
   return (
     <div className="container-page flex flex-col items-center gap-4 py-24 text-center">
       <h1 className="font-serif-display text-2xl text-charcoal">
-        {mounted ? "Redirecting to secure checkout…" : "Preparing your order…"}
+        {mounted ? t("redirecting") : t("preparingOrder")}
       </h1>
       {mounted && items.length > 0 && (
-        <p className="text-sm text-muted">Subtotal: {formatPrice(cartSubtotal(items))}</p>
+        <p className="text-sm text-muted">{t("subtotalLabel", { amount: formatPrice(cartSubtotal(items), "EUR", locale) })}</p>
       )}
     </div>
   );

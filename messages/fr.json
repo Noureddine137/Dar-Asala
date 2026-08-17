@@ -92,7 +92,35 @@
     "relatedProductLabel": "Voir {name}",
     "madeByHandIn": "Fabriqué à la main au {country}",
     "productStoryFallback": "Coupé, cousu et fini à la main, pièce par pièce.",
-    "productStoryBody": "Chaque {name} commence par une peau unique, sélectionnée à la main pour son grain et son caractère. Il est {claim}, produit {productionModel} plutôt qu'en série — pour que la qualité ne soit jamais diluée par le volume."
+    "productStoryBody": "Chaque {name} commence par une peau unique, sélectionnée à la main pour son grain et son caractère. Il est {claim}, produit {productionModel} plutôt qu'en série — pour que la qualité ne soit jamais diluée par le volume.",
+    "detailDesign": "Design",
+    "detailDesignFallback": "Sac en cuir structuré",
+    "detailLeather": "Cuir",
+    "detailLining": "Doublure",
+    "detailLiningValue": "Doublure en coton sergé",
+    "detailOrigin": "Origine",
+    "detailOriginValue": "Fabriqué à la main au {country}",
+    "detailUse": "Usage",
+    "detailUseValue": "Quotidien & occasions",
+    "designByCategory": {
+      "handbags": "Sac à main structuré à poignée",
+      "shoulder-bags": "Sac à épaule souplement structuré",
+      "crossbody-bags": "Sac bandoulière compact",
+      "tote-bags": "Cabas spacieux et souple",
+      "mini-bags": "Mini sac à poignée",
+      "leather-accessories": "Petite maroquinerie"
+    },
+    "craftsmanship": "Savoir-faire",
+    "craftsmanshipBody": "{claim} dans un petit atelier au {country} — de la peau brute jusqu'au bord bruni de la pièce finie.",
+    "dimensionsNote": "Les dimensions sont approximatives, comme il est d'usage pour des pièces fabriquées à la main.",
+    "shippingReturnsBody": "Livraison gratuite au sein de l'UE pour toute commande supérieure à {threshold}. {productionTime}. Retours acceptés sous 14 jours après livraison pour les articles non utilisés et non portés. Consultez nos pages Livraison et Retours pour tous les détails.",
+    "added": "Ajouté",
+    "newBadge": "Nouveau",
+    "bestSellerBadge": "Best-seller",
+    "addToWishlistNamed": "Ajouter {name} à la liste de souhaits",
+    "removeFromWishlistNamed": "Retirer {name} de la liste de souhaits",
+    "removeFromCartNamed": "Retirer {name} du panier",
+    "madeToOrderShort": "Fabriqué sur commande"
   },
   "cart": {
     "yourBag": "Votre Panier",
@@ -104,7 +132,7 @@
     "shippingUnavailable": "La livraison n'est actuellement pas disponible pour cette destination.",
     "freeShippingToDestination": "Livraison gratuite vers cette destination",
     "freeShippingUnlocked": "Vous avez débloqué la livraison gratuite",
-    "addMoreForFreeShipping": "Ajoutez {amount} de plus pour la livraison gratuite",
+    "addMoreForFreeShipping": "Encore <strong>{amount}</strong> pour la livraison gratuite",
     "subtotal": "Sous-total",
     "shipping": "Livraison",
     "total": "Total",
@@ -122,7 +150,9 @@
     "shopCollection": "Découvrir la collection",
     "shopTheCollection": "Découvrir la Collection",
     "secureCheckout": "Paiement Sécurisé",
-    "returns14Day": "Retours sous 14 jours"
+    "returns14Day": "Retours sous 14 jours",
+    "closeCart": "Fermer le panier",
+    "unableToCalculateShipping": "Impossible de calculer les frais de livraison pour le moment."
   },
   "checkout": {
     "preparingOrder": "Préparation de votre commande…",
@@ -131,7 +161,8 @@
     "unavailableTitle": "Paiement indisponible",
     "backToBag": "Retour au Panier",
     "selectDestinationTitle": "Sélectionnez une destination de livraison",
-    "selectDestinationBody": "Veuillez choisir votre pays de livraison dans votre panier avant de passer commande."
+    "selectDestinationBody": "Veuillez choisir votre pays de livraison dans votre panier avant de passer commande.",
+    "genericError": "Impossible de démarrer le paiement."
   },
   "search": {
     "search": "Recherche",
@@ -169,7 +200,16 @@
     "priceHighToLow": "Prix décroissant",
     "results": "{count, plural, =0 {Aucun résultat} one {# résultat} other {# résultats}}",
     "clearFilters": "Réinitialiser",
-    "resultsFound": "résultats"
+    "resultsFound": "résultats",
+    "applyFilters": "Appliquer les filtres",
+    "clearAll": "Tout effacer",
+    "closeFilters": "Fermer les filtres",
+    "filterDescription": "Filtrer les produits par couleur, taille et prix",
+    "showResults": "Afficher les résultats",
+    "sortBy": "Trier par",
+    "noProductsMatch": "Aucune pièce ne correspond à ces filtres",
+    "noProductsMatchBody": "Élargissez votre sélection ou parcourez l'ensemble de la collection.",
+    "productCount": "{count, plural, one {# produit} other {# produits}}"
   },
   "home": {
     "shopByCategory": "Acheter par Catégorie",

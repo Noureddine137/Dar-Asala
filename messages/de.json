@@ -92,7 +92,35 @@
     "relatedProductLabel": "{name} ansehen",
     "madeByHandIn": "Handgefertigt in {country}",
     "productStoryFallback": "Von Hand zugeschnitten, genäht und veredelt — Stück für Stück.",
-    "productStoryBody": "Jede {name} beginnt als einzelne, sorgfältig ausgewählte Häute mit Charakter. Sie wird {claim} gefertigt, {productionModel} statt in Massenproduktion — so verliert die Qualität nie an Substanz."
+    "productStoryBody": "Jede {name} beginnt als einzelne, sorgfältig ausgewählte Häute mit Charakter. Sie wird {claim} gefertigt, {productionModel} statt in Massenproduktion — so verliert die Qualität nie an Substanz.",
+    "detailDesign": "Design",
+    "detailDesignFallback": "Strukturierte Ledertasche",
+    "detailLeather": "Leder",
+    "detailLining": "Futter",
+    "detailLiningValue": "Baumwoll-Twill-Futter",
+    "detailOrigin": "Herkunft",
+    "detailOriginValue": "Handgefertigt in {country}",
+    "detailUse": "Verwendung",
+    "detailUseValue": "Alltag & besondere Anlässe",
+    "designByCategory": {
+      "handbags": "Strukturierte Handtasche mit Henkel",
+      "shoulder-bags": "Weich strukturierte Schultertasche",
+      "crossbody-bags": "Kompakte Umhängetasche",
+      "tote-bags": "Geräumiger, unstrukturierter Shopper",
+      "mini-bags": "Miniatur-Henkeltasche",
+      "leather-accessories": "Kleines Lederaccessoire"
+    },
+    "craftsmanship": "Handwerk",
+    "craftsmanshipBody": "{claim} in einer kleinen Werkstatt in {country} gefertigt — von der rohen Haut bis zur polierten Kante des fertigen Stücks.",
+    "dimensionsNote": "Die Maße sind ungefähre Angaben, wie bei handgefertigten Stücken üblich.",
+    "shippingReturnsBody": "Kostenloser Versand innerhalb der EU bei Bestellungen ab {threshold}. {productionTime}. Rückgabe innerhalb von 14 Tagen nach Lieferung bei unbenutzten, ungetragenen Artikeln möglich. Alle Details finden Sie auf unseren Seiten Versand und Rückgabe.",
+    "added": "Hinzugefügt",
+    "newBadge": "Neu",
+    "bestSellerBadge": "Bestseller",
+    "addToWishlistNamed": "{name} zur Wunschliste hinzufügen",
+    "removeFromWishlistNamed": "{name} von der Wunschliste entfernen",
+    "removeFromCartNamed": "{name} aus dem Warenkorb entfernen",
+    "madeToOrderShort": "Auf Bestellung gefertigt"
   },
   "cart": {
     "yourBag": "Ihre Tasche",
@@ -104,7 +132,7 @@
     "shippingUnavailable": "Der Versand an dieses Ziel ist derzeit nicht verfügbar.",
     "freeShippingToDestination": "Kostenloser Versand an dieses Ziel",
     "freeShippingUnlocked": "Sie haben kostenlosen Versand freigeschaltet",
-    "addMoreForFreeShipping": "Noch {amount} bis zum kostenlosen Versand",
+    "addMoreForFreeShipping": "Noch <strong>{amount}</strong> bis zum kostenlosen Versand",
     "subtotal": "Zwischensumme",
     "shipping": "Versand",
     "total": "Gesamtsumme",
@@ -122,7 +150,9 @@
     "shopCollection": "Kollektion entdecken",
     "shopTheCollection": "Zur Kollektion",
     "secureCheckout": "Sichere Kasse",
-    "returns14Day": "14 Tage Rückgaberecht"
+    "returns14Day": "14 Tage Rückgaberecht",
+    "closeCart": "Warenkorb schließen",
+    "unableToCalculateShipping": "Versandkosten können derzeit nicht berechnet werden."
   },
   "checkout": {
     "preparingOrder": "Ihre Bestellung wird vorbereitet…",
@@ -131,7 +161,8 @@
     "unavailableTitle": "Kasse derzeit nicht verfügbar",
     "backToBag": "Zurück zur Tasche",
     "selectDestinationTitle": "Lieferland auswählen",
-    "selectDestinationBody": "Bitte wählen Sie Ihr Lieferland in Ihrer Tasche aus, bevor Sie zur Kasse gehen."
+    "selectDestinationBody": "Bitte wählen Sie Ihr Lieferland in Ihrer Tasche aus, bevor Sie zur Kasse gehen.",
+    "genericError": "Checkout konnte nicht gestartet werden."
   },
   "search": {
     "search": "Suche",
@@ -169,7 +200,16 @@
     "priceHighToLow": "Preis absteigend",
     "results": "{count, plural, =0 {Keine Ergebnisse} one {# Ergebnis} other {# Ergebnisse}}",
     "clearFilters": "Zurücksetzen",
-    "resultsFound": "Ergebnisse"
+    "resultsFound": "Ergebnisse",
+    "applyFilters": "Filter anwenden",
+    "clearAll": "Alle zurücksetzen",
+    "closeFilters": "Filter schließen",
+    "filterDescription": "Produkte nach Farbe, Größe und Preis filtern",
+    "showResults": "Ergebnisse anzeigen",
+    "sortBy": "Sortieren nach",
+    "noProductsMatch": "Keine Stücke entsprechen diesen Filtern",
+    "noProductsMatchBody": "Erweitern Sie Ihre Auswahl oder durchstöbern Sie die gesamte Kollektion.",
+    "productCount": "{count, plural, one {# Produkt} other {# Produkte}}"
   },
   "home": {
     "shopByCategory": "Nach Kategorie einkaufen",

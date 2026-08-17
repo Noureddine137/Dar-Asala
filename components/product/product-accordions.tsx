@@ -3,9 +3,11 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { productDimensionsText } from "@/lib/content/product-details";
 import { formatPrice } from "@/lib/utils/format";
 import type { ProductDetailDTO } from "@/lib/commerce/types";
+import type { Locale } from "@/i18n/routing";
 
 function Item({ value, title, children }: { value: string; title: string; children: ReactNode }) {
   return (
@@ -31,31 +33,35 @@ type Props = {
 };
 
 export function ProductAccordions({ product, originCountry, artisanProcessClaim, freeShippingThreshold }: Props) {
+  const locale = useLocale() as Locale;
+  const t = useTranslations("product");
+  const claim = artisanProcessClaim.charAt(0).toUpperCase() + artisanProcessClaim.slice(1);
+
   return (
     <Accordion.Root type="single" collapsible defaultValue="description" className="mt-10">
-      <Item value="description" title="Description">
+      <Item value="description" title={t("description")}>
         <p>{product.description}</p>
       </Item>
-      <Item value="craftsmanship" title="Craftsmanship">
-        <p>
-          {artisanProcessClaim.charAt(0).toUpperCase() + artisanProcessClaim.slice(1)} in a small
-          workshop in {originCountry} — from raw hide to the burnished edge of the final piece.
-        </p>
+      <Item value="craftsmanship" title={t("craftsmanship")}>
+        <p>{t("craftsmanshipBody", { claim, country: originCountry })}</p>
       </Item>
-      <Item value="materials" title="Materials">
+      <Item value="materials" title={t("materials")}>
         <p>{product.materials}</p>
       </Item>
-      <Item value="dimensions" title="Dimensions">
-        <p>{productDimensionsText(product)}. Measurements are approximate, as expected with handmade pieces.</p>
+      <Item value="dimensions" title={t("dimensions")}>
+        <p>
+          {productDimensionsText(product, locale)}. {t("dimensionsNote")}
+        </p>
       </Item>
-      <Item value="care" title="Care">
+      <Item value="care" title={t("care")}>
         <p>{product.careInstructions}</p>
       </Item>
-      <Item value="shipping" title="Shipping & Returns">
+      <Item value="shipping" title={t("shippingReturns")}>
         <p>
-          Free shipping within the EU on orders over {formatPrice(freeShippingThreshold)}.{" "}
-          {product.productionTime}. Returns accepted within 14 days of delivery on unused, unworn
-          items. See our Shipping and Returns pages for full details.
+          {t("shippingReturnsBody", {
+            threshold: formatPrice(freeShippingThreshold, product.currency, locale),
+            productionTime: product.productionTime,
+          })}
         </p>
       </Item>
     </Accordion.Root>

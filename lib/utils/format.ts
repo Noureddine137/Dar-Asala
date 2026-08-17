@@ -1,48 +1,49 @@
-export function formatPrice(amount: number | string, currency = "EUR") {
+import { INTL_LOCALE_TAGS, DEFAULT_LOCALE, type Locale } from "@/i18n/routing";
+
+export function formatPrice(amount: number | string, currency = "EUR", locale: Locale = DEFAULT_LOCALE) {
   const value = typeof amount === "string" ? Number(amount) : amount;
-  return new Intl.NumberFormat("en-DE", {
+  return new Intl.NumberFormat(INTL_LOCALE_TAGS[locale], {
     style: "currency",
     currency,
     minimumFractionDigits: 2,
   }).format(value);
 }
 
-const COLOR_LABELS: Record<string, string> = {
-  COGNAC: "Cognac",
-  DARK_BROWN: "Dark Brown",
-  BLACK: "Black",
-  OLIVE: "Olive",
-  NATURAL: "Natural",
+const COLOR_LABELS: Record<Locale, Record<string, string>> = {
+  en: { COGNAC: "Cognac", DARK_BROWN: "Dark Brown", BLACK: "Black", OLIVE: "Olive", NATURAL: "Natural" },
+  de: { COGNAC: "Cognac", DARK_BROWN: "Dunkelbraun", BLACK: "Schwarz", OLIVE: "Oliv", NATURAL: "Natur" },
+  fr: { COGNAC: "Cognac", DARK_BROWN: "Brun foncé", BLACK: "Noir", OLIVE: "Olive", NATURAL: "Naturel" },
 };
 
-const SIZE_LABELS: Record<string, string> = {
-  MINI: "Mini",
-  MEDIUM: "Medium",
-  LARGE: "Large",
+const SIZE_LABELS: Record<Locale, Record<string, string>> = {
+  en: { MINI: "Mini", MEDIUM: "Medium", LARGE: "Large" },
+  de: { MINI: "Mini", MEDIUM: "Medium", LARGE: "Groß" },
+  fr: { MINI: "Mini", MEDIUM: "Moyen", LARGE: "Grand" },
 };
 
-const HARDWARE_LABELS: Record<string, string> = {
-  BRASS: "Brass",
-  ANTIQUE_BRASS: "Antique Brass",
+const HARDWARE_LABELS: Record<Locale, Record<string, string>> = {
+  en: { BRASS: "Brass", ANTIQUE_BRASS: "Antique Brass" },
+  de: { BRASS: "Messing", ANTIQUE_BRASS: "Antikmessing" },
+  fr: { BRASS: "Laiton", ANTIQUE_BRASS: "Laiton vieilli" },
 };
 
-const STRAP_LABELS: Record<string, string> = {
-  STANDARD: "Standard",
-  LONG: "Long / Crossbody",
-  ADJUSTABLE: "Adjustable",
+const STRAP_LABELS: Record<Locale, Record<string, string>> = {
+  en: { STANDARD: "Standard", LONG: "Long / Crossbody", ADJUSTABLE: "Adjustable" },
+  de: { STANDARD: "Standard", LONG: "Lang / Umhänge", ADJUSTABLE: "Verstellbar" },
+  fr: { STANDARD: "Standard", LONG: "Long / Bandoulière", ADJUSTABLE: "Réglable" },
 };
 
-export function colorLabel(value: string) {
-  return COLOR_LABELS[value] ?? value;
+export function colorLabel(value: string, locale: Locale = DEFAULT_LOCALE) {
+  return COLOR_LABELS[locale][value] ?? value;
 }
-export function sizeLabel(value: string) {
-  return SIZE_LABELS[value] ?? value;
+export function sizeLabel(value: string, locale: Locale = DEFAULT_LOCALE) {
+  return SIZE_LABELS[locale][value] ?? value;
 }
-export function hardwareLabel(value: string) {
-  return HARDWARE_LABELS[value] ?? value;
+export function hardwareLabel(value: string, locale: Locale = DEFAULT_LOCALE) {
+  return HARDWARE_LABELS[locale][value] ?? value;
 }
-export function strapLabel(value: string) {
-  return STRAP_LABELS[value] ?? value;
+export function strapLabel(value: string, locale: Locale = DEFAULT_LOCALE) {
+  return STRAP_LABELS[locale][value] ?? value;
 }
 
 const SWATCH_HEX: Record<string, string> = {

@@ -1,14 +1,7 @@
+import { getTranslations } from "next-intl/server";
 import { colorLabel, sizeLabel, strapLabel } from "@/lib/utils/format";
 import type { ProductDetailDTO } from "@/lib/commerce/types";
-
-const DESIGN_BY_CATEGORY: Record<string, string> = {
-  handbags: "Structured top-handle handbag",
-  "shoulder-bags": "Softly structured shoulder bag",
-  "crossbody-bags": "Compact crossbody bag",
-  "tote-bags": "Spacious, unstructured tote",
-  "mini-bags": "Miniature top-handle bag",
-  "leather-accessories": "Small leather good",
-};
+import type { Locale } from "@/i18n/routing";
 
 const DIMENSIONS_BY_SIZE: Record<string, string> = {
   MINI: "18 × 14 × 7 cm",
@@ -16,22 +9,24 @@ const DIMENSIONS_BY_SIZE: Record<string, string> = {
   LARGE: "38 × 28 × 14 cm",
 };
 
-export function productDimensionsText(product: ProductDetailDTO): string {
+export function productDimensionsText(product: ProductDetailDTO, locale: Locale): string {
   const sizes = Array.from(new Set(product.variants.map((v) => v.size)));
-  return sizes.map((s) => `${sizeLabel(s)}: ${DIMENSIONS_BY_SIZE[s] ?? "—"}`).join(" / ");
+  return sizes.map((s) => `${sizeLabel(s, locale)}: ${DIMENSIONS_BY_SIZE[s] ?? "—"}`).join(" / ");
 }
 
-export function productDetailTiles(product: ProductDetailDTO, originCountry: string) {
+export async function productDetailTiles(product: ProductDetailDTO, originCountry: string, locale: Locale) {
   const straps = Array.from(new Set(product.variants.map((v) => v.strap)));
+  const t = await getTranslations({ locale, namespace: "product" });
+  const designByCategory = t.raw("designByCategory") as Record<string, string>;
 
   return [
-    { label: "Design", value: DESIGN_BY_CATEGORY[product.category] ?? "Structured leather bag" },
-    { label: "Leather", value: product.materials.split(".")[0] + "." },
-    { label: "Colors", value: product.colors.map(colorLabel).join(" · ") },
-    { label: "Dimensions", value: productDimensionsText(product) },
-    { label: "Strap", value: straps.map(strapLabel).join(" · ") },
-    { label: "Lining", value: "Cotton-twill lining" },
-    { label: "Origin", value: `Handmade in ${originCountry}` },
-    { label: "Use", value: "Everyday & occasion" },
+    { label: t("detailDesign"), value: designByCategory[product.category] ?? t("detailDesignFallback") },
+    { label: t("detailLeather"), value: product.materials.split(".")[0] + "." },
+    { label: t("color"), value: product.colors.map((c) => colorLabel(c, locale)).join(" · ") },
+    { label: t("dimensions"), value: productDimensionsText(product, locale) },
+    { label: t("strap"), value: straps.map((s) => strapLabel(s, locale)).join(" · ") },
+    { label: t("detailLining"), value: t("detailLiningValue") },
+    { label: t("detailOrigin"), value: t("detailOriginValue", { country: originCountry }) },
+    { label: t("detailUse"), value: t("detailUseValue") },
   ];
 }

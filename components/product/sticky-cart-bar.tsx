@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
 import { formatPrice } from "@/lib/utils/format";
 import { Button } from "@/components/ui/button";
+import type { Locale } from "@/i18n/routing";
 
 export function StickyMobileCartBar({
   show,
@@ -25,6 +27,8 @@ export function StickyMobileCartBar({
   justAdded: boolean;
   onAdd: () => void;
 }) {
+  const locale = useLocale() as Locale;
+  const t = useTranslations("product");
   if (!show) return null;
 
   return (
@@ -40,7 +44,7 @@ export function StickyMobileCartBar({
         <p className="truncate text-xs text-muted">{optionsLabel}</p>
       </div>
       <Button onClick={onAdd} size="md" className="shrink-0">
-        {justAdded ? "Added" : formatPrice(price, currency)}
+        {justAdded ? t("added") : formatPrice(price, currency, locale)}
       </Button>
     </div>
   );

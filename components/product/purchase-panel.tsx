@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Star, Heart, Minus, Plus } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/cn";
 import { colorLabel, colorSwatchHex, formatPrice, hardwareLabel, sizeLabel, strapLabel } from "@/lib/utils/format";
 import { dimensionOptions, defaultSelection, findVariant, type VariantSelection } from "@/lib/commerce/variant-utils";
@@ -11,8 +12,11 @@ import { useWishlistStore } from "@/lib/store/wishlist-store";
 import { Button } from "@/components/ui/button";
 import { StickyMobileCartBar } from "./sticky-cart-bar";
 import type { ProductDetailDTO } from "@/lib/commerce/types";
+import type { Locale } from "@/i18n/routing";
 
 export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
+  const locale = useLocale() as Locale;
+  const t = useTranslations("product");
   const options = useMemo(() => dimensionOptions(product.variants), [product.variants]);
   const [selection, setSelection] = useState<VariantSelection>(() => defaultSelection(product.variants));
   const [quantity, setQuantity] = useState(1);
@@ -42,10 +46,7 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
   const variant = findVariant(product.variants, selection);
   const image = product.images.find((img) => img.id === variant.imageId) ?? product.primaryImage ?? product.images[0];
   const available = variant.stock > 0;
-  const statusLabel =
-    available && !variant.isMadeToOrder
-      ? "In stock — ships in 1–3 business days"
-      : "Made to order — handcrafted in 7–14 business days";
+  const statusLabel = available && !variant.isMadeToOrder ? t("inStock") : t("madeToOrder");
 
   const steps: string[] = [];
   if (options.colors.length > 1) steps.push("color");
@@ -65,8 +66,8 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
         imageAlt: image?.alt ?? product.name,
         color: variant.color,
         size: variant.size,
-        strap: strapLabel(variant.strap),
-        hardware: hardwareLabel(variant.hardware),
+        strap: strapLabel(variant.strap, locale),
+        hardware: hardwareLabel(variant.hardware, locale),
         price: variant.price,
         currency: product.currency,
         isMadeToOrder: variant.isMadeToOrder,
@@ -93,18 +94,18 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
         </span>
         {product.reviewCount > 0 ? (
           <span>
-            {product.averageRating.toFixed(1)} ({product.reviewCount} Review{product.reviewCount === 1 ? "" : "s"})
+            {product.averageRating.toFixed(1)} ({t("reviewCount", { count: product.reviewCount })})
           </span>
         ) : (
-          <span>Be the first to review</span>
+          <span>{t("beFirstToReview")}</span>
         )}
       </a>
 
       <div className="mt-4 flex items-baseline gap-3">
-        <span className="text-2xl font-medium text-charcoal">{formatPrice(variant.price, product.currency)}</span>
+        <span className="text-2xl font-medium text-charcoal">{formatPrice(variant.price, product.currency, locale)}</span>
         {product.compareAtPrice && (
           <span className="text-base text-muted line-through">
-            {formatPrice(product.compareAtPrice, product.currency)}
+            {formatPrice(product.compareAtPrice, product.currency, locale)}
           </span>
         )}
       </div>
@@ -115,8 +116,8 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
         {options.colors.length > 1 && (
           <div>
             <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted">
-              {stepNumber("color")}. Color —{" "}
-              <span className="normal-case tracking-normal text-charcoal">{colorLabel(selection.color)}</span>
+              {stepNumber("color")}. {t("color")} —{" "}
+              <span className="normal-case tracking-normal text-charcoal">{colorLabel(selection.color, locale)}</span>
             </p>
             <div className="flex flex-wrap gap-2.5">
               {options.colors.map((c) => (
@@ -125,7 +126,7 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
                   type="button"
                   onClick={() => setSelection((s) => ({ ...s, color: c }))}
                   aria-pressed={selection.color === c}
-                  aria-label={colorLabel(c)}
+                  aria-label={colorLabel(c, locale)}
                   className="flex h-11 w-11 items-center justify-center rounded-full"
                 >
                   <span
@@ -144,7 +145,7 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
         {options.sizes.length > 1 && (
           <div>
             <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted">
-              {stepNumber("size")}. Size
+              {stepNumber("size")}. {t("size")}
             </p>
             <div className="flex flex-wrap gap-2">
               {options.sizes.map((s) => (
@@ -160,7 +161,7 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
                       : "border-sand text-charcoal hover:border-charcoal"
                   )}
                 >
-                  {sizeLabel(s)}
+                  {sizeLabel(s, locale)}
                 </button>
               ))}
             </div>
@@ -170,7 +171,7 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
         {options.straps.length > 1 && (
           <div>
             <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted">
-              {stepNumber("strap")}. Strap
+              {stepNumber("strap")}. {t("strap")}
             </p>
             <div className="flex flex-wrap gap-2">
               {options.straps.map((s) => (
@@ -186,7 +187,7 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
                       : "border-sand text-charcoal hover:border-charcoal"
                   )}
                 >
-                  {strapLabel(s)}
+                  {strapLabel(s, locale)}
                 </button>
               ))}
             </div>
@@ -196,7 +197,7 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
         {options.hardwares.length > 1 && (
           <div>
             <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted">
-              {stepNumber("hardware")}. Hardware
+              {stepNumber("hardware")}. {t("hardware")}
             </p>
             <div className="flex flex-wrap gap-2">
               {options.hardwares.map((h) => (
@@ -212,7 +213,7 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
                       : "border-sand text-charcoal hover:border-charcoal"
                   )}
                 >
-                  {hardwareLabel(h)}
+                  {hardwareLabel(h, locale)}
                 </button>
               ))}
             </div>
@@ -221,12 +222,12 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
       </div>
 
       <div className="mt-6 flex items-center gap-3">
-        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">Quantity</span>
+        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">{t("quantity")}</span>
         <div className="flex items-center rounded-sm border border-sand">
           <button
             type="button"
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-            aria-label="Decrease quantity"
+            aria-label={t("decreaseQuantity")}
             className="flex h-11 w-10 items-center justify-center text-charcoal"
           >
             <Minus className="h-4 w-4" />
@@ -237,7 +238,7 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
           <button
             type="button"
             onClick={() => setQuantity((q) => q + 1)}
-            aria-label="Increase quantity"
+            aria-label={t("increaseQuantity")}
             className="flex h-11 w-10 items-center justify-center text-charcoal"
           >
             <Plus className="h-4 w-4" />
@@ -247,14 +248,16 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
 
       <div ref={ctaRef} className="mt-4 flex items-stretch gap-3">
         <Button size="lg" onClick={handleAddToCart} className="flex-1">
-          {justAdded ? "Added to Cart" : `Add to Cart — ${formatPrice(variant.price * quantity, product.currency)}`}
+          {justAdded
+            ? t("addedToCart")
+            : t("addToCartWithPrice", { price: formatPrice(variant.price * quantity, product.currency, locale) })}
         </Button>
 
         <button
           type="button"
           onClick={() => toggleWishlist(product.slug)}
           aria-pressed={isWishlisted}
-          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          aria-label={isWishlisted ? t("removeFromWishlist") : t("addToWishlist")}
           className="flex h-14 w-14 shrink-0 items-center justify-center rounded-sm border border-sand text-charcoal"
         >
           <Heart className={cn("h-5 w-5", isWishlisted && "fill-terracotta text-terracotta")} />
@@ -268,7 +271,7 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
         image={image?.url ?? ""}
         imageAlt={image?.alt ?? product.name}
         name={product.name}
-        optionsLabel={[colorLabel(variant.color), sizeLabel(variant.size)].join(" / ")}
+        optionsLabel={[colorLabel(variant.color, locale), sizeLabel(variant.size, locale)].join(" / ")}
         price={variant.price * quantity}
         currency={product.currency}
         justAdded={justAdded}

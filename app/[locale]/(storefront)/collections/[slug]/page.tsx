@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { SortSelect } from "@/components/collection/sort-select";
 import { CollectionFilterSidebar, CollectionFilterTrigger } from "@/components/collection/collection-filters";
 import { ProductGrid } from "@/components/collection/product-grid";
@@ -47,15 +48,14 @@ export default async function CollectionPage({ params, searchParams }: Props) {
   if (!data) notFound();
 
   const { collection, products } = data;
+  const t = await getTranslations({ locale, namespace: "general" });
 
   return (
     <div className="bg-cream">
       <div className="container-page pb-6 pt-8 md:pt-12">
         <h1 className="font-serif-display text-3xl text-charcoal md:text-4xl">{collection.title}</h1>
         <p className="mt-2 max-w-xl text-sm text-charcoal/75 md:text-base">{collection.description}</p>
-        <p className="mt-3 text-xs text-muted md:text-sm">
-          {products.length} {products.length === 1 ? "product" : "products"}
-        </p>
+        <p className="mt-3 text-xs text-muted md:text-sm">{t("productCount", { count: products.length })}</p>
 
         <div className="mt-5 flex items-center justify-between gap-3 border-y border-sand py-3">
           <CollectionFilterTrigger />

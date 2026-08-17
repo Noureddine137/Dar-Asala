@@ -92,7 +92,35 @@
     "relatedProductLabel": "View {name}",
     "madeByHandIn": "Made by Hand in {country}",
     "productStoryFallback": "Cut, stitched and finished by hand, one piece at a time.",
-    "productStoryBody": "Every {name} begins as a single hide, hand-selected for grain and character. It is {claim}, produced {productionModel} rather than mass runs — so quality never gets diluted by volume."
+    "productStoryBody": "Every {name} begins as a single hide, hand-selected for grain and character. It is {claim}, produced {productionModel} rather than mass runs — so quality never gets diluted by volume.",
+    "detailDesign": "Design",
+    "detailDesignFallback": "Structured leather bag",
+    "detailLeather": "Leather",
+    "detailLining": "Lining",
+    "detailLiningValue": "Cotton-twill lining",
+    "detailOrigin": "Origin",
+    "detailOriginValue": "Handmade in {country}",
+    "detailUse": "Use",
+    "detailUseValue": "Everyday & occasion",
+    "designByCategory": {
+      "handbags": "Structured top-handle handbag",
+      "shoulder-bags": "Softly structured shoulder bag",
+      "crossbody-bags": "Compact crossbody bag",
+      "tote-bags": "Spacious, unstructured tote",
+      "mini-bags": "Miniature top-handle bag",
+      "leather-accessories": "Small leather good"
+    },
+    "craftsmanship": "Craftsmanship",
+    "craftsmanshipBody": "{claim} in a small workshop in {country} — from raw hide to the burnished edge of the final piece.",
+    "dimensionsNote": "Measurements are approximate, as expected with handmade pieces.",
+    "shippingReturnsBody": "Free shipping within the EU on orders over {threshold}. {productionTime}. Returns accepted within 14 days of delivery on unused, unworn items. See our Shipping and Returns pages for full details.",
+    "added": "Added",
+    "newBadge": "New",
+    "bestSellerBadge": "Best Seller",
+    "addToWishlistNamed": "Add {name} to wishlist",
+    "removeFromWishlistNamed": "Remove {name} from wishlist",
+    "removeFromCartNamed": "Remove {name} from cart",
+    "madeToOrderShort": "Made to order"
   },
   "cart": {
     "yourBag": "Your Bag",
@@ -104,7 +132,7 @@
     "shippingUnavailable": "Shipping is currently unavailable for this destination.",
     "freeShippingToDestination": "Free shipping to this destination",
     "freeShippingUnlocked": "You've unlocked free shipping",
-    "addMoreForFreeShipping": "Add {amount} more for free shipping",
+    "addMoreForFreeShipping": "Add <strong>{amount}</strong> more for free shipping",
     "subtotal": "Subtotal",
     "shipping": "Shipping",
     "total": "Total",
@@ -122,7 +150,9 @@
     "shopCollection": "Shop the collection",
     "shopTheCollection": "Shop the Collection",
     "secureCheckout": "Secure Checkout",
-    "returns14Day": "14-Day Returns"
+    "returns14Day": "14-Day Returns",
+    "closeCart": "Close cart",
+    "unableToCalculateShipping": "Unable to calculate shipping right now."
   },
   "checkout": {
     "preparingOrder": "Preparing your order…",
@@ -131,7 +161,8 @@
     "unavailableTitle": "Checkout is unavailable",
     "backToBag": "Back to Bag",
     "selectDestinationTitle": "Select a shipping destination",
-    "selectDestinationBody": "Please choose your delivery country in your bag before checking out."
+    "selectDestinationBody": "Please choose your delivery country in your bag before checking out.",
+    "genericError": "Unable to start checkout."
   },
   "search": {
     "search": "Search",
@@ -169,7 +200,16 @@
     "priceHighToLow": "Price: High to Low",
     "results": "{count, plural, =0 {No results} one {# result} other {# results}}",
     "clearFilters": "Clear",
-    "resultsFound": "results"
+    "resultsFound": "results",
+    "applyFilters": "Apply Filters",
+    "clearAll": "Clear all",
+    "closeFilters": "Close filters",
+    "filterDescription": "Filter products by color, size and price",
+    "showResults": "Show Results",
+    "sortBy": "Sort by",
+    "noProductsMatch": "No pieces match those filters",
+    "noProductsMatchBody": "Try widening your selection, or browse the full collection instead.",
+    "productCount": "{count, plural, one {# product} other {# products}}"
   },
   "home": {
     "shopByCategory": "Shop by Category",

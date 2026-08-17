@@ -3,10 +3,14 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { Minus, Plus, X } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useCartStore, type CartItem } from "@/lib/store/cart-store";
 import { colorLabel, sizeLabel, formatPrice } from "@/lib/utils/format";
+import type { Locale } from "@/i18n/routing";
 
 export function CartLineItem({ item, onNavigate }: { item: CartItem; onNavigate?: () => void }) {
+  const locale = useLocale() as Locale;
+  const t = useTranslations("product");
   const updateQuantity = useCartStore((s) => s.updateQuantity);
   const removeItem = useCartStore((s) => s.removeItem);
 
@@ -30,19 +34,19 @@ export function CartLineItem({ item, onNavigate }: { item: CartItem; onNavigate?
               {item.name}
             </Link>
             <p className="mt-0.5 truncate text-xs text-muted">
-              {colorLabel(item.color)} / {sizeLabel(item.size)}
+              {colorLabel(item.color, locale)} / {sizeLabel(item.size, locale)}
             </p>
             {(item.strap || item.hardware) && (
               <p className="truncate text-xs text-muted">
                 {[item.strap, item.hardware].filter(Boolean).join(" / ")}
               </p>
             )}
-            {item.isMadeToOrder && <p className="mt-0.5 text-xs text-olive">Made to order</p>}
+            {item.isMadeToOrder && <p className="mt-0.5 text-xs text-olive">{t("madeToOrderShort")}</p>}
           </div>
           <button
             type="button"
             onClick={() => removeItem(item.variantId)}
-            aria-label={`Remove ${item.name} from cart`}
+            aria-label={t("removeFromCartNamed", { name: item.name })}
             className="shrink-0 text-muted hover:text-charcoal"
           >
             <X className="h-4 w-4" />
@@ -53,7 +57,7 @@ export function CartLineItem({ item, onNavigate }: { item: CartItem; onNavigate?
             <button
               type="button"
               onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
-              aria-label="Decrease quantity"
+              aria-label={t("decreaseQuantity")}
               className="flex h-8 w-8 items-center justify-center text-charcoal"
             >
               <Minus className="h-3.5 w-3.5" />
@@ -64,14 +68,14 @@ export function CartLineItem({ item, onNavigate }: { item: CartItem; onNavigate?
             <button
               type="button"
               onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
-              aria-label="Increase quantity"
+              aria-label={t("increaseQuantity")}
               className="flex h-8 w-8 items-center justify-center text-charcoal"
             >
               <Plus className="h-3.5 w-3.5" />
             </button>
           </div>
           <span className="text-sm font-medium text-charcoal">
-            {formatPrice(item.price * item.quantity, item.currency)}
+            {formatPrice(item.price * item.quantity, item.currency, locale)}
           </span>
         </div>
       </div>

@@ -3,10 +3,12 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { Heart } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/cn";
 import { colorSwatchHex, formatPrice } from "@/lib/utils/format";
 import { useWishlistStore } from "@/lib/store/wishlist-store";
 import type { ProductCardDTO } from "@/lib/commerce/types";
+import type { Locale } from "@/i18n/routing";
 
 export function ProductCard({
   product,
@@ -15,6 +17,8 @@ export function ProductCard({
   product: ProductCardDTO;
   priority?: boolean;
 }) {
+  const locale = useLocale() as Locale;
+  const t = useTranslations("product");
   const isWishlisted = useWishlistStore((s) => s.has(product.slug));
   const toggleWishlist = useWishlistStore((s) => s.toggle);
 
@@ -50,12 +54,12 @@ export function ProductCard({
         <div className="absolute left-3 top-3 flex flex-col gap-1.5">
           {product.isNew && (
             <span className="rounded-sm bg-ivory/90 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-charcoal">
-              New
+              {t("newBadge")}
             </span>
           )}
           {product.isBestSeller && (
             <span className="rounded-sm bg-terracotta/90 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-ivory">
-              Best Seller
+              {t("bestSellerBadge")}
             </span>
           )}
         </div>
@@ -68,7 +72,11 @@ export function ProductCard({
           toggleWishlist(product.slug);
         }}
         aria-pressed={isWishlisted}
-        aria-label={isWishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
+        aria-label={
+          isWishlisted
+            ? t("removeFromWishlistNamed", { name: product.name })
+            : t("addToWishlistNamed", { name: product.name })
+        }
         className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-ivory/90 text-charcoal transition-transform hover:scale-105"
       >
         <Heart
@@ -83,10 +91,10 @@ export function ProductCard({
 
         <div className="mt-1.5 flex items-center justify-between">
           <div className="flex items-baseline gap-2">
-            <span className="text-sm font-medium text-charcoal">{formatPrice(product.price, product.currency)}</span>
+            <span className="text-sm font-medium text-charcoal">{formatPrice(product.price, product.currency, locale)}</span>
             {product.compareAtPrice && (
               <span className="text-xs text-muted line-through">
-                {formatPrice(product.compareAtPrice, product.currency)}
+                {formatPrice(product.compareAtPrice, product.currency, locale)}
               </span>
             )}
           </div>

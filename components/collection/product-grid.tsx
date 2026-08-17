@@ -1,19 +1,22 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ProductCard } from "@/components/product/product-card";
 import { Button } from "@/components/ui/button";
 import type { ProductCardDTO } from "@/lib/commerce/types";
 
 export function ProductGrid({ products }: { products: ProductCardDTO[] }) {
+  const t = useTranslations("general");
+
   if (products.length === 0) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-4 py-24 text-center">
-        <p className="font-serif-display text-2xl text-charcoal">No pieces match those filters</p>
-        <p className="max-w-xs text-sm text-muted">
-          Try widening your selection, or browse the full collection instead.
-        </p>
+        <p className="font-serif-display text-2xl text-charcoal">{t("noProductsMatch")}</p>
+        <p className="max-w-xs text-sm text-muted">{t("noProductsMatchBody")}</p>
         <Link href="?">
           <Button variant="secondary" size="sm">
-            Clear Filters
+            {t("clearFilters")}
           </Button>
         </Link>
       </div>

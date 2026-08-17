@@ -3,7 +3,9 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { FilterFields, EMPTY_FILTERS, type FilterState } from "./filter-fields";
 
@@ -55,17 +57,18 @@ function useFilterController() {
 
 export function CollectionFilterSidebar() {
   const { draft, setDraft, apply, clearAll, activeCount } = useFilterController();
+  const t = useTranslations("general");
 
   return (
     <aside className="hidden w-56 shrink-0 md:block">
       <FilterFields value={draft} onChange={setDraft} />
       <div className="mt-8 flex flex-col gap-2">
         <Button size="sm" onClick={apply}>
-          Apply Filters
+          {t("applyFilters")}
         </Button>
         {activeCount > 0 && (
           <button type="button" onClick={clearAll} className="text-left text-xs text-muted underline">
-            Clear all
+            {t("clearAll")}
           </button>
         )}
       </div>
@@ -76,6 +79,7 @@ export function CollectionFilterSidebar() {
 export function CollectionFilterTrigger() {
   const { draft, setDraft, apply, clearAll, resync, activeCount } = useFilterController();
   const [open, setOpen] = useState(false);
+  const t = useTranslations("general");
 
   return (
     <div className="md:hidden">
@@ -92,7 +96,7 @@ export function CollectionFilterTrigger() {
             className="flex items-center gap-2 rounded-sm border border-sand bg-ivory px-4 py-2 text-xs font-semibold uppercase tracking-wide text-charcoal sm:text-sm"
           >
             <SlidersHorizontal className="h-4 w-4" />
-            Filter
+            {t("filter")}
             {activeCount > 0 && <span className="font-normal normal-case text-muted">({activeCount})</span>}
           </button>
         </Dialog.Trigger>
@@ -100,14 +104,14 @@ export function CollectionFilterTrigger() {
           <Dialog.Overlay className="fixed inset-0 z-50 bg-charcoal/40 data-[state=open]:animate-fade-in" />
           <Dialog.Content className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-lg bg-ivory p-6 focus:outline-none data-[state=open]:animate-slide-up">
             <div className="mb-6 flex items-center justify-between">
-              <Dialog.Title className="font-serif-display text-xl text-charcoal">Filter</Dialog.Title>
+              <Dialog.Title className="font-serif-display text-xl text-charcoal">{t("filter")}</Dialog.Title>
               <Dialog.Close asChild>
-                <button aria-label="Close filters" className="text-charcoal">
+                <button aria-label={t("closeFilters")} className="text-charcoal">
                   <X className="h-5 w-5" />
                 </button>
               </Dialog.Close>
             </div>
-            <Dialog.Description className="sr-only">Filter products by color, size and price</Dialog.Description>
+            <Dialog.Description className="sr-only">{t("filterDescription")}</Dialog.Description>
             <FilterFields value={draft} onChange={setDraft} />
             <div className="mt-8 flex gap-3">
               <Button
@@ -118,7 +122,7 @@ export function CollectionFilterTrigger() {
                   setOpen(false);
                 }}
               >
-                Clear
+                {t("clearFilters")}
               </Button>
               <Button
                 className="flex-1"
@@ -127,7 +131,7 @@ export function CollectionFilterTrigger() {
                   setOpen(false);
                 }}
               >
-                Show Results
+                {t("showResults")}
               </Button>
             </div>
           </Dialog.Content>

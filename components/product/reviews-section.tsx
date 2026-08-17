@@ -1,9 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Star, BadgeCheck } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { INTL_LOCALE_TAGS, type Locale } from "@/i18n/routing";
 import type { ReviewDTO } from "@/lib/commerce/types";
 import type { StoreReviewDTO } from "@/lib/commerce/products";
 
@@ -21,12 +23,6 @@ function Stars({ rating, size = "sm" }: { rating: number; size?: "sm" | "lg" }) 
 }
 
 type SortOption = "recent" | "highest" | "lowest";
-
-const SORT_OPTIONS: { value: SortOption; label: string }[] = [
-  { value: "recent", label: "Most Recent" },
-  { value: "highest", label: "Highest Rating" },
-  { value: "lowest", label: "Lowest Rating" },
-];
 
 function sortReviews<T extends { rating: number; createdAt: string }>(reviews: T[], sort: SortOption): T[] {
   const copy = [...reviews];
@@ -50,9 +46,17 @@ export function ReviewsSection({
   storeAverageRating: number;
   storeReviewCount: number;
 }) {
+  const locale = useLocale() as Locale;
+  const t = useTranslations("product");
   const [tab, setTab] = useState<"product" | "store">("product");
   const [sort, setSort] = useState<SortOption>("recent");
   const [visible, setVisible] = useState(4);
+
+  const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+    { value: "recent", label: t("sortMostRecent") },
+    { value: "highest", label: t("sortHighestRating") },
+    { value: "lowest", label: t("sortLowestRating") },
+  ];
 
   const activeReviews = tab === "product" ? reviews : storeReviews;
   const activeAverage = tab === "product" ? averageRating : storeAverageRating;
@@ -67,7 +71,7 @@ export function ReviewsSection({
   return (
     <section id="reviews" className="border-t border-sand py-14 md:py-20">
       <div className="container-page">
-        <h2 className="font-serif-display text-2xl text-charcoal md:text-3xl">Customer Reviews</h2>
+        <h2 className="font-serif-display text-2xl text-charcoal md:text-3xl">{t("customerReviews")}</h2>
 
         <div className="mt-5 flex gap-2">
           <button
@@ -81,7 +85,7 @@ export function ReviewsSection({
               tab === "product" ? "border-charcoal bg-charcoal text-ivory" : "border-sand text-charcoal"
             )}
           >
-            Product Reviews ({reviewCount})
+            {t("productReviews")} ({reviewCount})
           </button>
           <button
             type="button"
@@ -94,12 +98,12 @@ export function ReviewsSection({
               tab === "store" ? "border-charcoal bg-charcoal text-ivory" : "border-sand text-charcoal"
             )}
           >
-            Store Reviews ({storeReviewCount})
+            {t("storeReviews")} ({storeReviewCount})
           </button>
         </div>
 
         {activeCount === 0 ? (
-          <p className="mt-6 text-sm text-muted">No reviews yet — be the first to share yours.</p>
+          <p className="mt-6 text-sm text-muted">{t("noReviewsYet")}</p>
         ) : (
           <div className="mt-8 grid gap-10 md:grid-cols-[260px_1fr]">
             <div>
@@ -107,9 +111,7 @@ export function ReviewsSection({
                 <span className="font-serif-display text-5xl text-charcoal">{activeAverage.toFixed(1)}</span>
                 <div>
                   <Stars rating={Math.round(activeAverage)} size="lg" />
-                  <p className="mt-1 text-xs text-muted">
-                    Based on {activeCount} review{activeCount === 1 ? "" : "s"}
-                  </p>
+                  <p className="mt-1 text-xs text-muted">{t("basedOnReviews", { count: activeCount })}</p>
                 </div>
               </div>
               <div className="mt-6 space-y-1.5">
@@ -152,7 +154,10 @@ export function ReviewsSection({
                     <div className="flex items-center justify-between">
                       <Stars rating={review.rating} />
                       <time className="text-xs text-muted" dateTime={review.createdAt}>
-                        {new Date(review.createdAt).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}
+                        {new Date(review.createdAt).toLocaleDateString(INTL_LOCALE_TAGS[locale], {
+                          month: "short",
+                          year: "numeric",
+                        })}
                       </time>
                     </div>
                     <h3 className="mt-2 font-medium text-charcoal">{review.title}</h3>
@@ -162,7 +167,7 @@ export function ReviewsSection({
                       <span>· {review.country}</span>
                       {review.verifiedPurchase && (
                         <span className="ml-1 inline-flex items-center gap-1 text-olive">
-                          <BadgeCheck className="h-3.5 w-3.5" /> Verified Purchase
+                          <BadgeCheck className="h-3.5 w-3.5" /> {t("verifiedPurchase")}
                         </span>
                       )}
                       {tab === "store" && "productSlug" in review && (
@@ -182,7 +187,7 @@ export function ReviewsSection({
                     onClick={() => setVisible((v) => v + 4)}
                     className="text-sm font-medium text-charcoal underline underline-offset-4"
                   >
-                    Load more reviews
+                    {t("loadMoreReviews")}
                   </button>
                 </div>
               )}

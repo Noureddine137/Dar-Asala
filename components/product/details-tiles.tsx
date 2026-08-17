@@ -7,7 +7,7 @@ import type { Locale } from "@/i18n/routing";
 export async function DetailsTiles({ product }: { product: ProductDetailDTO }) {
   const locale = (await getLocale()) as Locale;
   const [settings, t] = await Promise.all([getLocalizedStoreSettings(locale), getTranslations("product")]);
-  const tiles = productDetailTiles(product, settings.brandOriginCountry);
+  const tiles = await productDetailTiles(product, settings.brandOriginCountry, locale);
 
   return (
     <div>

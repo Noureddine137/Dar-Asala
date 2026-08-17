@@ -1,14 +1,21 @@
 "use client";
 
 import { useMemo } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { FreeShippingBar } from "./free-shipping-bar";
 import { formatPrice } from "@/lib/utils/format";
+import { INTL_LOCALE_TAGS, type Locale } from "@/i18n/routing";
 import type { ShippingCountryOption, ShippingQuoteResult } from "@/lib/hooks/use-shipping-quote";
 
-let regionNames: Intl.DisplayNames | null = null;
-function countryName(code: string) {
+const regionNamesCache = new Map<string, Intl.DisplayNames>();
+function countryName(code: string, locale: Locale) {
   if (typeof Intl === "undefined" || typeof Intl.DisplayNames === "undefined") return code;
-  regionNames ??= new Intl.DisplayNames(["en"], { type: "region" });
+  const tag = INTL_LOCALE_TAGS[locale];
+  let regionNames = regionNamesCache.get(tag);
+  if (!regionNames) {
+    regionNames = new Intl.DisplayNames([tag], { type: "region" });
+    regionNamesCache.set(tag, regionNames);
+  }
   return regionNames.of(code) ?? code;
 }
 
@@ -22,6 +29,8 @@ type Props = {
 };
 
 export function ShippingCountrySelect({ subtotal, country, setCountry, countries, quote, loading }: Props) {
+  const locale = useLocale() as Locale;
+  const t = useTranslations("cart");
   const grouped = useMemo(() => {
     const byRegion = new Map<string, ShippingCountryOption[]>();
     for (const c of countries ?? []) {
@@ -32,10 +41,12 @@ export function ShippingCountrySelect({ subtotal, country, setCountry, countries
     return Array.from(byRegion.entries());
   }, [countries]);
 
+  const errorMessage = (error: string) => (error === "no_zone" ? t("shippingUnavailable") : t("unableToCalculateShipping"));
+
   return (
     <div>
       <label htmlFor="shipping-country" className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-muted">
-        Shipping To
+        {t("shippingTo")}
       </label>
       <select
         id="shipping-country"
@@ -45,13 +56,13 @@ export function ShippingCountrySelect({ subtotal, country, setCountry, countries
         disabled={!countries}
       >
         <option value="" disabled>
-          {countries ? "Select your country" : "Loading countries…"}
+          {countries ? t("selectYourCountry") : t("loadingCountries")}
         </option>
         {grouped.map(([region, opts]) => (
           <optgroup key={region} label={region}>
             {opts.map((c) => (
               <option key={c.code} value={c.code}>
-                {countryName(c.code)}
+                {countryName(c.code, locale)}
               </option>
             ))}
           </optgroup>
@@ -61,14 +72,14 @@ export function ShippingCountrySelect({ subtotal, country, setCountry, countries
       {country && (
         <div className="mt-3">
           {loading || !quote ? (
-            <p className="text-xs text-muted">Calculating shipping…</p>
+            <p className="text-xs text-muted">{t("calculatingShipping")}</p>
           ) : quote.ok ? (
             quote.isFree ? (
-              <p className="text-xs font-medium text-olive">Free shipping to this destination</p>
+              <p className="text-xs font-medium text-olive">{t("freeShippingToDestination")}</p>
             ) : (
               <>
                 <p className="text-xs text-charcoal/80">
-                  Shipping: <span className="font-medium text-charcoal">{formatPrice(quote.shipping)}</span> ·{" "}
+                  {t("shipping")}: <span className="font-medium text-charcoal">{formatPrice(quote.shipping, "EUR", locale)}</span> ·{" "}
                   {quote.estimate}
                 </p>
                 {quote.freeThreshold != null && (
@@ -79,7 +90,7 @@ export function ShippingCountrySelect({ subtotal, country, setCountry, countries
               </>
             )
           ) : (
-            <p className="text-xs text-terracotta">{quote.error}</p>
+            <p className="text-xs text-terracotta">{errorMessage(quote.error)}</p>
           )}
         </div>
       )}
