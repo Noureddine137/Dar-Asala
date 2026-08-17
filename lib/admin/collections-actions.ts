@@ -41,20 +41,19 @@ export async function createCollection(formData: FormData) {
   }
 }
 
-export async function updateCollection(collectionId: string, formData: FormData) {
+// Shared fields — never duplicated per language. Split from
+// updateCollectionContent() below so the admin "Content" locale tabs can
+// each submit independently.
+export async function updateCollectionDetails(collectionId: string, formData: FormData) {
   await requireAdminSession();
-  const title = String(formData.get("title") ?? "").trim();
   const slug = slugify(String(formData.get("slug") ?? ""));
-  if (!title) throw new Error("Title is required.");
   if (!slug) throw new Error("Slug is required.");
 
   try {
     await prisma.collection.update({
       where: { id: collectionId },
       data: {
-        title,
         slug,
-        description: String(formData.get("description") ?? ""),
         heroImage: String(formData.get("heroImage") ?? ""),
         position: Number(formData.get("position") ?? 0),
         active: formData.get("active") === "on",
@@ -66,6 +65,26 @@ export async function updateCollection(collectionId: string, formData: FormData)
     }
     throw err;
   }
+
+  revalidatePath("/admin/collections");
+  revalidatePath(`/admin/collections/${collectionId}`);
+  revalidatePath("/");
+}
+
+// English content — the canonical/fallback source, stored directly on
+// Collection (not a translation row); see CollectionTranslation for DE/FR.
+export async function updateCollectionContent(collectionId: string, formData: FormData) {
+  await requireAdminSession();
+  const title = String(formData.get("title") ?? "").trim();
+  if (!title) throw new Error("Title is required.");
+
+  await prisma.collection.update({
+    where: { id: collectionId },
+    data: {
+      title,
+      description: String(formData.get("description") ?? ""),
+    },
+  });
 
   revalidatePath("/admin/collections");
   revalidatePath(`/admin/collections/${collectionId}`);

@@ -8,6 +8,7 @@ async function ensureSettings() {
   return prisma.storeSettings.upsert({ where: { id: "singleton" }, update: {}, create: { id: "singleton" } });
 }
 
+// General/operational fields — not customer-copy, so never translated.
 export async function updateStoreSettings(formData: FormData) {
   await requireAdminSession();
   await ensureSettings();
@@ -29,6 +30,26 @@ export async function updateStoreSettings(formData: FormData) {
       instagramUrl: optStr("instagramUrl"),
       facebookUrl: optStr("facebookUrl"),
       tiktokUrl: optStr("tiktokUrl"),
+    },
+  });
+
+  revalidatePath("/admin/settings");
+  revalidatePath("/", "layout");
+}
+
+// English business claims — the canonical/fallback source, stored directly
+// on StoreSettings (not a translation row); see updateBusinessClaimsTranslation
+// in translation-actions.ts for DE/FR. Split out of updateStoreSettings so
+// the admin "Content" locale tabs can each submit independently.
+export async function updateBusinessClaimsEn(formData: FormData) {
+  await requireAdminSession();
+  await ensureSettings();
+
+  const str = (key: string) => String(formData.get(key) ?? "").trim();
+
+  await prisma.storeSettings.update({
+    where: { id: "singleton" },
+    data: {
       brandOriginCountry: str("brandOriginCountry"),
       brandWorkshopLocations: str("brandWorkshopLocations"),
       leatherClaim: str("leatherClaim"),
@@ -41,7 +62,33 @@ export async function updateStoreSettings(formData: FormData) {
   revalidatePath("/", "layout");
 }
 
-export async function updateHomepageContent(formData: FormData) {
+// Images and links — shared across every language, never duplicated per
+// translation. Split from updateHomepageContentEn() below so the admin
+// "Content" locale tabs can each submit independently.
+export async function updateHomepageMedia(formData: FormData) {
+  await requireAdminSession();
+  await ensureSettings();
+
+  const str = (key: string) => String(formData.get(key) ?? "").trim();
+
+  await prisma.storeSettings.update({
+    where: { id: "singleton" },
+    data: {
+      heroImageUrl: str("heroImageUrl"),
+      heroCtaHref: str("heroCtaHref"),
+      brandStoryImageUrl: str("brandStoryImageUrl"),
+      customOrderImageUrl: str("customOrderImageUrl"),
+    },
+  });
+
+  revalidatePath("/admin/homepage");
+  revalidatePath("/", "layout");
+}
+
+// English content — the canonical/fallback source, stored directly on
+// StoreSettings (not a translation row); see StoreSettingsTranslation for
+// DE/FR (lib/admin/translation-actions.ts).
+export async function updateHomepageContentEn(formData: FormData) {
   await requireAdminSession();
   await ensureSettings();
 
@@ -52,15 +99,11 @@ export async function updateHomepageContent(formData: FormData) {
     data: {
       heroHeadline: str("heroHeadline"),
       heroSubtitle: str("heroSubtitle"),
-      heroImageUrl: str("heroImageUrl"),
       heroCtaLabel: str("heroCtaLabel"),
-      heroCtaHref: str("heroCtaHref"),
       brandStoryHeading: str("brandStoryHeading"),
       brandStoryBody: str("brandStoryBody"),
-      brandStoryImageUrl: str("brandStoryImageUrl"),
       customOrderHeading: str("customOrderHeading"),
       customOrderBody: str("customOrderBody"),
-      customOrderImageUrl: str("customOrderImageUrl"),
       newsletterHeading: str("newsletterHeading"),
       newsletterBody: str("newsletterBody"),
     },

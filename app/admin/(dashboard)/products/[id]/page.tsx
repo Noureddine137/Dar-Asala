@@ -3,7 +3,8 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { prisma } from "@/lib/db/prisma";
 import {
-  updateProduct,
+  updateProductCommerce,
+  updateProductContent,
   deleteProduct,
   addVariant,
   updateVariant,
@@ -14,6 +15,7 @@ import {
   moveProductImage,
   setPrimaryProductImage,
 } from "@/lib/admin/actions";
+import { updateProductTranslation } from "@/lib/admin/translation-actions";
 import {
   PRODUCT_IMAGE_KINDS,
   PRODUCT_CATEGORIES,
@@ -25,6 +27,7 @@ import {
 } from "@/lib/admin/constants";
 import { ConfirmSubmitButton } from "@/components/admin/confirm-submit";
 import { ImageUploadForm } from "@/components/admin/image-upload-form";
+import { LocaleContentTabs } from "@/components/admin/locale-content-tabs";
 import { colorLabel, sizeLabel, hardwareLabel, strapLabel, formatPrice } from "@/lib/utils/format";
 
 type Props = { params: Promise<{ id: string }> };
@@ -33,16 +36,22 @@ const CURRENCIES = ["EUR", "USD", "GBP"];
 
 export default async function EditProductPage({ params }: Props) {
   const { id } = await params;
-  const [product, orderItemCount] = await Promise.all([
+  const [product, orderItemCount, translations] = await Promise.all([
     prisma.product.findUnique({
       where: { id },
       include: { variants: true, images: { orderBy: { position: "asc" } } },
     }),
     prisma.orderItem.count({ where: { productId: id } }),
+    prisma.productTranslation.findMany({ where: { productId: id } }),
   ]);
   if (!product) notFound();
 
-  const boundUpdate = updateProduct.bind(null, product.id);
+  const deTranslation = translations.find((t) => t.locale === "DE");
+  const frTranslation = translations.find((t) => t.locale === "FR");
+  const boundCommerce = updateProductCommerce.bind(null, product.id);
+  const boundContentEn = updateProductContent.bind(null, product.id);
+  const boundContentDe = updateProductTranslation.bind(null, product.id, "de");
+  const boundContentFr = updateProductTranslation.bind(null, product.id, "fr");
   const boundDelete = deleteProduct.bind(null, product.id);
 
   return (
@@ -57,94 +66,126 @@ export default async function EditProductPage({ params }: Props) {
         </Link>
       </div>
 
-      <form action={boundUpdate} className="mt-8 space-y-6">
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          <Field label="Name">
-            <input name="name" defaultValue={product.name} className="input" />
-          </Field>
-          <Field label="Slug">
-            <input name="slug" defaultValue={product.slug} className="input" />
-          </Field>
-          <Field label="Category">
-            <select name="category" defaultValue={product.category} className="input">
-              {PRODUCT_CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Status">
-            <select name="status" defaultValue={product.status} className="input">
-              {PRODUCT_STATUSES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Price">
-            <input name="price" type="number" step="0.01" defaultValue={Number(product.price)} className="input" />
-          </Field>
-          <Field label="Compare-at Price">
-            <input
-              name="compareAtPrice"
-              type="number"
-              step="0.01"
-              defaultValue={product.compareAtPrice ? Number(product.compareAtPrice) : ""}
-              className="input"
-              placeholder="Leave blank for no sale badge"
-            />
-          </Field>
-          <Field label="Currency">
-            <select name="currency" defaultValue={product.currency} className="input">
-              {CURRENCIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Production Time">
-            <input name="productionTime" defaultValue={product.productionTime} className="input" />
-          </Field>
-        </div>
+      <div className="mt-8">
+        <h2 className="mb-1 font-serif-display text-xl">Details</h2>
+        <p className="mb-4 text-xs text-muted">
+          Commerce data — shared across every language, never duplicated per translation.
+        </p>
+        <form action={boundCommerce} className="space-y-6">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <Field label="Slug">
+              <input name="slug" defaultValue={product.slug} className="input" />
+            </Field>
+            <Field label="Category">
+              <select name="category" defaultValue={product.category} className="input">
+                {PRODUCT_CATEGORIES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Status">
+              <select name="status" defaultValue={product.status} className="input">
+                {PRODUCT_STATUSES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Price">
+              <input name="price" type="number" step="0.01" defaultValue={Number(product.price)} className="input" />
+            </Field>
+            <Field label="Compare-at Price">
+              <input
+                name="compareAtPrice"
+                type="number"
+                step="0.01"
+                defaultValue={product.compareAtPrice ? Number(product.compareAtPrice) : ""}
+                className="input"
+                placeholder="Leave blank for no sale badge"
+              />
+            </Field>
+            <Field label="Currency">
+              <select name="currency" defaultValue={product.currency} className="input">
+                {CURRENCIES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Production Time">
+              <input name="productionTime" defaultValue={product.productionTime} className="input" />
+            </Field>
+          </div>
 
-        <Field label="Short Description">
-          <textarea name="shortDescription" defaultValue={product.shortDescription} rows={2} className="input" />
-        </Field>
-        <Field label="Full Description">
-          <textarea name="description" defaultValue={product.description} rows={4} className="input" />
-        </Field>
-        <Field label="Story">
-          <textarea name="story" defaultValue={product.story ?? ""} rows={3} className="input" />
-        </Field>
-        <Field label="Materials">
-          <textarea name="materials" defaultValue={product.materials} rows={2} className="input" />
-        </Field>
-        <Field label="Care Instructions">
-          <textarea name="careInstructions" defaultValue={product.careInstructions} rows={2} className="input" />
-        </Field>
+          <div className="flex flex-wrap gap-6 text-sm">
+            <label className="flex items-center gap-2">
+              <input type="checkbox" name="featured" defaultChecked={product.featured} /> Featured
+            </label>
+            <label className="flex items-center gap-2">
+              <input type="checkbox" name="isNew" defaultChecked={product.isNew} /> New Arrival
+            </label>
+            <label className="flex items-center gap-2">
+              <input type="checkbox" name="isBestSeller" defaultChecked={product.isBestSeller} /> Best Seller
+            </label>
+            <label className="flex items-center gap-2">
+              <input type="checkbox" name="isMadeToOrder" defaultChecked={product.isMadeToOrder} /> Made to Order
+            </label>
+          </div>
 
-        <div className="flex flex-wrap gap-6 text-sm">
-          <label className="flex items-center gap-2">
-            <input type="checkbox" name="featured" defaultChecked={product.featured} /> Featured
-          </label>
-          <label className="flex items-center gap-2">
-            <input type="checkbox" name="isNew" defaultChecked={product.isNew} /> New Arrival
-          </label>
-          <label className="flex items-center gap-2">
-            <input type="checkbox" name="isBestSeller" defaultChecked={product.isBestSeller} /> Best Seller
-          </label>
-          <label className="flex items-center gap-2">
-            <input type="checkbox" name="isMadeToOrder" defaultChecked={product.isMadeToOrder} /> Made to Order
-          </label>
-        </div>
+          <button type="submit" className="rounded-sm bg-charcoal px-5 py-2.5 text-sm text-ivory">
+            Save Details
+          </button>
+        </form>
+      </div>
 
-        <button type="submit" className="rounded-sm bg-charcoal px-5 py-2.5 text-sm text-ivory">
-          Save Changes
-        </button>
-      </form>
+      <div className="mt-12">
+        <h2 className="mb-1 font-serif-display text-xl">Content</h2>
+        <p className="mb-4 text-xs text-muted">
+          Customer-visible copy, translated per language. English is the fallback shown wherever a
+          German or French translation is missing.
+        </p>
+        <LocaleContentTabs
+          missing={{
+            de: !deTranslation?.name,
+            fr: !frTranslation?.name,
+          }}
+          en={
+            <form action={boundContentEn} className="space-y-5">
+              <Field label="Name">
+                <input name="name" defaultValue={product.name} className="input" />
+              </Field>
+              <Field label="Short Description">
+                <textarea name="shortDescription" defaultValue={product.shortDescription} rows={2} className="input" />
+              </Field>
+              <Field label="Full Description">
+                <textarea name="description" defaultValue={product.description} rows={4} className="input" />
+              </Field>
+              <Field label="Story">
+                <textarea name="story" defaultValue={product.story ?? ""} rows={3} className="input" />
+              </Field>
+              <Field label="Materials">
+                <textarea name="materials" defaultValue={product.materials} rows={2} className="input" />
+              </Field>
+              <Field label="Care Instructions">
+                <textarea name="careInstructions" defaultValue={product.careInstructions} rows={2} className="input" />
+              </Field>
+              <button type="submit" className="rounded-sm bg-charcoal px-5 py-2.5 text-sm text-ivory">
+                Save English Content
+              </button>
+            </form>
+          }
+          de={
+            <ProductTranslationForm action={boundContentDe} translation={deTranslation} localeLabel="Deutsch" />
+          }
+          fr={
+            <ProductTranslationForm action={boundContentFr} translation={frTranslation} localeLabel="Français" />
+          }
+        />
+      </div>
 
       <div className="mt-10 rounded-sm border border-sand p-5">
         <h2 className="font-serif-display text-lg">Danger Zone</h2>
@@ -452,6 +493,70 @@ function MiniField({ label, children }: { label: string; children: ReactNode }) 
       <span className="mb-1 block text-[10px] uppercase tracking-wide text-muted">{label}</span>
       {children}
     </label>
+  );
+}
+
+type ProductTranslationRow = {
+  name: string;
+  shortDescription: string;
+  description: string;
+  story: string | null;
+  materials: string;
+  careInstructions: string;
+  seoTitle: string | null;
+  seoDescription: string | null;
+} | undefined;
+
+function ProductTranslationForm({
+  action,
+  translation,
+  localeLabel,
+}: {
+  action: (formData: FormData) => void | Promise<void>;
+  translation: ProductTranslationRow;
+  localeLabel: string;
+}) {
+  return (
+    <form action={action} className="space-y-5">
+      {!translation?.name && (
+        <p className="rounded-sm border border-camel/40 bg-camel/10 px-3 py-2 text-xs text-charcoal/85">
+          No {localeLabel} translation yet — these fields fall back to English on the storefront until filled in.
+        </p>
+      )}
+      <Field label="Name">
+        <input name="name" defaultValue={translation?.name ?? ""} placeholder="Falls back to English name" className="input" />
+      </Field>
+      <Field label="Short Description">
+        <textarea name="shortDescription" defaultValue={translation?.shortDescription ?? ""} rows={2} className="input" />
+      </Field>
+      <Field label="Full Description">
+        <textarea name="description" defaultValue={translation?.description ?? ""} rows={4} className="input" />
+      </Field>
+      <Field label="Story">
+        <textarea name="story" defaultValue={translation?.story ?? ""} rows={3} className="input" />
+      </Field>
+      <Field label="Materials">
+        <textarea name="materials" defaultValue={translation?.materials ?? ""} rows={2} className="input" />
+      </Field>
+      <Field label="Care Instructions">
+        <textarea name="careInstructions" defaultValue={translation?.careInstructions ?? ""} rows={2} className="input" />
+      </Field>
+      <Field label="SEO Title (optional override)">
+        <input name="seoTitle" defaultValue={translation?.seoTitle ?? ""} placeholder="Falls back to Name" className="input" />
+      </Field>
+      <Field label="SEO Description (optional override)">
+        <textarea
+          name="seoDescription"
+          defaultValue={translation?.seoDescription ?? ""}
+          placeholder="Falls back to Short Description"
+          rows={2}
+          className="input"
+        />
+      </Field>
+      <button type="submit" className="rounded-sm bg-charcoal px-5 py-2.5 text-sm text-ivory">
+        Save {localeLabel} Content
+      </button>
+    </form>
   );
 }
 

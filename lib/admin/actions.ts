@@ -43,31 +43,27 @@ export async function createProduct(formData: FormData) {
   redirect(`/admin/products/${product.id}`);
 }
 
-export async function updateProduct(productId: string, formData: FormData) {
+// Shared commerce fields (slug/price/stock-adjacent/status/etc.) — never
+// duplicated per language. Kept separate from updateProductContent() below
+// so the admin "Content" locale tabs can each submit independently without
+// one tab's form (missing the other section's fields) blanking them out.
+export async function updateProductCommerce(productId: string, formData: FormData) {
   await requireAdminSession();
-  const name = String(formData.get("name") ?? "").trim();
   const slugInput = slugify(String(formData.get("slug") ?? ""));
   const price = Number(formData.get("price") ?? 0);
   const compareAtPriceRaw = formData.get("compareAtPrice");
   const compareAtPrice = compareAtPriceRaw ? Number(compareAtPriceRaw) : null;
-  if (!name) throw new Error("Name is required.");
   if (!slugInput) throw new Error("Slug is required.");
 
   try {
     await prisma.product.update({
       where: { id: productId },
       data: {
-        name,
         slug: slugInput,
-        shortDescription: String(formData.get("shortDescription") ?? ""),
-        description: String(formData.get("description") ?? ""),
-        story: String(formData.get("story") ?? "") || null,
         price,
         compareAtPrice,
         currency: String(formData.get("currency") ?? "EUR"),
         category: String(formData.get("category") ?? "handbags"),
-        materials: String(formData.get("materials") ?? ""),
-        careInstructions: String(formData.get("careInstructions") ?? ""),
         productionTime: String(formData.get("productionTime") ?? ""),
         status: String(formData.get("status") ?? "DRAFT") as ProductStatus,
         featured: formData.get("featured") === "on",
@@ -82,6 +78,30 @@ export async function updateProduct(productId: string, formData: FormData) {
     }
     throw err;
   }
+
+  revalidatePath("/admin/products");
+  revalidatePath(`/admin/products/${productId}`);
+  revalidatePath("/");
+}
+
+// English content — the canonical/fallback source, stored directly on
+// Product (not a translation row); see ProductTranslation for DE/FR.
+export async function updateProductContent(productId: string, formData: FormData) {
+  await requireAdminSession();
+  const name = String(formData.get("name") ?? "").trim();
+  if (!name) throw new Error("Name is required.");
+
+  await prisma.product.update({
+    where: { id: productId },
+    data: {
+      name,
+      shortDescription: String(formData.get("shortDescription") ?? ""),
+      description: String(formData.get("description") ?? ""),
+      story: String(formData.get("story") ?? "") || null,
+      materials: String(formData.get("materials") ?? ""),
+      careInstructions: String(formData.get("careInstructions") ?? ""),
+    },
+  });
 
   revalidatePath("/admin/products");
   revalidatePath(`/admin/products/${productId}`);
