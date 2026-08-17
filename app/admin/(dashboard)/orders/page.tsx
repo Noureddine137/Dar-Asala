@@ -35,6 +35,14 @@ export default async function AdminOrdersPage() {
                     <Link href={`/admin/orders/${o.id}`} className="underline">
                       {o.orderNumber}
                     </Link>
+                    {o.shippingCountryMismatch && (
+                      <span
+                        title="Shipping address country doesn't match the destination selected at checkout — needs manual review"
+                        className="ml-1.5 text-terracotta"
+                      >
+                        ⚠
+                      </span>
+                    )}
                   </td>
                   <td className="py-2.5">{o.email}</td>
                   <td className="py-2.5">{o.createdAt.toLocaleDateString("en-GB")}</td>

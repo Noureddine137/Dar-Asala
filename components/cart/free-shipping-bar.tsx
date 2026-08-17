@@ -1,9 +1,8 @@
-import { FREE_SHIPPING_THRESHOLD } from "@/lib/config";
 import { formatPrice } from "@/lib/utils/format";
 
-export function FreeShippingBar({ subtotal }: { subtotal: number }) {
-  const remaining = Math.max(FREE_SHIPPING_THRESHOLD - subtotal, 0);
-  const progress = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
+export function FreeShippingBar({ subtotal, threshold }: { subtotal: number; threshold: number }) {
+  const remaining = Math.max(threshold - subtotal, 0);
+  const progress = Math.min((subtotal / threshold) * 100, 100);
 
   return (
     <div>

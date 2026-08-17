@@ -20,6 +20,11 @@ export type CartItem = {
 
 type CartState = {
   items: CartItem[];
+  // ISO alpha-2 destination country the customer selected for shipping,
+  // remembered across visits. Only ever used to look up the matching
+  // ShippingZone server-side (see /api/checkout) — never trusted as a price.
+  shippingCountry: string | null;
+  setShippingCountry: (code: string | null) => void;
   addItem: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
   removeItem: (variantId: string) => void;
   updateQuantity: (variantId: string, quantity: number) => void;
@@ -30,6 +35,8 @@ export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      shippingCountry: null,
+      setShippingCountry: (code) => set({ shippingCountry: code }),
       addItem: (item, quantity = 1) => {
         const existing = get().items.find((i) => i.variantId === item.variantId);
         if (existing) {

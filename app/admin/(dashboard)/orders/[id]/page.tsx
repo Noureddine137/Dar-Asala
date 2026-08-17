@@ -49,6 +49,18 @@ export default async function AdminOrderDetailPage({ params }: Props) {
         </span>
       </div>
 
+      {order.shippingCountryMismatch && (
+        <div className="mt-6 rounded-sm border border-terracotta/40 bg-terracotta/10 p-4 text-sm">
+          <p className="font-medium text-terracotta">⚠ Shipping destination mismatch — needs manual review</p>
+          <p className="mt-1 text-charcoal/80">
+            The customer selected <strong>{order.selectedShippingCountry ?? "—"}</strong> before checkout, but
+            Stripe collected a shipping address in <strong>{order.shippingCountry ?? "—"}</strong>. Payment has
+            already succeeded and this order was recorded normally — verify the destination is correct
+            before shipping.
+          </p>
+        </div>
+      )}
+
       <div className="mt-6 rounded-sm border border-sand p-5">
         <h2 className="mb-3 font-serif-display text-lg">Items</h2>
         <ul className="divide-y divide-sand/60">

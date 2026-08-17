@@ -9,6 +9,7 @@ import { ButtonLink } from "@/components/ui/button";
 
 export default function CheckoutPage() {
   const items = useCartStore((s) => s.items);
+  const shippingCountry = useCartStore((s) => s.shippingCountry);
   const router = useRouter();
   const mounted = useMounted();
   const [error, setError] = useState<string | null>(null);
@@ -20,6 +21,10 @@ export default function CheckoutPage() {
       router.replace("/cart");
       return;
     }
+    // Country is chosen on the cart page/drawer, immediately before this —
+    // if it's missing (direct navigation, stale bookmark), don't guess or
+    // silently default; send them back to choose one.
+    if (!shippingCountry) return;
 
     started.current = true;
     fetch("/api/checkout", {
@@ -27,6 +32,7 @@ export default function CheckoutPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         items: items.map((i) => ({ variantId: i.variantId, quantity: i.quantity })),
+        country: shippingCountry,
       }),
     })
       .then(async (res) => {
@@ -39,13 +45,25 @@ export default function CheckoutPage() {
         started.current = false;
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mounted]);
+  }, [mounted, shippingCountry]);
 
   if (error) {
     return (
       <div className="container-page flex flex-col items-center gap-4 py-24 text-center">
         <h1 className="font-serif-display text-2xl text-charcoal">Checkout is unavailable</h1>
         <p className="max-w-md text-sm text-muted">{error}</p>
+        <ButtonLink href="/cart">Back to Bag</ButtonLink>
+      </div>
+    );
+  }
+
+  if (mounted && items.length > 0 && !shippingCountry) {
+    return (
+      <div className="container-page flex flex-col items-center gap-4 py-24 text-center">
+        <h1 className="font-serif-display text-2xl text-charcoal">Select a shipping destination</h1>
+        <p className="max-w-md text-sm text-muted">
+          Please choose your delivery country in your bag before checking out.
+        </p>
         <ButtonLink href="/cart">Back to Bag</ButtonLink>
       </div>
     );

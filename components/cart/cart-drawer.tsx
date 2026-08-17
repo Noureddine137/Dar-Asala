@@ -6,8 +6,9 @@ import { X, ShoppingBag, Lock, RotateCcw } from "lucide-react";
 import { useUIStore } from "@/lib/store/ui-store";
 import { useCartStore, cartSubtotal } from "@/lib/store/cart-store";
 import { useMounted } from "@/lib/hooks/use-mounted";
+import { useShippingQuote } from "@/lib/hooks/use-shipping-quote";
 import { CartLineItem } from "./cart-line-item";
-import { FreeShippingBar } from "./free-shipping-bar";
+import { ShippingCountrySelect } from "./shipping-country-select";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils/format";
 
@@ -21,6 +22,8 @@ export function CartDrawer() {
 
   const subtotal = mounted ? cartSubtotal(items) : 0;
   const displayItems = mounted ? items : [];
+  const { country, setCountry, countries, quote, loading } = useShippingQuote(subtotal);
+  const canCheckout = Boolean(quote?.ok);
 
   return (
     <Dialog.Root open={open} onOpenChange={(v) => !v && close()}>
@@ -58,7 +61,14 @@ export function CartDrawer() {
                 className="space-y-4 border-t border-sand/70 px-5 pt-5"
                 style={{ paddingBottom: "max(1.25rem, calc(env(safe-area-inset-bottom) + 1rem))" }}
               >
-                <FreeShippingBar subtotal={subtotal} />
+                <ShippingCountrySelect
+                  subtotal={subtotal}
+                  country={country}
+                  setCountry={setCountry}
+                  countries={countries}
+                  quote={quote}
+                  loading={loading}
+                />
                 <div className="space-y-1.5 text-sm">
                   <div className="flex items-center justify-between">
                     <span className="text-muted">Subtotal</span>
@@ -66,7 +76,9 @@ export function CartDrawer() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-muted">Shipping</span>
-                    <span className="text-charcoal/80">Calculated at checkout</span>
+                    <span className="text-charcoal/80">
+                      {quote?.ok ? (quote.isFree ? "Free" : formatPrice(quote.shipping)) : "Select destination"}
+                    </span>
                   </div>
                 </div>
                 <Button
@@ -74,6 +86,7 @@ export function CartDrawer() {
                     close();
                     router.push("/checkout");
                   }}
+                  disabled={!canCheckout}
                   className="w-full"
                   size="lg"
                 >

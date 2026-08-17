@@ -4,11 +4,11 @@ import { useRouter } from "next/navigation";
 import { ShoppingBag } from "lucide-react";
 import { useCartStore, cartSubtotal } from "@/lib/store/cart-store";
 import { useMounted } from "@/lib/hooks/use-mounted";
+import { useShippingQuote } from "@/lib/hooks/use-shipping-quote";
 import { CartLineItem } from "./cart-line-item";
-import { FreeShippingBar } from "./free-shipping-bar";
+import { ShippingCountrySelect } from "./shipping-country-select";
 import { ButtonLink, Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils/format";
-import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_RATE } from "@/lib/config";
 
 export function CartPageContent() {
   const items = useCartStore((s) => s.items);
@@ -17,8 +17,10 @@ export function CartPageContent() {
 
   const displayItems = mounted ? items : [];
   const subtotal = cartSubtotal(displayItems);
-  const shipping = subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_RATE;
-  const total = subtotal + shipping;
+  const { country, setCountry, countries, quote, loading } = useShippingQuote(subtotal);
+  const canCheckout = Boolean(quote?.ok);
+  const shipping = quote?.ok ? quote.shipping : null;
+  const total = subtotal + (shipping ?? 0);
 
   if (mounted && displayItems.length === 0) {
     return (
@@ -47,7 +49,14 @@ export function CartPageContent() {
         </div>
 
         <div className="h-fit space-y-6 rounded-sm bg-cream p-6">
-          <FreeShippingBar subtotal={subtotal} />
+          <ShippingCountrySelect
+            subtotal={subtotal}
+            country={country}
+            setCountry={setCountry}
+            countries={countries}
+            quote={quote}
+            loading={loading}
+          />
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-muted">Subtotal</span>
@@ -55,14 +64,16 @@ export function CartPageContent() {
             </div>
             <div className="flex justify-between">
               <span className="text-muted">Shipping</span>
-              <span className="text-charcoal">{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
+              <span className="text-charcoal">
+                {shipping == null ? "Select destination above" : shipping === 0 ? "Free" : formatPrice(shipping)}
+              </span>
             </div>
             <div className="flex justify-between border-t border-sand/70 pt-2 text-base font-medium">
               <span className="text-charcoal">Total</span>
               <span className="text-charcoal">{formatPrice(total)}</span>
             </div>
           </div>
-          <Button size="lg" className="w-full" onClick={() => router.push("/checkout")}>
+          <Button size="lg" className="w-full" onClick={() => router.push("/checkout")} disabled={!canCheckout}>
             Proceed to Checkout
           </Button>
           <ButtonLink href="/collections/all" variant="ghost" className="w-full">

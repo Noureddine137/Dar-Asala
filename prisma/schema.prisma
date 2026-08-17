@@ -190,6 +190,14 @@ model Order {
   total             Decimal     @db.Decimal(10, 2)
   currency           String      @default("EUR")
   shippingAddress   Json?
+  // Destination country Stripe actually collected (ISO alpha-2). Flat/queryable
+  // alongside shippingAddress. selectedShippingCountry is what the customer
+  // chose on our own site before Checkout (see /api/checkout); shippingCountryMismatch
+  // is true when the two differ — flagged for manual review, never
+  // auto-cancelled/refunded.
+  shippingCountry   String?
+  selectedShippingCountry String?
+  shippingCountryMismatch Boolean @default(false)
   trackingNumber    String?
   stripeSessionId   String?     @unique
   stripePaymentIntentId String? @unique

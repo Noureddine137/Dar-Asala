@@ -44,6 +44,23 @@ export async function POST(request: NextRequest) {
     const total = (session.amount_total ?? 0) / 100;
     const shipping = (session.shipping_cost?.amount_total ?? 0) / 100;
 
+    // Integrity check: does the address Stripe actually collected match the
+    // destination the customer selected on our site before Checkout (stored
+    // in session metadata by /api/checkout)? A mismatch doesn't change what
+    // was charged — Stripe's allowed_countries already constrained the
+    // address field to the matched zone's countries, so this mainly catches
+    // edge cases — but it's flagged for manual review rather than ignored.
+    // Payment already succeeded, so the order is still recorded normally;
+    // never auto-cancelled or refunded.
+    const selectedCountry = session.metadata?.shippingCountry ?? null;
+    const actualCountry = session.customer_details?.address?.country ?? null;
+    const shippingCountryMismatch = Boolean(selectedCountry && actualCountry && selectedCountry !== actualCountry);
+    if (shippingCountryMismatch) {
+      console.warn(
+        `[stripe-webhook] shipping country mismatch on session ${session.id}: selected=${selectedCountry} actual=${actualCountry}`
+      );
+    }
+
     const orderItemsData = await Promise.all(
       lineItems.data.map(async (li) => {
         const product = li.price?.product as Stripe.Product | undefined;
@@ -78,6 +95,9 @@ export async function POST(request: NextRequest) {
           shippingAddress: session.customer_details?.address
             ? JSON.parse(JSON.stringify(session.customer_details.address))
             : undefined,
+          shippingCountry: actualCountry,
+          selectedShippingCountry: selectedCountry,
+          shippingCountryMismatch,
           items: { create: validItems },
         },
       });
