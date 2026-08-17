@@ -42,6 +42,16 @@ enum StrapType {
   ADJUSTABLE
 }
 
+// German/French translations for customer-visible copy. English is never
+// stored here — it lives on the base row (Product.name, Collection.title,
+// etc.) as the canonical source and fallback, so existing English content
+// needs no migration/backfill and can never end up blank. Only DE/FR rows
+// are ever created, one per (entity, locale).
+enum Locale {
+  DE
+  FR
+}
+
 model Product {
   id               String        @id @default(cuid())
   slug             String        @unique
@@ -62,18 +72,42 @@ model Product {
   productionTime   String
   category         String
 
-  images     ProductImage[]
-  variants   ProductVariant[]
-  collections CollectionProduct[]
-  reviews    Review[]
-  orderItems OrderItem[]
-  wishlisted Wishlist[]
+  images       ProductImage[]
+  variants     ProductVariant[]
+  collections  CollectionProduct[]
+  reviews      Review[]
+  orderItems   OrderItem[]
+  wishlisted   Wishlist[]
+  translations ProductTranslation[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([status, featured])
   @@index([category])
+}
+
+// Localized copy only — SKU, price, stock, category and every other
+// commerce/identifier field stay on Product and are never duplicated here.
+model ProductTranslation {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  locale    Locale
+
+  name             String
+  shortDescription String
+  description      String
+  story            String?
+  materials        String
+  careInstructions String
+  seoTitle         String?
+  seoDescription   String?
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([productId, locale])
+  @@index([productId])
 }
 
 model ProductImage {
@@ -91,19 +125,19 @@ model ProductImage {
 }
 
 model ProductVariant {
-  id            String          @id @default(cuid())
+  id            String         @id @default(cuid())
   productId     String
-  product       Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
-  sku           String          @unique
+  product       Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku           String         @unique
   color         LeatherColor
   size          BagSize
-  hardware      HardwareFinish  @default(BRASS)
-  strap         StrapType       @default(STANDARD)
-  priceOverride Decimal?        @db.Decimal(10, 2)
-  stock         Int             @default(0)
-  isMadeToOrder Boolean         @default(false)
+  hardware      HardwareFinish @default(BRASS)
+  strap         StrapType      @default(STANDARD)
+  priceOverride Decimal?       @db.Decimal(10, 2)
+  stock         Int            @default(0)
+  isMadeToOrder Boolean        @default(false)
   imageId       String?
-  image         ProductImage?   @relation(fields: [imageId], references: [id])
+  image         ProductImage?  @relation(fields: [imageId], references: [id])
 
   orderItems OrderItem[]
 
@@ -119,10 +153,31 @@ model Collection {
   position    Int     @default(0)
   active      Boolean @default(true)
 
-  products CollectionProduct[]
+  products     CollectionProduct[]
+  translations CollectionTranslation[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// Slug, position, active state and product assignment stay shared across
+// locales (see Collection) — only the customer-visible title/description/SEO
+// copy is translated here.
+model CollectionTranslation {
+  id           String     @id @default(cuid())
+  collectionId String
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  locale       Locale
+
+  title          String
+  description    String
+  seoTitle       String?
+  seoDescription String?
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([collectionId, locale])
+  @@index([collectionId])
 }
 
 model CollectionProduct {
@@ -142,13 +197,13 @@ model CollectionProduct {
 // ---------------------------------------------------------------------------
 
 model Customer {
-  id        String    @id @default(cuid())
-  email     String    @unique
+  id        String     @id @default(cuid())
+  email     String     @unique
   name      String?
   addresses Address[]
   orders    Order[]
   wishlist  Wishlist[]
-  createdAt DateTime  @default(now())
+  createdAt DateTime   @default(now())
 }
 
 model Address {
@@ -178,29 +233,33 @@ enum OrderStatus {
 }
 
 model Order {
-  id                String      @id @default(cuid())
-  orderNumber       String      @unique
-  customerId        String?
-  customer          Customer?   @relation(fields: [customerId], references: [id])
-  email             String
-  status            OrderStatus @default(PENDING)
-  subtotal          Decimal     @db.Decimal(10, 2)
-  shipping          Decimal     @db.Decimal(10, 2) @default(0)
-  discount          Decimal     @db.Decimal(10, 2) @default(0)
-  total             Decimal     @db.Decimal(10, 2)
-  currency           String      @default("EUR")
-  shippingAddress   Json?
+  id                      String      @id @default(cuid())
+  orderNumber             String      @unique
+  customerId              String?
+  customer                Customer?   @relation(fields: [customerId], references: [id])
+  email                   String
+  status                  OrderStatus @default(PENDING)
+  subtotal                Decimal     @db.Decimal(10, 2)
+  shipping                Decimal     @default(0) @db.Decimal(10, 2)
+  discount                Decimal     @default(0) @db.Decimal(10, 2)
+  total                   Decimal     @db.Decimal(10, 2)
+  currency                String      @default("EUR")
+  shippingAddress         Json?
   // Destination country Stripe actually collected (ISO alpha-2). Flat/queryable
   // alongside shippingAddress. selectedShippingCountry is what the customer
   // chose on our own site before Checkout (see /api/checkout); shippingCountryMismatch
   // is true when the two differ — flagged for manual review, never
   // auto-cancelled/refunded.
-  shippingCountry   String?
+  shippingCountry         String?
   selectedShippingCountry String?
-  shippingCountryMismatch Boolean @default(false)
-  trackingNumber    String?
-  stripeSessionId   String?     @unique
-  stripePaymentIntentId String? @unique
+  shippingCountryMismatch Boolean     @default(false)
+  trackingNumber          String?
+  stripeSessionId         String?     @unique
+  stripePaymentIntentId   String?     @unique
+  // Storefront locale ("en"/"de"/"fr") active when the order was placed —
+  // stored so a future transactional-email system can send confirmations in
+  // the customer's language. No email system is being built this checkpoint.
+  locale                  String?
 
   items OrderItem[]
 
@@ -209,18 +268,18 @@ model Order {
 }
 
 model OrderItem {
-  id        String          @id @default(cuid())
-  orderId   String
-  order     Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId String
-  product   Product         @relation(fields: [productId], references: [id])
-  variantId String?
-  variant   ProductVariant? @relation(fields: [variantId], references: [id])
-  name      String
+  id           String          @id @default(cuid())
+  orderId      String
+  order        Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String
+  product      Product         @relation(fields: [productId], references: [id])
+  variantId    String?
+  variant      ProductVariant? @relation(fields: [variantId], references: [id])
+  name         String
   variantLabel String?
-  unitPrice Decimal         @db.Decimal(10, 2)
-  quantity  Int
-  imageUrl  String?
+  unitPrice    Decimal         @db.Decimal(10, 2)
+  quantity     Int
+  imageUrl     String?
 
   @@index([orderId])
 }
@@ -230,17 +289,17 @@ model OrderItem {
 // ---------------------------------------------------------------------------
 
 model Review {
-  id                String   @id @default(cuid())
-  productId         String
-  product           Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  rating            Int
-  title             String
-  content           String
-  author            String
-  country            String
+  id               String   @id @default(cuid())
+  productId        String
+  product          Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  rating           Int
+  title            String
+  content          String
+  author           String
+  country          String
   verifiedPurchase Boolean  @default(true)
-  published         Boolean  @default(true)
-  createdAt         DateTime @default(now())
+  published        Boolean  @default(true)
+  createdAt        DateTime @default(now())
 
   @@index([productId])
 }
@@ -264,30 +323,32 @@ model NewsletterSubscriber {
 }
 
 model DiscountCode {
-  id            String    @id @default(cuid())
-  code          String    @unique
-  percentOff    Int?
-  amountOff     Decimal?  @db.Decimal(10, 2)
-  active        Boolean   @default(true)
-  expiresAt     DateTime?
-  createdAt     DateTime  @default(now())
+  id         String    @id @default(cuid())
+  code       String    @unique
+  percentOff Int?
+  amountOff  Decimal?  @db.Decimal(10, 2)
+  active     Boolean   @default(true)
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
 }
 
 model CustomOrderRequest {
-  id                  String   @id @default(cuid())
-  name                String
-  email               String
-  phone               String?
+  id                   String   @id @default(cuid())
+  name                 String
+  email                String
+  phone                String?
   requestedProductName String?
-  leatherColor        String?
-  dimensions          String?
-  strapLength         String?
-  initials            String?
-  lining              String?
-  hardware            String?
-  message             String?
-  status              String   @default("new")
-  createdAt           DateTime @default(now())
+  leatherColor         String?
+  dimensions           String?
+  strapLength          String?
+  initials             String?
+  lining               String?
+  hardware             String?
+  message              String?
+  status               String   @default("new")
+  // Storefront locale active when the request was submitted — see Order.locale.
+  locale               String?
+  createdAt            DateTime @default(now())
 }
 
 // ---------------------------------------------------------------------------
@@ -303,7 +364,7 @@ model StoreSettings {
   whatsappNumber        String?
   businessAddress       String?
   currency              String  @default("EUR")
-  freeShippingThreshold Decimal @db.Decimal(10, 2) @default(250)
+  freeShippingThreshold Decimal @default(250) @db.Decimal(10, 2)
   defaultProductionTime String  @default("Made to order — handcrafted in 7-14 business days")
   instagramUrl          String?
   facebookUrl           String?
@@ -311,9 +372,9 @@ model StoreSettings {
 
   brandOriginCountry     String @default("Morocco")
   brandWorkshopLocations String @default("Marrakech and Fez")
-  leatherClaim            String @default("full-grain, vegetable-tanned leather")
-  artisanProcessClaim     String @default("hand-cut, hand-stitched and finished by a single artisan from start to finish")
-  productionModelClaim    String @default("small-batch, made to order")
+  leatherClaim           String @default("full-grain, vegetable-tanned leather")
+  artisanProcessClaim    String @default("hand-cut, hand-stitched and finished by a single artisan from start to finish")
+  productionModelClaim   String @default("small-batch, made to order")
 
   heroHeadline String @default("Handcrafted in Morocco. Made to last.")
   heroSubtitle String @default("Timeless leather bags shaped by our artisans, carried by you.")
@@ -332,22 +393,80 @@ model StoreSettings {
   newsletterHeading String @default("Letters from the Atelier")
   newsletterBody    String @default("New pieces, artisan stories and private releases — straight to your inbox, roughly once a month.")
 
+  translations StoreSettingsTranslation[]
+
   updatedAt DateTime @updatedAt
+}
+
+// Localized CMS copy for the singleton StoreSettings row. Image URLs, CTA
+// hrefs, currency and every operational field (contact info, shipping
+// threshold, etc.) stay shared on StoreSettings — only the customer-facing
+// text below is translated, and each column is nullable so an editor can
+// leave a field untranslated without blocking the others (falls back to the
+// English value on StoreSettings itself).
+model StoreSettingsTranslation {
+  id         String        @id @default(cuid())
+  settingsId String
+  settings   StoreSettings @relation(fields: [settingsId], references: [id], onDelete: Cascade)
+  locale     Locale
+
+  heroHeadline String?
+  heroSubtitle String?
+  heroCtaLabel String?
+
+  brandStoryHeading String?
+  brandStoryBody    String?
+
+  customOrderHeading String?
+  customOrderBody    String?
+
+  newsletterHeading String?
+  newsletterBody    String?
+
+  brandOriginCountry     String?
+  brandWorkshopLocations String?
+  leatherClaim           String?
+  artisanProcessClaim    String?
+  productionModelClaim   String?
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([settingsId, locale])
 }
 
 model ShippingZone {
   id            String   @id @default(cuid())
   region        String
   countries     String
-  price         Decimal  @db.Decimal(10, 2) @default(0)
+  price         Decimal  @default(0) @db.Decimal(10, 2)
   freeThreshold Decimal? @db.Decimal(10, 2)
   estimate      String
   carrier       String?
   active        Boolean  @default(true)
   position      Int      @default(0)
 
+  translations ShippingZoneTranslation[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// Pricing, free-shipping threshold, the country list and active/position all
+// stay on ShippingZone as one shared configuration (per checkpoint: shipping
+// calculation logic must not be duplicated by language) — only the
+// customer-visible region name and delivery-estimate copy are translated.
+model ShippingZoneTranslation {
+  id     String       @id @default(cuid())
+  zoneId String
+  zone   ShippingZone @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  locale Locale
+
+  region   String?
+  estimate String?
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([zoneId, locale])
 }
 
 model Testimonial {
@@ -360,5 +479,22 @@ model Testimonial {
   position   Int     @default(0)
   active     Boolean @default(true)
 
+  translations TestimonialTranslation[]
+
   createdAt DateTime @default(now())
+}
+
+// Author name, country, rating, avatar and ordering stay shared — only the
+// quote text itself is translated.
+model TestimonialTranslation {
+  id            String      @id @default(cuid())
+  testimonialId String
+  testimonial   Testimonial @relation(fields: [testimonialId], references: [id], onDelete: Cascade)
+  locale        Locale
+
+  quote String
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([testimonialId, locale])
 }
