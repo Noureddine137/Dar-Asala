@@ -38,7 +38,7 @@ export function TrustList({ product }: { product: ProductDetailDTO }) {
           <p className="text-sm leading-snug text-charcoal">
             <span className="font-medium">{title}</span>
             <br />
-            <span className="text-charcoal/65">{copy}</span>
+            <span className="text-charcoal/75">{copy}</span>
           </p>
         </div>
       ))}

@@ -78,7 +78,10 @@ export function MobileMenu() {
             <Section title="Shop" links={SHOP_LINKS} onNavigate={close} />
             <Section title="The Brand" links={BRAND_LINKS} onNavigate={close} />
             <Section title="Help" links={HELP_LINKS} onNavigate={close} />
-            <div className="py-6 text-sm text-muted">
+            <div
+              className="py-6 text-sm text-muted"
+              style={{ paddingBottom: "max(1.5rem, calc(env(safe-area-inset-bottom) + 1rem))" }}
+            >
               <Link href="/account" onClick={close} className="block py-1.5 text-charcoal">
                 Account
               </Link>

@@ -74,6 +74,82 @@ export async function updateVariantStock(variantId: string, stock: number) {
   revalidatePath("/admin/products");
 }
 
+// ---------------------------------------------------------------------------
+// Product images — kept URL-based (no upload pipeline configured yet), but
+// fully editable: add, reorder, re-tag, delete, and the lowest `position`
+// is always treated as the primary/card image by the storefront.
+// ---------------------------------------------------------------------------
+
+export async function addProductImage(productId: string, formData: FormData) {
+  const url = String(formData.get("url") ?? "").trim();
+  const alt = String(formData.get("alt") ?? "").trim();
+  const kind = String(formData.get("kind") ?? "front");
+  if (!url || !alt) throw new Error("Image URL and alt text are required.");
+
+  const maxPosition = await prisma.productImage.aggregate({
+    where: { productId },
+    _max: { position: true },
+  });
+
+  await prisma.productImage.create({
+    data: {
+      productId,
+      url,
+      alt,
+      kind,
+      position: (maxPosition._max.position ?? -1) + 1,
+    },
+  });
+
+  revalidatePath(`/admin/products/${productId}`);
+  revalidatePath("/");
+}
+
+export async function updateProductImageMeta(imageId: string, productId: string, formData: FormData) {
+  const alt = String(formData.get("alt") ?? "").trim();
+  const kind = String(formData.get("kind") ?? "front");
+  if (!alt) throw new Error("Alt text is required.");
+
+  await prisma.productImage.update({ where: { id: imageId }, data: { alt, kind } });
+
+  revalidatePath(`/admin/products/${productId}`);
+  revalidatePath("/");
+}
+
+export async function deleteProductImage(imageId: string, productId: string) {
+  await prisma.$transaction([
+    // Variants pointing at this image fall back to the product's default (primary) image.
+    prisma.productVariant.updateMany({ where: { imageId }, data: { imageId: null } }),
+    prisma.productImage.delete({ where: { id: imageId } }),
+  ]);
+
+  revalidatePath(`/admin/products/${productId}`);
+  revalidatePath("/");
+}
+
+export async function moveProductImage(imageId: string, productId: string, direction: "up" | "down") {
+  const images = await prisma.productImage.findMany({
+    where: { productId },
+    orderBy: { position: "asc" },
+  });
+  const index = images.findIndex((img) => img.id === imageId);
+  if (index === -1) return;
+
+  const swapWith = direction === "up" ? index - 1 : index + 1;
+  if (swapWith < 0 || swapWith >= images.length) return;
+
+  const a = images[index];
+  const b = images[swapWith];
+
+  await prisma.$transaction([
+    prisma.productImage.update({ where: { id: a.id }, data: { position: b.position } }),
+    prisma.productImage.update({ where: { id: b.id }, data: { position: a.position } }),
+  ]);
+
+  revalidatePath(`/admin/products/${productId}`);
+  revalidatePath("/");
+}
+
 export async function updateOrderStatus(orderId: string, formData: FormData) {
   const status = String(formData.get("status") ?? "PENDING");
   await prisma.order.update({

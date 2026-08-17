@@ -54,7 +54,10 @@ export function CartDrawer() {
                   <CartLineItem key={item.variantId} item={item} onNavigate={close} />
                 ))}
               </div>
-              <div className="space-y-4 border-t border-sand/70 px-5 py-5">
+              <div
+                className="space-y-4 border-t border-sand/70 px-5 pt-5"
+                style={{ paddingBottom: "max(1.25rem, calc(env(safe-area-inset-bottom) + 1rem))" }}
+              >
                 <FreeShippingBar subtotal={subtotal} />
                 <div className="space-y-1.5 text-sm">
                   <div className="flex items-center justify-between">

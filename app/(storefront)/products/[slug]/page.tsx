@@ -97,7 +97,7 @@ export default async function ProductPage({ params }: Props) {
       </div>
 
       {/* Gallery + purchase panel */}
-      <div className="container-page grid gap-8 pb-10 pt-4 md:grid-cols-2 md:gap-14 md:pb-16">
+      <div className="container-page grid grid-cols-1 gap-8 pb-10 pt-4 md:grid-cols-2 md:gap-14 md:pb-16">
         <ProductGallery images={product.images} productName={product.name} />
         <PurchasePanel product={product} />
       </div>

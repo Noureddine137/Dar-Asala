@@ -77,7 +77,9 @@ export function ProductCard({
       </button>
 
       <Link href={`/products/${product.slug}`} className="mt-2.5 flex flex-1 flex-col">
-        <h3 className="font-serif-display text-base leading-snug text-charcoal md:text-lg">{product.name}</h3>
+        <h3 className="line-clamp-1 font-serif-display text-base leading-snug text-charcoal md:text-lg">
+          {product.name}
+        </h3>
 
         <div className="mt-1.5 flex items-center justify-between">
           <div className="flex items-baseline gap-2">

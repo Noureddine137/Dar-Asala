@@ -17,7 +17,7 @@ export function BeforeYouOrder() {
   return (
     <div>
       <p className="mb-4 font-serif-display text-xl text-charcoal md:text-2xl">Before You Order</p>
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {NOTES.map((note) => (
           <div key={note.title} className="rounded-sm bg-sand/50 p-5">
             <p className="text-xs font-semibold uppercase tracking-wide text-leather">{note.title}</p>

@@ -19,17 +19,21 @@ export function CartLineItem({ item, onNavigate }: { item: CartItem; onNavigate?
       >
         <Image src={item.image} alt={item.imageAlt} fill sizes="80px" className="object-cover" />
       </Link>
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex items-start justify-between gap-2">
-          <div>
-            <Link href={`/products/${item.slug}`} onClick={onNavigate} className="font-serif-display text-base text-charcoal">
+          <div className="min-w-0">
+            <Link
+              href={`/products/${item.slug}`}
+              onClick={onNavigate}
+              className="line-clamp-2 font-serif-display text-base leading-snug text-charcoal"
+            >
               {item.name}
             </Link>
-            <p className="mt-0.5 text-xs text-muted">
+            <p className="mt-0.5 truncate text-xs text-muted">
               {colorLabel(item.color)} / {sizeLabel(item.size)}
             </p>
             {(item.strap || item.hardware) && (
-              <p className="text-xs text-muted">
+              <p className="truncate text-xs text-muted">
                 {[item.strap, item.hardware].filter(Boolean).join(" / ")}
               </p>
             )}
@@ -39,7 +43,7 @@ export function CartLineItem({ item, onNavigate }: { item: CartItem; onNavigate?
             type="button"
             onClick={() => removeItem(item.variantId)}
             aria-label={`Remove ${item.name} from cart`}
-            className="text-muted hover:text-charcoal"
+            className="shrink-0 text-muted hover:text-charcoal"
           >
             <X className="h-4 w-4" />
           </button>

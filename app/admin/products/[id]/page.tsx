@@ -1,7 +1,15 @@
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { prisma } from "@/lib/db/prisma";
-import { updateProduct, updateVariantStock } from "@/lib/admin/actions";
+import {
+  updateProduct,
+  updateVariantStock,
+  addProductImage,
+  updateProductImageMeta,
+  deleteProductImage,
+  moveProductImage,
+} from "@/lib/admin/actions";
+import { PRODUCT_IMAGE_KINDS } from "@/lib/admin/constants";
 import { colorLabel, sizeLabel, formatPrice } from "@/lib/utils/format";
 
 type Props = { params: Promise<{ id: string }> };
@@ -25,7 +33,7 @@ export default async function EditProductPage({ params }: Props) {
       <p className="mt-1 text-sm text-muted">/products/{product.slug}</p>
 
       <form action={boundUpdate} className="mt-8 space-y-6">
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field label="Name">
             <input name="name" defaultValue={product.name} className="input" />
           </Field>
@@ -135,18 +143,92 @@ export default async function EditProductPage({ params }: Props) {
       </div>
 
       <div className="mt-12">
-        <h2 className="mb-4 font-serif-display text-xl">Images</h2>
-        <div className="grid grid-cols-4 gap-3">
-          {product.images.map((img) => (
-            // eslint-disable-next-line @next/next/no-img-element -- admin preview thumbnail, not a storefront asset
-            <img key={img.id} src={img.url} alt={img.alt} className="aspect-[4/5] w-full rounded-sm object-cover" />
-          ))}
-        </div>
-        <p className="mt-3 text-xs text-muted">
-          Image upload isn&rsquo;t wired up yet — this build renders images from{" "}
-          <code>/public/images</code>. Connect an object storage provider (e.g. S3, Cloudinary,
-          Vercel Blob) to support uploads from this screen.
+        <h2 className="mb-1 font-serif-display text-xl">Images</h2>
+        <p className="mb-4 text-xs text-muted">
+          The image at position 1 is used as the primary/card image. Order, alt text and kind are
+          editable below — pointing <code>url</code> at a new file (uploaded to{" "}
+          <code>/public/images</code> or an external host) replaces the photo with no code
+          changes. No upload pipeline is wired up yet: connect an object storage provider (S3,
+          Cloudinary, Vercel Blob) to upload directly from this screen.
         </p>
+
+        <div className="space-y-4">
+          {product.images.map((img, i) => {
+            const boundMeta = updateProductImageMeta.bind(null, img.id, product.id);
+            const boundDelete = deleteProductImage.bind(null, img.id, product.id);
+            const boundMoveUp = moveProductImage.bind(null, img.id, product.id, "up");
+            const boundMoveDown = moveProductImage.bind(null, img.id, product.id, "down");
+            return (
+              <div key={img.id} className="flex gap-4 rounded-sm border border-sand p-4">
+                <div className="relative h-24 w-20 shrink-0 overflow-hidden rounded-sm bg-sand">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- admin preview thumbnail, not a storefront asset */}
+                  <img src={img.url} alt={img.alt} className="h-full w-full object-cover" />
+                  {i === 0 && (
+                    <span className="absolute left-1 top-1 rounded-sm bg-charcoal px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-ivory">
+                      Primary
+                    </span>
+                  )}
+                </div>
+
+                <form action={boundMeta} className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-2">
+                  <p className="truncate text-xs text-muted sm:col-span-2" title={img.url}>
+                    {img.url}
+                  </p>
+                  <input name="alt" defaultValue={img.alt} placeholder="Alt text" className="input" />
+                  <select name="kind" defaultValue={img.kind} className="input">
+                    {PRODUCT_IMAGE_KINDS.map((k) => (
+                      <option key={k} value={k}>
+                        {k}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="flex items-center gap-3 sm:col-span-2">
+                    <button type="submit" className="text-xs underline">
+                      Save
+                    </button>
+                    <span className="text-xs text-muted">Position {i + 1}</span>
+                  </div>
+                </form>
+
+                <div className="flex shrink-0 flex-col gap-1.5 text-xs">
+                  <form action={boundMoveUp}>
+                    <button type="submit" disabled={i === 0} className="underline disabled:opacity-30">
+                      Move up
+                    </button>
+                  </form>
+                  <form action={boundMoveDown}>
+                    <button type="submit" disabled={i === product.images.length - 1} className="underline disabled:opacity-30">
+                      Move down
+                    </button>
+                  </form>
+                  <form action={boundDelete}>
+                    <button type="submit" className="text-terracotta underline">
+                      Delete
+                    </button>
+                  </form>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-6 rounded-sm border border-dashed border-sand p-4">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted">Add Image</p>
+          <form action={addProductImage.bind(null, product.id)} className="grid grid-cols-1 gap-3 sm:grid-cols-4">
+            <input name="url" placeholder="/images/products/... or https://..." required className="input sm:col-span-2" />
+            <input name="alt" placeholder="Alt text" required className="input" />
+            <select name="kind" defaultValue="front" className="input">
+              {PRODUCT_IMAGE_KINDS.map((k) => (
+                <option key={k} value={k}>
+                  {k}
+                </option>
+              ))}
+            </select>
+            <button type="submit" className="rounded-sm bg-charcoal px-4 py-2 text-sm text-ivory sm:col-span-4 sm:w-fit">
+              Add Image
+            </button>
+          </form>
+        </div>
       </div>
 
       <p className="mt-6 text-sm">

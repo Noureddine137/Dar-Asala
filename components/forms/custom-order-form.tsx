@@ -51,7 +51,7 @@ export function CustomOrderForm() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-xl space-y-5">
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor="name" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted">
             Name
@@ -77,7 +77,7 @@ export function CustomOrderForm() {
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         {FIELDS.map((f) => (
           <div key={f.name}>
             <label htmlFor={f.name} className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted">

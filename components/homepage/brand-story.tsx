@@ -1,9 +1,10 @@
 import Image from "next/image";
 import { ButtonLink } from "@/components/ui/button";
+import { BRAND_WORKSHOP_LOCATIONS } from "@/lib/content/business-claims";
 
 export function BrandStory() {
   return (
-    <section className="py-16 md:py-24">
+    <section className="border-t border-sand py-16 md:py-24">
       <div className="container-page grid items-center gap-10 md:grid-cols-2 md:gap-16">
         <div className="relative order-2 aspect-[4/3] overflow-hidden rounded-sm md:order-1">
           <Image
@@ -17,12 +18,12 @@ export function BrandStory() {
         <div className="order-1 md:order-2">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-muted">Our Story</p>
           <h2 className="font-serif-display text-3xl leading-tight text-charcoal md:text-4xl">
-            Crafted slowly. Made to last.
+            Slow by design.
           </h2>
           <p className="mt-5 text-base leading-relaxed text-charcoal/80">
             Each Dar Asala piece is shaped by artisans using techniques rooted in Moroccan
             leather craftsmanship — hand-cut, hand-stitched and finished one bag at a time in
-            small workshops across Marrakech and Fez.
+            small workshops across {BRAND_WORKSHOP_LOCATIONS}.
           </p>
           <p className="mt-4 text-base leading-relaxed text-charcoal/80">
             We work in small batches by choice, not necessity: it is the only way to keep the

@@ -3,6 +3,10 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
+import { ARTISAN_PROCESS_CLAIM, BRAND_ORIGIN_COUNTRY } from "@/lib/content/business-claims";
+import { productDimensionsText } from "@/lib/content/product-details";
+import { FREE_SHIPPING_THRESHOLD } from "@/lib/config";
+import { formatPrice } from "@/lib/utils/format";
 import type { ProductDetailDTO } from "@/lib/commerce/types";
 
 function Item({ value, title, children }: { value: string; title: string; children: ReactNode }) {
@@ -29,24 +33,24 @@ export function ProductAccordions({ product }: { product: ProductDetailDTO }) {
       </Item>
       <Item value="craftsmanship" title="Craftsmanship">
         <p>
-          Hand-cut, hand-stitched and hand-finished by a single artisan in a small Moroccan workshop —
-          from raw hide to the burnished edge of the final piece.
+          {ARTISAN_PROCESS_CLAIM.charAt(0).toUpperCase() + ARTISAN_PROCESS_CLAIM.slice(1)} in a small
+          workshop in {BRAND_ORIGIN_COUNTRY} — from raw hide to the burnished edge of the final piece.
         </p>
       </Item>
       <Item value="materials" title="Materials">
         <p>{product.materials}</p>
       </Item>
       <Item value="dimensions" title="Dimensions">
-        <p>Approximate dimensions vary by size selection. Full measurements are noted on the packing slip and available on request via our Contact page.</p>
+        <p>{productDimensionsText(product)}. Measurements are approximate, as expected with handmade pieces.</p>
       </Item>
       <Item value="care" title="Care">
         <p>{product.careInstructions}</p>
       </Item>
       <Item value="shipping" title="Shipping & Returns">
         <p>
-          Free shipping within the EU on orders over €250. Made-to-order pieces ship in 7–14 business
-          days; in-stock pieces ship in 1–3 business days. Returns accepted within 14 days of delivery
-          on unused, unworn items. See our Shipping and Returns pages for full details.
+          Free shipping within the EU on orders over {formatPrice(FREE_SHIPPING_THRESHOLD)}.{" "}
+          {product.productionTime}. Returns accepted within 14 days of delivery on unused, unworn
+          items. See our Shipping and Returns pages for full details.
         </p>
       </Item>
     </Accordion.Root>

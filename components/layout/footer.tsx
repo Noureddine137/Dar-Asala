@@ -5,14 +5,17 @@ import { NewsletterForm } from "@/components/homepage/newsletter-form";
 export function Footer() {
   return (
     <footer className="border-t border-sand/70 bg-cream">
-      <div className="container-page grid grid-cols-2 gap-x-6 gap-y-10 py-14 md:grid-cols-4 md:gap-x-10 md:py-20">
+      <div className="container-page grid grid-cols-2 gap-x-6 gap-y-8 py-12 md:grid-cols-4 md:gap-x-10 md:py-20">
         {FOOTER_COLUMNS.map((col) => (
           <div key={col.heading}>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-muted">{col.heading}</h3>
-            <ul className="space-y-2.5">
+            <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-muted">{col.heading}</h3>
+            <ul>
               {col.links.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-charcoal/85 transition-colors hover:text-charcoal">
+                  <Link
+                    href={link.href}
+                    className="inline-block py-1.5 text-sm text-charcoal/85 transition-colors hover:text-charcoal"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -30,9 +33,9 @@ export function Footer() {
 
       <div className="border-t border-sand/70">
         <div className="container-page flex flex-col gap-4 py-6 text-xs text-muted md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-wrap gap-x-5 gap-y-2">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
             {LEGAL_LINKS.map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-charcoal">
+              <Link key={link.href} href={link.href} className="inline-block py-1 hover:text-charcoal">
                 {link.label}
               </Link>
             ))}

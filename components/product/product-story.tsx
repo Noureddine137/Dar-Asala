@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ARTISAN_PROCESS_CLAIM, BRAND_ORIGIN_COUNTRY, PRODUCTION_MODEL_CLAIM } from "@/lib/content/business-claims";
 import type { ProductDetailDTO } from "@/lib/commerce/types";
 
 export function ProductStory({ product }: { product: ProductDetailDTO }) {
@@ -13,14 +14,16 @@ export function ProductStory({ product }: { product: ProductDetailDTO }) {
           )}
         </div>
         <div>
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-muted">Made by Hand in Morocco</p>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-muted">
+            Made by Hand in {BRAND_ORIGIN_COUNTRY}
+          </p>
           <h2 className="font-serif-display text-2xl leading-tight text-charcoal md:text-3xl">
             {product.story ?? "Cut, stitched and finished by hand, one piece at a time."}
           </h2>
           <p className="mt-5 text-base leading-relaxed text-charcoal/80">
-            Every {product.name} begins as a single hide, hand-selected for grain and character. It is
-            cut, saddle-stitched and edge-finished by one artisan from start to finish, then produced
-            in small batches rather than mass runs — so quality never gets diluted by volume.
+            Every {product.name} begins as a single hide, hand-selected for grain and character. It is{" "}
+            {ARTISAN_PROCESS_CLAIM}, produced {PRODUCTION_MODEL_CLAIM} rather than mass runs — so
+            quality never gets diluted by volume.
           </p>
         </div>
       </div>

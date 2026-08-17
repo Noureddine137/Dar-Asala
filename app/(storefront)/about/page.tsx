@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { PageHeader } from "@/components/layout/page-header";
 import { ButtonLink } from "@/components/ui/button";
+import { BRAND_WORKSHOP_LOCATIONS } from "@/lib/content/business-claims";
 
 export const metadata: Metadata = {
   title: "Our Story",
@@ -27,8 +28,8 @@ export default function AboutPage() {
           </h2>
           <p className="mt-5 text-base leading-relaxed text-charcoal/80">
             Dar Asala — &ldquo;house of authenticity&rdquo; — began as an attempt to bring the leather
-            craft of Marrakech and Fez to a wider audience without losing what makes it worth
-            preserving: real hides, real hands, and real time.
+            craft of {BRAND_WORKSHOP_LOCATIONS} to a wider audience without losing what makes it
+            worth preserving: real hides, real hands, and real time.
           </p>
           <p className="mt-4 text-base leading-relaxed text-charcoal/80">
             Every bag we make passes through a small number of artisans, each responsible for a

@@ -13,7 +13,8 @@
   --color-forest: #3e4638;
   --color-charcoal: #2c2a26;
   --color-brass: #a78b57;
-  --color-muted: #7a6f62;
+  /* Contrast-checked against --color-cream: ~5.4:1, passes WCAG AA for normal text */
+  --color-muted: #6b6055;
 
   --color-background: var(--color-cream);
   --color-foreground: var(--color-charcoal);

@@ -18,6 +18,7 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
   const [quantity, setQuantity] = useState(1);
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useUIStore((s) => s.openCart);
+  const anyOverlayOpen = useUIStore((s) => s.overlay !== null);
   const isWishlisted = useWishlistStore((s) => s.has(product.slug));
   const toggleWishlist = useWishlistStore((s) => s.toggle);
   const [justAdded, setJustAdded] = useState(false);
@@ -125,12 +126,16 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
                   onClick={() => setSelection((s) => ({ ...s, color: c }))}
                   aria-pressed={selection.color === c}
                   aria-label={colorLabel(c)}
-                  className={cn(
-                    "h-9 w-9 rounded-full ring-2 ring-offset-2 ring-offset-ivory transition-all",
-                    selection.color === c ? "ring-charcoal" : "ring-transparent hover:ring-sand"
-                  )}
-                  style={{ backgroundColor: colorSwatchHex(c) }}
-                />
+                  className="flex h-11 w-11 items-center justify-center rounded-full"
+                >
+                  <span
+                    className={cn(
+                      "h-8 w-8 rounded-full ring-2 ring-offset-2 ring-offset-ivory transition-all",
+                      selection.color === c ? "ring-charcoal" : "ring-transparent hover:ring-sand"
+                    )}
+                    style={{ backgroundColor: colorSwatchHex(c) }}
+                  />
+                </button>
               ))}
             </div>
           </div>
@@ -259,7 +264,7 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
       <p className={cn("mt-4 text-sm", variant.isMadeToOrder ? "text-olive" : "text-charcoal/80")}>{statusLabel}</p>
 
       <StickyMobileCartBar
-        show={showSticky}
+        show={showSticky && !anyOverlayOpen}
         image={image?.url ?? ""}
         imageAlt={image?.alt ?? product.name}
         name={product.name}

@@ -1,3 +1,5 @@
+// DEMO CONTENT — describes an illustrative production process, not yet
+// verified against a real workshop. Confirm before launch.
 export const CRAFTSMANSHIP_STEPS = [
   {
     slug: "leather-selection",

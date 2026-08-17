@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   description: "The leather, hardware and linings we use, and how to care for a Dar Asala bag.",
 };
 
+// DEMO CONTENT — sourcing/process claims below (tannery origin, hardware
+// casting, thread type) are illustrative and unverified. Confirm against
+// your actual suppliers before launch; see lib/content/business-claims.ts
+// for the claims already centralized elsewhere on the site.
 const MATERIALS = [
   {
     title: "Full-Grain Leather",

@@ -24,7 +24,7 @@ const FEATURES = [
 
 export function Editorial() {
   return (
-    <section className="bg-cream py-16 md:py-24">
+    <section className="border-t border-sand bg-cream py-16 md:py-24">
       <div className="container-page mb-8 md:mb-10">
         <h2 className="font-serif-display text-3xl text-charcoal md:text-4xl">From the Journal</h2>
       </div>
