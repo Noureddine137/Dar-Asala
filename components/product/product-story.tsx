@@ -1,9 +1,12 @@
 import Image from "next/image";
-import { getStoreSettings } from "@/lib/content/store-settings";
+import { getLocale, getTranslations } from "next-intl/server";
+import { getLocalizedStoreSettings } from "@/lib/content/store-settings";
 import type { ProductDetailDTO } from "@/lib/commerce/types";
+import type { Locale } from "@/i18n/routing";
 
 export async function ProductStory({ product }: { product: ProductDetailDTO }) {
-  const settings = await getStoreSettings();
+  const locale = (await getLocale()) as Locale;
+  const [settings, t] = await Promise.all([getLocalizedStoreSettings(locale), getTranslations("product")]);
   const image = product.images.find((img) => img.kind === "lifestyle") ?? product.images[3] ?? product.images[0];
 
   return (
@@ -16,15 +19,17 @@ export async function ProductStory({ product }: { product: ProductDetailDTO }) {
         </div>
         <div>
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-muted">
-            Made by Hand in {settings.brandOriginCountry}
+            {t("madeByHandIn", { country: settings.brandOriginCountry })}
           </p>
           <h2 className="font-serif-display text-2xl leading-tight text-charcoal md:text-3xl">
-            {product.story ?? "Cut, stitched and finished by hand, one piece at a time."}
+            {product.story ?? t("productStoryFallback")}
           </h2>
           <p className="mt-5 text-base leading-relaxed text-charcoal/80">
-            Every {product.name} begins as a single hide, hand-selected for grain and character. It is{" "}
-            {settings.artisanProcessClaim}, produced {settings.productionModelClaim} rather than mass
-            runs — so quality never gets diluted by volume.
+            {t("productStoryBody", {
+              name: product.name,
+              claim: settings.artisanProcessClaim,
+              productionModel: settings.productionModelClaim,
+            })}
           </p>
         </div>
       </div>

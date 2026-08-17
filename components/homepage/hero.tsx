@@ -1,9 +1,12 @@
 import Image from "next/image";
+import { getLocale } from "next-intl/server";
 import { ButtonLink } from "@/components/ui/button-link";
-import { getStoreSettings } from "@/lib/content/store-settings";
+import { getLocalizedStoreSettings } from "@/lib/content/store-settings";
+import type { Locale } from "@/i18n/routing";
 
 export async function Hero() {
-  const settings = await getStoreSettings();
+  const locale = (await getLocale()) as Locale;
+  const settings = await getLocalizedStoreSettings(locale);
 
   return (
     <section className="relative flex h-[80svh] min-h-[560px] items-end overflow-hidden bg-forest md:h-[84vh]">

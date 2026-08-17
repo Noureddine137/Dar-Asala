@@ -1,9 +1,13 @@
 import Image from "next/image";
+import { getLocale, getTranslations } from "next-intl/server";
 import { ButtonLink } from "@/components/ui/button-link";
-import { getStoreSettings } from "@/lib/content/store-settings";
+import { getLocalizedStoreSettings } from "@/lib/content/store-settings";
+import type { Locale } from "@/i18n/routing";
 
 export async function CustomOrders() {
-  const settings = await getStoreSettings();
+  const locale = (await getLocale()) as Locale;
+  const [settings, t] = await Promise.all([getLocalizedStoreSettings(locale), getTranslations("home")]);
+  const features = t.raw("customOrderFeatures") as string[];
 
   return (
     <section className="py-16 md:py-24">
@@ -18,21 +22,18 @@ export async function CustomOrders() {
           />
         </div>
         <div>
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-muted">Bespoke</p>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-muted">{t("bespokeLabel")}</p>
           <h2 className="font-serif-display text-3xl leading-tight text-charcoal md:text-4xl">
             {settings.customOrderHeading}
           </h2>
           <p className="mt-5 max-w-md text-base leading-relaxed text-charcoal/80">{settings.customOrderBody}</p>
           <ul className="mt-6 grid grid-cols-2 gap-2 text-sm text-charcoal/80">
-            <li>— Leather color</li>
-            <li>— Dimensions</li>
-            <li>— Strap length</li>
-            <li>— Monogram initials</li>
-            <li>— Interior lining</li>
-            <li>— Hardware finish</li>
+            {features.map((feature) => (
+              <li key={feature}>— {feature}</li>
+            ))}
           </ul>
           <ButtonLink href="/custom-orders" className="mt-8">
-            Create Your Bag
+            {t("createYourBag")}
           </ButtonLink>
         </div>
       </div>

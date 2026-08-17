@@ -1,7 +1,9 @@
 import "server-only";
+import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/db/prisma";
 import { LeatherColor, BagSize, type Prisma } from "@prisma/client";
 import type { CollectionDTO, ProductCardDTO } from "./types";
+import { toPrismaLocale, withTranslation, type Locale } from "@/lib/i18n/merge";
 
 function toLeatherColors(values: string[]): LeatherColor[] {
   return values.filter((v): v is LeatherColor => (Object.values(LeatherColor) as string[]).includes(v));
@@ -18,14 +20,30 @@ const cardInclude = {
 
 type ProductWithRelations = Prisma.ProductGetPayload<{ include: typeof cardInclude }>;
 
-function toCardDTO(product: ProductWithRelations): ProductCardDTO {
+const PRODUCT_CARD_TRANSLATION_KEYS = ["name", "shortDescription"] as const;
+const COLLECTION_TRANSLATION_KEYS = ["title", "description"] as const;
+
+async function loadProductTranslations(productIds: string[], locale: Locale) {
+  const prismaLocale = toPrismaLocale(locale);
+  if (!prismaLocale || productIds.length === 0) return new Map<string, Prisma.ProductTranslationGetPayload<object>>();
+  const rows = await prisma.productTranslation.findMany({
+    where: { productId: { in: productIds }, locale: prismaLocale },
+  });
+  return new Map(rows.map((row) => [row.productId, row]));
+}
+
+function toCardDTO(
+  product: ProductWithRelations,
+  translation: Prisma.ProductTranslationGetPayload<object> | undefined
+): ProductCardDTO {
   const images = product.images;
   const colors = Array.from(new Set(product.variants.map((v) => v.color)));
+  const localized = withTranslation(product, translation, PRODUCT_CARD_TRANSLATION_KEYS);
   return {
     id: product.id,
     slug: product.slug,
-    name: product.name,
-    shortDescription: product.shortDescription,
+    name: localized.name,
+    shortDescription: localized.shortDescription,
     price: Number(product.price),
     compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
     currency: product.currency,
@@ -39,9 +57,37 @@ function toCardDTO(product: ProductWithRelations): ProductCardDTO {
   };
 }
 
-export async function getAllCollections(): Promise<CollectionDTO[]> {
+async function toCardDTOs(products: ProductWithRelations[], locale: Locale): Promise<ProductCardDTO[]> {
+  const translations = await loadProductTranslations(products.map((p) => p.id), locale);
+  return products.map((product) => toCardDTO(product, translations.get(product.id)));
+}
+
+function toCollectionDTO(
+  collection: { id: string; slug: string; title: string; description: string; heroImage: string },
+  translation: { title: string; description: string; seoTitle: string | null; seoDescription: string | null } | undefined
+): CollectionDTO {
+  const localized = withTranslation(collection, translation, COLLECTION_TRANSLATION_KEYS);
+  return {
+    id: collection.id,
+    slug: collection.slug,
+    title: localized.title,
+    description: localized.description,
+    heroImage: collection.heroImage,
+    seoTitle: translation?.seoTitle || localized.title,
+    seoDescription: translation?.seoDescription || localized.description,
+  };
+}
+
+export async function getAllCollections(locale: Locale): Promise<CollectionDTO[]> {
   const collections = await prisma.collection.findMany({ where: { active: true }, orderBy: { position: "asc" } });
-  return collections;
+  const prismaLocale = toPrismaLocale(locale);
+  const translations = prismaLocale
+    ? await prisma.collectionTranslation.findMany({
+        where: { collectionId: { in: collections.map((c) => c.id) }, locale: prismaLocale },
+      })
+    : [];
+  const byId = new Map(translations.map((t) => [t.collectionId, t]));
+  return collections.map((c) => toCollectionDTO(c, byId.get(c.id)));
 }
 
 export type SortOption = "featured" | "newest" | "price-asc" | "price-desc";
@@ -56,43 +102,50 @@ export type CollectionFilters = {
 
 const SPECIAL_SLUGS = new Set(["all", "new-arrivals", "best-sellers"]);
 
+/**
+ * The three synthetic collections ("all", "new-arrivals", "best-sellers")
+ * aren't DB rows, so their copy lives in messages/*.json (namespace
+ * "virtualCollections") rather than a translation table.
+ */
+async function virtualCollection(slug: "all" | "newArrivals" | "bestSellers", realSlug: string): Promise<CollectionDTO> {
+  const t = await getTranslations("virtualCollections");
+  const title = t(`${slug}.title`);
+  const description = t(`${slug}.description`);
+  return {
+    id: realSlug,
+    slug: realSlug,
+    title,
+    description,
+    heroImage: `/images/categories/${realSlug}-banner.webp`,
+    seoTitle: title,
+    seoDescription: description,
+  };
+}
+
 export async function getCollectionBySlug(
   slug: string,
+  locale: Locale,
   filters: CollectionFilters = {}
 ): Promise<{ collection: CollectionDTO; products: ProductCardDTO[] } | null> {
   let collection: CollectionDTO | null = null;
   let where: Prisma.ProductWhereInput = { status: "ACTIVE" };
 
   if (slug === "all") {
-    collection = {
-      id: "all",
-      slug: "all",
-      title: "All Bags",
-      description: "The full Dar Asala catalogue — every handcrafted bag, in one place.",
-      heroImage: "/images/categories/all-banner.webp",
-    };
+    collection = await virtualCollection("all", "all");
   } else if (slug === "new-arrivals") {
-    collection = {
-      id: "new-arrivals",
-      slug: "new-arrivals",
-      title: "New Arrivals",
-      description: "The newest pieces from the atelier.",
-      heroImage: "/images/categories/new-arrivals-banner.webp",
-    };
+    collection = await virtualCollection("newArrivals", "new-arrivals");
     where = { ...where, isNew: true };
   } else if (slug === "best-sellers") {
-    collection = {
-      id: "best-sellers",
-      slug: "best-sellers",
-      title: "Best Sellers",
-      description: "The pieces our customers reach for again and again.",
-      heroImage: "/images/categories/best-sellers-banner.webp",
-    };
+    collection = await virtualCollection("bestSellers", "best-sellers");
     where = { ...where, isBestSeller: true };
   } else {
     const found = await prisma.collection.findUnique({ where: { slug } });
     if (!found || !found.active) return null;
-    collection = found;
+    const prismaLocale = toPrismaLocale(locale);
+    const translation = prismaLocale
+      ? (await prisma.collectionTranslation.findUnique({ where: { collectionId_locale: { collectionId: found.id, locale: prismaLocale } } })) ?? undefined
+      : undefined;
+    collection = toCollectionDTO(found, translation);
     where = { ...where, collections: { some: { collection: { slug } } } };
   }
 
@@ -134,7 +187,7 @@ export async function getCollectionBySlug(
     orderBy,
   });
 
-  return { collection, products: products.map(toCardDTO) };
+  return { collection, products: await toCardDTOs(products, locale) };
 }
 
 export function isKnownCollectionSlug(slug: string) {

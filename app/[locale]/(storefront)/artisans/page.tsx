@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { PageHeader } from "@/components/layout/page-header";
-import { getStoreSettings } from "@/lib/content/store-settings";
+import { getLocalizedStoreSettings } from "@/lib/content/store-settings";
+import type { Locale } from "@/i18n/routing";
 
 export const metadata: Metadata = {
   title: "Artisans",
@@ -26,8 +27,11 @@ const WORKSHOPS = [
   },
 ];
 
-export default async function ArtisansPage() {
-  const settings = await getStoreSettings();
+type Props = { params: Promise<{ locale: string }> };
+
+export default async function ArtisansPage({ params }: Props) {
+  const { locale } = await params;
+  const settings = await getLocalizedStoreSettings(locale as Locale);
   return (
     <div>
       <PageHeader

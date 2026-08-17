@@ -3,14 +3,16 @@ import { Search } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { ProductGrid } from "@/components/collection/product-grid";
 import { searchProducts } from "@/lib/commerce/products";
+import type { Locale } from "@/i18n/routing";
 
-type Props = { searchParams: Promise<{ q?: string }> };
+type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ q?: string }> };
 
 export const metadata: Metadata = { title: "Search" };
 
-export default async function SearchPage({ searchParams }: Props) {
+export default async function SearchPage({ params, searchParams }: Props) {
+  const { locale } = await params;
   const { q = "" } = await searchParams;
-  const results = q.trim() ? await searchProducts(q) : [];
+  const results = q.trim() ? await searchProducts(q, locale as Locale) : [];
 
   return (
     <div>

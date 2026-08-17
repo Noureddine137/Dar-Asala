@@ -14,40 +14,41 @@ import { ShippingInfo } from "@/components/product/shipping-info";
 import { ReviewsSection } from "@/components/product/reviews-section";
 import { RelatedProducts } from "@/components/product/related-products";
 import { getProductBySlug, getRelatedProducts, getStoreReviewSummary } from "@/lib/commerce/products";
-import { getStoreSettings } from "@/lib/content/store-settings";
+import { getLocalizedStoreSettings } from "@/lib/content/store-settings";
 import { jsonLdScript } from "@/lib/utils/json-ld";
+import type { Locale } from "@/i18n/routing";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ slug: string; locale: string }> };
 
 export const revalidate = 60;
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const { slug, locale } = await params;
+  const product = await getProductBySlug(slug, locale as Locale);
   if (!product) return {};
   return {
-    title: product.name,
-    description: product.shortDescription,
+    title: product.seoTitle,
+    description: product.seoDescription,
     alternates: { canonical: `/products/${slug}` },
     openGraph: {
-      title: product.name,
-      description: product.shortDescription,
+      title: product.seoTitle,
+      description: product.seoDescription,
       images: product.primaryImage ? [{ url: product.primaryImage.url }] : undefined,
     },
   };
 }
 
 export default async function ProductPage({ params }: Props) {
-  const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const { slug, locale } = await params;
+  const product = await getProductBySlug(slug, locale as Locale);
   if (!product) notFound();
 
   const [related, storeReviews, settings] = await Promise.all([
-    getRelatedProducts(product),
-    getStoreReviewSummary(),
-    getStoreSettings(),
+    getRelatedProducts(product, locale as Locale),
+    getStoreReviewSummary(locale as Locale),
+    getLocalizedStoreSettings(locale as Locale),
   ]);
 
   const jsonLd = {

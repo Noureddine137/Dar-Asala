@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import type { StoreSettings } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
+import { toPrismaLocale, withTranslation, type Locale } from "@/lib/i18n/merge";
 
 // Mirrors the @default() values in prisma/schema.prisma — used only if the
 // singleton row hasn't been created yet (e.g. migrated but not seeded).
@@ -47,4 +48,41 @@ export const getStoreSettings = cache(async function getStoreSettings(): Promise
   const settings = await prisma.storeSettings.findUnique({ where: { id: "singleton" } });
   if (settings) return settings;
   return { id: "singleton", updatedAt: new Date(), ...FALLBACK };
+});
+
+const CMS_TRANSLATION_KEYS = [
+  "heroHeadline",
+  "heroSubtitle",
+  "heroCtaLabel",
+  "brandStoryHeading",
+  "brandStoryBody",
+  "customOrderHeading",
+  "customOrderBody",
+  "newsletterHeading",
+  "newsletterBody",
+  "brandOriginCountry",
+  "brandWorkshopLocations",
+  "leatherClaim",
+  "artisanProcessClaim",
+  "productionModelClaim",
+] as const satisfies readonly (keyof StoreSettings)[];
+
+/**
+ * Locale-merged CMS copy for storefront components (hero, brand story,
+ * custom-order box, newsletter panel, footer/contact business claims).
+ * Image URLs, CTA href, currency and every operational field stay in
+ * English only (shared, not customer-copy) — see getStoreSettings() for the
+ * raw admin-facing row. Falls back field-by-field to English when a DE/FR
+ * translation is missing or partial.
+ */
+export const getLocalizedStoreSettings = cache(async function getLocalizedStoreSettings(
+  locale: Locale
+): Promise<StoreSettings> {
+  const settings = await getStoreSettings();
+  const prismaLocale = toPrismaLocale(locale);
+  if (!prismaLocale) return settings;
+  const translation = await prisma.storeSettingsTranslation.findUnique({
+    where: { settingsId_locale: { settingsId: settings.id, locale: prismaLocale } },
+  });
+  return withTranslation(settings, translation, CMS_TRANSLATION_KEYS);
 });

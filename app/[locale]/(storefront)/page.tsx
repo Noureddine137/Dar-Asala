@@ -10,11 +10,18 @@ import { Testimonials } from "@/components/homepage/testimonials";
 import { Newsletter } from "@/components/homepage/newsletter";
 import { getFeaturedProducts } from "@/lib/commerce/products";
 import { getAllCollections } from "@/lib/commerce/collections";
+import type { Locale } from "@/i18n/routing";
 
 export const revalidate = 60;
 
-export default async function HomePage() {
-  const [featured, collections] = await Promise.all([getFeaturedProducts(8), getAllCollections()]);
+type Props = { params: Promise<{ locale: string }> };
+
+export default async function HomePage({ params }: Props) {
+  const { locale } = await params;
+  const [featured, collections] = await Promise.all([
+    getFeaturedProducts(locale as Locale, 8),
+    getAllCollections(locale as Locale),
+  ]);
 
   return (
     <>

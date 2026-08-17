@@ -4,9 +4,10 @@ import { SortSelect } from "@/components/collection/sort-select";
 import { CollectionFilterSidebar, CollectionFilterTrigger } from "@/components/collection/collection-filters";
 import { ProductGrid } from "@/components/collection/product-grid";
 import { getCollectionBySlug, type SortOption } from "@/lib/commerce/collections";
+import type { Locale } from "@/i18n/routing";
 
 type Props = {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
@@ -18,19 +19,19 @@ function toArray(value: string | string[] | undefined): string[] {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const data = await getCollectionBySlug(slug);
+  const { slug, locale } = await params;
+  const data = await getCollectionBySlug(slug, locale as Locale);
   if (!data) return {};
   return {
-    title: data.collection.title,
-    description: data.collection.description,
+    title: data.collection.seoTitle,
+    description: data.collection.seoDescription,
     alternates: { canonical: `/collections/${slug}` },
-    openGraph: { title: data.collection.title, description: data.collection.description },
+    openGraph: { title: data.collection.seoTitle, description: data.collection.seoDescription },
   };
 }
 
 export default async function CollectionPage({ params, searchParams }: Props) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const sp = await searchParams;
 
   const sort = (typeof sp.sort === "string" ? sp.sort : "featured") as SortOption;
@@ -42,7 +43,7 @@ export default async function CollectionPage({ params, searchParams }: Props) {
     sort,
   };
 
-  const data = await getCollectionBySlug(slug, filters);
+  const data = await getCollectionBySlug(slug, locale as Locale, filters);
   if (!data) notFound();
 
   const { collection, products } = data;

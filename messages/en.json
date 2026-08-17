@@ -89,7 +89,10 @@
     "sortLowestRating": "Lowest Rating",
     "noReviewsYet": "No reviews yet — be the first to share yours.",
     "loadMoreReviews": "Load more reviews",
-    "relatedProductLabel": "View {name}"
+    "relatedProductLabel": "View {name}",
+    "madeByHandIn": "Made by Hand in {country}",
+    "productStoryFallback": "Cut, stitched and finished by hand, one piece at a time.",
+    "productStoryBody": "Every {name} begins as a single hide, hand-selected for grain and character. It is {claim}, produced {productionModel} rather than mass runs — so quality never gets diluted by volume."
   },
   "cart": {
     "yourBag": "Your Bag",
@@ -177,7 +180,18 @@
     "createYourBag": "Create Your Bag",
     "ourCraftsmanship": "Our Craftsmanship",
     "seeHowItsMade": "See how it's made",
-    "seeHowItsMadeBody": "Go behind the workshop doors and follow a bag from raw hide to finished piece."
+    "seeHowItsMadeBody": "Go behind the workshop doors and follow a bag from raw hide to finished piece.",
+    "newsletterLabel": "Newsletter",
+    "ourStoryLabel": "Our Story",
+    "bespokeLabel": "Bespoke",
+    "customOrderFeatures": [
+      "Leather color",
+      "Dimensions",
+      "Strap length",
+      "Monogram initials",
+      "Interior lining",
+      "Hardware finish"
+    ]
   },
   "cookieConsent": {
     "label": "Cookie consent",
@@ -200,5 +214,27 @@
     "en": "English",
     "de": "Deutsch",
     "fr": "Français"
+  },
+  "virtualCollections": {
+    "all": {
+      "title": "All Bags",
+      "description": "The full Dar Asala catalogue — every handcrafted bag, in one place."
+    },
+    "newArrivals": {
+      "title": "New Arrivals",
+      "description": "The newest pieces from the atelier."
+    },
+    "bestSellers": {
+      "title": "Best Sellers",
+      "description": "The pieces our customers reach for again and again."
+    }
+  },
+  "customOrderBox": {
+    "title": "Your Bag, Your Details",
+    "body": "Every piece is made by hand. Ask us about a different leather color, strap length, size, monogram initials or hardware finish.",
+    "whatsappUs": "WhatsApp Us",
+    "emailAtelier": "Email the Atelier",
+    "whatsappMessage": "Hi Dar Asala, I'd like to ask about customizing the {productName}.",
+    "emailSubject": "Custom order — {productName}"
   }
 }

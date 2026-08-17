@@ -4,6 +4,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useUIStore } from "@/lib/store/ui-store";
 import { formatPrice } from "@/lib/utils/format";
@@ -17,17 +18,19 @@ export function SearchOverlay() {
   const [results, setResults] = useState<ProductCardDTO[]>([]);
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const locale = useLocale();
+  const t = useTranslations("search");
 
   useEffect(() => {
     if (!query.trim()) return;
     const handle = setTimeout(() => {
-      fetch(`/api/search?q=${encodeURIComponent(query)}`)
+      fetch(`/api/search?q=${encodeURIComponent(query)}&locale=${locale}`)
         .then((res) => res.json())
         .then((data) => setResults(data.results ?? []))
         .finally(() => setLoading(false));
     }, 250);
     return () => clearTimeout(handle);
-  }, [query]);
+  }, [query, locale]);
 
   function handleQueryChange(value: string) {
     setQuery(value);
@@ -54,8 +57,8 @@ export function SearchOverlay() {
             inputRef.current?.focus();
           }}
         >
-          <Dialog.Title className="sr-only">Search</Dialog.Title>
-          <Dialog.Description className="sr-only">Search products</Dialog.Description>
+          <Dialog.Title className="sr-only">{t("search")}</Dialog.Title>
+          <Dialog.Description className="sr-only">{t("searchProducts")}</Dialog.Description>
           <div className="container-page flex items-center gap-3 border-b border-sand/70 py-5">
             <Search className="h-5 w-5 shrink-0 text-muted" />
             <input
@@ -63,20 +66,20 @@ export function SearchOverlay() {
               value={query}
               onChange={(e) => handleQueryChange(e.target.value)}
               type="search"
-              placeholder="Search bags, colors, categories…"
+              placeholder={t("searchPlaceholder")}
               className="w-full bg-transparent font-serif-display text-xl text-charcoal placeholder:text-muted focus:outline-none md:text-2xl"
             />
             <Dialog.Close asChild>
-              <button aria-label="Close search" className="flex h-9 w-9 shrink-0 items-center justify-center text-charcoal">
+              <button aria-label={t("closeSearch")} className="flex h-9 w-9 shrink-0 items-center justify-center text-charcoal">
                 <X className="h-5 w-5" />
               </button>
             </Dialog.Close>
           </div>
 
           <div className="container-page py-6">
-            {loading && <p className="text-sm text-muted">Searching…</p>}
+            {loading && <p className="text-sm text-muted">{t("searching")}</p>}
             {!loading && query.trim() && results.length === 0 && (
-              <p className="text-sm text-muted">No results for &ldquo;{query}&rdquo;. Try another word.</p>
+              <p className="text-sm text-muted">{t("noProductsFound", { query })}</p>
             )}
             {query.trim() && results.length > 0 && (
               <ul className="grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-4">

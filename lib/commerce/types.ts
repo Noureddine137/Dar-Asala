@@ -58,6 +58,9 @@ export type ProductDetailDTO = ProductCardDTO & {
   reviews: ReviewDTO[];
   averageRating: number;
   reviewCount: number;
+  /** Resolved for the active locale: translation override, else the (possibly translated) name/shortDescription. */
+  seoTitle: string;
+  seoDescription: string;
 };
 
 export type CollectionDTO = {
@@ -66,4 +69,7 @@ export type CollectionDTO = {
   title: string;
   description: string;
   heroImage: string;
+  /** Resolved for the active locale: translation override, else title/description. */
+  seoTitle: string;
+  seoDescription: string;
 };

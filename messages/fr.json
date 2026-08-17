@@ -89,7 +89,10 @@
     "sortLowestRating": "Notes les Plus Basses",
     "noReviewsYet": "Aucun avis pour le moment — soyez le premier à partager le vôtre.",
     "loadMoreReviews": "Voir plus d'avis",
-    "relatedProductLabel": "Voir {name}"
+    "relatedProductLabel": "Voir {name}",
+    "madeByHandIn": "Fabriqué à la main au {country}",
+    "productStoryFallback": "Coupé, cousu et fini à la main, pièce par pièce.",
+    "productStoryBody": "Chaque {name} commence par une peau unique, sélectionnée à la main pour son grain et son caractère. Il est {claim}, produit {productionModel} plutôt qu'en série — pour que la qualité ne soit jamais diluée par le volume."
   },
   "cart": {
     "yourBag": "Votre Panier",
@@ -177,7 +180,18 @@
     "createYourBag": "Créer Votre Sac",
     "ourCraftsmanship": "Notre Savoir-Faire",
     "seeHowItsMade": "Découvrez la fabrication",
-    "seeHowItsMadeBody": "Entrez dans l'atelier et suivez un sac depuis la peau brute jusqu'à la pièce finie."
+    "seeHowItsMadeBody": "Entrez dans l'atelier et suivez un sac depuis la peau brute jusqu'à la pièce finie.",
+    "newsletterLabel": "Newsletter",
+    "ourStoryLabel": "Notre histoire",
+    "bespokeLabel": "Sur mesure",
+    "customOrderFeatures": [
+      "Couleur du cuir",
+      "Dimensions",
+      "Longueur de la bandoulière",
+      "Initiales brodées",
+      "Doublure intérieure",
+      "Finition de la quincaillerie"
+    ]
   },
   "cookieConsent": {
     "label": "Consentement aux cookies",
@@ -200,5 +214,27 @@
     "en": "English",
     "de": "Deutsch",
     "fr": "Français"
+  },
+  "virtualCollections": {
+    "all": {
+      "title": "Tous les sacs",
+      "description": "Le catalogue complet Dar Asala — chaque sac fait main, réuni au même endroit."
+    },
+    "newArrivals": {
+      "title": "Nouveautés",
+      "description": "Les pièces les plus récentes de l'atelier."
+    },
+    "bestSellers": {
+      "title": "Meilleures ventes",
+      "description": "Les pièces que nos clientes et clients choisissent encore et encore."
+    }
+  },
+  "customOrderBox": {
+    "title": "Votre sac, vos détails",
+    "body": "Chaque pièce est fabriquée à la main. Demandez-nous une couleur de cuir différente, une longueur de bandoulière, une taille, des initiales brodées ou une finition de quincaillerie.",
+    "whatsappUs": "Nous écrire sur WhatsApp",
+    "emailAtelier": "Écrire à l'atelier",
+    "whatsappMessage": "Bonjour Dar Asala, je souhaite me renseigner sur la personnalisation du {productName}.",
+    "emailSubject": "Commande sur mesure — {productName}"
   }
 }

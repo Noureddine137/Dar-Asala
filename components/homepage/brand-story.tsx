@@ -1,9 +1,12 @@
 import Image from "next/image";
+import { getLocale, getTranslations } from "next-intl/server";
 import { ButtonLink } from "@/components/ui/button-link";
-import { getStoreSettings } from "@/lib/content/store-settings";
+import { getLocalizedStoreSettings } from "@/lib/content/store-settings";
+import type { Locale } from "@/i18n/routing";
 
 export async function BrandStory() {
-  const settings = await getStoreSettings();
+  const locale = (await getLocale()) as Locale;
+  const [settings, t] = await Promise.all([getLocalizedStoreSettings(locale), getTranslations("home")]);
   const paragraphs = settings.brandStoryBody.split("\n").filter(Boolean);
 
   return (
@@ -19,7 +22,7 @@ export async function BrandStory() {
           />
         </div>
         <div className="order-1 md:order-2">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-muted">Our Story</p>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-muted">{t("ourStoryLabel")}</p>
           <h2 className="font-serif-display text-3xl leading-tight text-charcoal md:text-4xl">
             {settings.brandStoryHeading}
           </h2>
@@ -29,7 +32,7 @@ export async function BrandStory() {
             </p>
           ))}
           <ButtonLink href="/about" variant="secondary" className="mt-8">
-            Discover Our Story
+            {t("discoverOurStory")}
           </ButtonLink>
         </div>
       </div>

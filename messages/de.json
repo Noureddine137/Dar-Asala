@@ -89,7 +89,10 @@
     "sortLowestRating": "Schlechteste Bewertung",
     "noReviewsYet": "Noch keine Bewertungen — seien Sie die/der Erste.",
     "loadMoreReviews": "Weitere Bewertungen laden",
-    "relatedProductLabel": "{name} ansehen"
+    "relatedProductLabel": "{name} ansehen",
+    "madeByHandIn": "Handgefertigt in {country}",
+    "productStoryFallback": "Von Hand zugeschnitten, genäht und veredelt — Stück für Stück.",
+    "productStoryBody": "Jede {name} beginnt als einzelne, sorgfältig ausgewählte Häute mit Charakter. Sie wird {claim} gefertigt, {productionModel} statt in Massenproduktion — so verliert die Qualität nie an Substanz."
   },
   "cart": {
     "yourBag": "Ihre Tasche",
@@ -177,7 +180,18 @@
     "createYourBag": "Ihre Tasche gestalten",
     "ourCraftsmanship": "Unsere Handwerkskunst",
     "seeHowItsMade": "Einblick in die Werkstatt",
-    "seeHowItsMadeBody": "Werfen Sie einen Blick hinter die Werkstatttüren und begleiten Sie eine Tasche von der rohen Lederhaut bis zum fertigen Stück."
+    "seeHowItsMadeBody": "Werfen Sie einen Blick hinter die Werkstatttüren und begleiten Sie eine Tasche von der rohen Lederhaut bis zum fertigen Stück.",
+    "newsletterLabel": "Newsletter",
+    "ourStoryLabel": "Unsere Geschichte",
+    "bespokeLabel": "Maßanfertigung",
+    "customOrderFeatures": [
+      "Lederfarbe",
+      "Maße",
+      "Riemenlänge",
+      "Monogramm-Initialen",
+      "Innenfutter",
+      "Beschlagfinish"
+    ]
   },
   "cookieConsent": {
     "label": "Cookie-Einwilligung",
@@ -200,5 +214,27 @@
     "en": "English",
     "de": "Deutsch",
     "fr": "Français"
+  },
+  "virtualCollections": {
+    "all": {
+      "title": "Alle Taschen",
+      "description": "Der komplette Dar-Asala-Katalog — jede handgefertigte Tasche an einem Ort."
+    },
+    "newArrivals": {
+      "title": "Neuheiten",
+      "description": "Die neuesten Stücke aus dem Atelier."
+    },
+    "bestSellers": {
+      "title": "Bestseller",
+      "description": "Die Stücke, zu denen unsere Kundinnen und Kunden immer wieder greifen."
+    }
+  },
+  "customOrderBox": {
+    "title": "Ihre Tasche, Ihre Details",
+    "body": "Jedes Stück wird von Hand gefertigt. Fragen Sie uns nach einer anderen Lederfarbe, Riemenlänge, Größe, Monogramm-Initialen oder Beschlagfinish.",
+    "whatsappUs": "WhatsApp schreiben",
+    "emailAtelier": "Atelier per E-Mail kontaktieren",
+    "whatsappMessage": "Hallo Dar Asala, ich möchte mich nach einer individuellen Anpassung der {productName} erkundigen.",
+    "emailSubject": "Sonderanfertigung — {productName}"
   }
 }

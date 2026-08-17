@@ -2,6 +2,7 @@ import "server-only";
 import { prisma } from "@/lib/db/prisma";
 import type { Prisma } from "@prisma/client";
 import type { ProductCardDTO, ProductDetailDTO, ReviewDTO } from "./types";
+import { toPrismaLocale, withTranslation, type Locale } from "@/lib/i18n/merge";
 
 const cardInclude = {
   images: { orderBy: { position: "asc" as const } },
@@ -10,14 +11,38 @@ const cardInclude = {
 
 type ProductWithRelations = Prisma.ProductGetPayload<{ include: typeof cardInclude }>;
 
-function toCardDTO(product: ProductWithRelations): ProductCardDTO {
+const CARD_TRANSLATION_KEYS = ["name", "shortDescription"] as const;
+const DETAIL_TRANSLATION_KEYS = [
+  "name",
+  "shortDescription",
+  "description",
+  "story",
+  "materials",
+  "careInstructions",
+] as const;
+
+/** Batch-fetches translation rows for a set of products and returns a lookup keyed by productId. */
+async function loadProductTranslations(productIds: string[], locale: Locale) {
+  const prismaLocale = toPrismaLocale(locale);
+  if (!prismaLocale || productIds.length === 0) return new Map<string, Prisma.ProductTranslationGetPayload<object>>();
+  const rows = await prisma.productTranslation.findMany({
+    where: { productId: { in: productIds }, locale: prismaLocale },
+  });
+  return new Map(rows.map((row) => [row.productId, row]));
+}
+
+function toCardDTO(
+  product: ProductWithRelations,
+  translation: Prisma.ProductTranslationGetPayload<object> | undefined
+): ProductCardDTO {
   const images = product.images;
   const colors = Array.from(new Set(product.variants.map((v) => v.color)));
+  const localized = withTranslation(product, translation, CARD_TRANSLATION_KEYS);
   return {
     id: product.id,
     slug: product.slug,
-    name: product.name,
-    shortDescription: product.shortDescription,
+    name: localized.name,
+    shortDescription: localized.shortDescription,
     price: Number(product.price),
     compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
     currency: product.currency,
@@ -31,10 +56,16 @@ function toCardDTO(product: ProductWithRelations): ProductCardDTO {
   };
 }
 
+async function toCardDTOs(products: ProductWithRelations[], locale: Locale): Promise<ProductCardDTO[]> {
+  const translations = await loadProductTranslations(products.map((p) => p.id), locale);
+  return products.map((product) => toCardDTO(product, translations.get(product.id)));
+}
+
 function toDetailDTO(
   product: Prisma.ProductGetPayload<{
     include: { images: true; variants: true; reviews: { where: { published: true } } };
-  }>
+  }>,
+  translation: Prisma.ProductTranslationGetPayload<object> | undefined
 ): ProductDetailDTO {
   const images = [...product.images].sort((a, b) => a.position - b.position);
   const colors = Array.from(new Set(product.variants.map((v) => v.color)));
@@ -54,13 +85,15 @@ function toDetailDTO(
     ? Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length) * 10) / 10
     : 0;
 
+  const localized = withTranslation(product, translation, DETAIL_TRANSLATION_KEYS);
+
   return {
     id: product.id,
     slug: product.slug,
-    name: product.name,
-    shortDescription: product.shortDescription,
-    description: product.description,
-    story: product.story,
+    name: localized.name,
+    shortDescription: localized.shortDescription,
+    description: localized.description,
+    story: localized.story,
     price: Number(product.price),
     compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
     currency: product.currency,
@@ -68,8 +101,8 @@ function toDetailDTO(
     isNew: product.isNew,
     isBestSeller: product.isBestSeller,
     isMadeToOrder: product.isMadeToOrder,
-    materials: product.materials,
-    careInstructions: product.careInstructions,
+    materials: localized.materials,
+    careInstructions: localized.careInstructions,
     productionTime: product.productionTime,
     primaryImage: images[0] ?? null,
     hoverImage: images[1] ?? images[0] ?? null,
@@ -90,56 +123,62 @@ function toDetailDTO(
     reviews,
     averageRating,
     reviewCount: reviews.length,
+    seoTitle: translation?.seoTitle || localized.name,
+    seoDescription: translation?.seoDescription || localized.shortDescription,
   };
 }
 
-export async function getFeaturedProducts(limit = 6): Promise<ProductCardDTO[]> {
+export async function getFeaturedProducts(locale: Locale, limit = 6): Promise<ProductCardDTO[]> {
   const products = await prisma.product.findMany({
     where: { status: "ACTIVE", featured: true },
     include: cardInclude,
     orderBy: { createdAt: "desc" },
     take: limit,
   });
-  return products.map(toCardDTO);
+  return toCardDTOs(products, locale);
 }
 
-export async function getAllActiveProducts(): Promise<ProductCardDTO[]> {
+export async function getAllActiveProducts(locale: Locale): Promise<ProductCardDTO[]> {
   const products = await prisma.product.findMany({
     where: { status: "ACTIVE" },
     include: cardInclude,
     orderBy: { createdAt: "desc" },
   });
-  return products.map(toCardDTO);
+  return toCardDTOs(products, locale);
 }
 
-export async function getNewArrivals(): Promise<ProductCardDTO[]> {
+export async function getNewArrivals(locale: Locale): Promise<ProductCardDTO[]> {
   const products = await prisma.product.findMany({
     where: { status: "ACTIVE", isNew: true },
     include: cardInclude,
     orderBy: { createdAt: "desc" },
   });
-  return products.map(toCardDTO);
+  return toCardDTOs(products, locale);
 }
 
-export async function getBestSellers(): Promise<ProductCardDTO[]> {
+export async function getBestSellers(locale: Locale): Promise<ProductCardDTO[]> {
   const products = await prisma.product.findMany({
     where: { status: "ACTIVE", isBestSeller: true },
     include: cardInclude,
     orderBy: { createdAt: "desc" },
   });
-  return products.map(toCardDTO);
+  return toCardDTOs(products, locale);
 }
 
-export async function getProductBySlug(slug: string): Promise<ProductDetailDTO | null> {
+export async function getProductBySlug(slug: string, locale: Locale): Promise<ProductDetailDTO | null> {
   const product = await prisma.product.findUnique({
     where: { slug },
     include: { images: true, variants: true, reviews: { where: { published: true } } },
   });
   if (!product) return null;
-  return toDetailDTO(product);
+  const prismaLocale = toPrismaLocale(locale);
+  const translation = prismaLocale
+    ? (await prisma.productTranslation.findUnique({ where: { productId_locale: { productId: product.id, locale: prismaLocale } } })) ?? undefined
+    : undefined;
+  return toDetailDTO(product, translation);
 }
 
-export async function getRelatedProducts(product: ProductCardDTO, limit = 4): Promise<ProductCardDTO[]> {
+export async function getRelatedProducts(product: ProductCardDTO, locale: Locale, limit = 4): Promise<ProductCardDTO[]> {
   const products = await prisma.product.findMany({
     where: { status: "ACTIVE", category: product.category, id: { not: product.id } },
     include: cardInclude,
@@ -151,12 +190,12 @@ export async function getRelatedProducts(product: ProductCardDTO, limit = 4): Pr
       include: cardInclude,
       take: limit - products.length,
     });
-    return [...products, ...fallback].map(toCardDTO);
+    return toCardDTOs([...products, ...fallback], locale);
   }
-  return products.map(toCardDTO);
+  return toCardDTOs(products, locale);
 }
 
-export async function searchProducts(query: string): Promise<ProductCardDTO[]> {
+export async function searchProducts(query: string, locale: Locale): Promise<ProductCardDTO[]> {
   const q = query.trim();
   if (!q) return [];
   const products = await prisma.product.findMany({
@@ -173,19 +212,19 @@ export async function searchProducts(query: string): Promise<ProductCardDTO[]> {
     include: cardInclude,
     take: 24,
   });
-  return products.map(toCardDTO);
+  return toCardDTOs(products, locale);
 }
 
 export type StoreReviewDTO = ReviewDTO & { productName: string; productSlug: string };
 
-export async function getStoreReviewSummary(): Promise<{
+export async function getStoreReviewSummary(locale: Locale): Promise<{
   averageRating: number;
   reviewCount: number;
   reviews: StoreReviewDTO[];
 }> {
   const reviews = await prisma.review.findMany({
     where: { published: true },
-    include: { product: { select: { name: true, slug: true } } },
+    include: { product: { select: { id: true, name: true, slug: true } } },
     orderBy: { createdAt: "desc" },
     take: 50,
   });
@@ -193,6 +232,11 @@ export async function getStoreReviewSummary(): Promise<{
   const averageRating = reviewCount
     ? Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount) * 10) / 10
     : 0;
+
+  const translations = await loadProductTranslations(
+    Array.from(new Set(reviews.map((r) => r.product.id))),
+    locale
+  );
 
   return {
     averageRating,
@@ -206,7 +250,7 @@ export async function getStoreReviewSummary(): Promise<{
       country: r.country,
       verifiedPurchase: r.verifiedPurchase,
       createdAt: r.createdAt.toISOString(),
-      productName: r.product.name,
+      productName: translations.get(r.product.id)?.name || r.product.name,
       productSlug: r.product.slug,
     })),
   };
