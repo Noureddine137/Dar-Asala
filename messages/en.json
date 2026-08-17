@@ -120,7 +120,70 @@
     "addToWishlistNamed": "Add {name} to wishlist",
     "removeFromWishlistNamed": "Remove {name} from wishlist",
     "removeFromCartNamed": "Remove {name} from cart",
-    "madeToOrderShort": "Made to order"
+    "madeToOrderShort": "Made to order",
+    "howItWorksSteps": [
+      {
+        "title": "You Order",
+        "copy": "Choose your bag, color and options online or via our atelier."
+      },
+      {
+        "title": "Handcrafted in Morocco",
+        "copy": "Your piece is cut, stitched and finished by hand in our workshop."
+      },
+      {
+        "title": "Shipped to Your Door",
+        "copy": "Packed with care and shipped with tracking, wherever you are."
+      }
+    ],
+    "beforeYouOrderNotes": [
+      {
+        "title": "Leather Varies Naturally",
+        "copy": "Natural leather contains variations in grain, tone and texture. No two hides — and no two bags — are ever perfectly identical."
+      },
+      {
+        "title": "Handmade Means Unique",
+        "copy": "Minor differences in stitching and finishing are the signature of handcraftsmanship, not a flaw."
+      },
+      {
+        "title": "Color May Vary From Photography",
+        "copy": "Screen settings and the natural character of leather can cause subtle differences from the photos shown."
+      }
+    ],
+    "trustListItems": [
+      {
+        "title": "Made to order",
+        "copy": ""
+      },
+      {
+        "title": "In stock, ready to ship",
+        "copy": ""
+      },
+      {
+        "title": "Individually inspected",
+        "copy": "Every piece checked by hand before dispatch"
+      },
+      {
+        "title": "Arrives damaged?",
+        "copy": "We replace it, no questions asked"
+      },
+      {
+        "title": "Secure checkout",
+        "copy": "SSL encrypted, processed by Stripe"
+      },
+      {
+        "title": "Worldwide shipping",
+        "copy": "With tracking on every order"
+      }
+    ],
+    "shippingTitle": "Shipping",
+    "freeOverThreshold": "Free over {threshold}",
+    "otherwise": "{price} otherwise",
+    "zoomProductImage": "Zoom product image",
+    "thumbnailsFor": "{name} thumbnails",
+    "viewImageOf": "View image {index} of {total}",
+    "closeZoomedImage": "Close zoomed image",
+    "enlargedImage": "{name} — enlarged image",
+    "enlargedImageDescription": "Enlarged product photo"
   },
   "cart": {
     "yourBag": "Your Bag",
@@ -276,5 +339,17 @@
     "emailAtelier": "Email the Atelier",
     "whatsappMessage": "Hi Dar Asala, I'd like to ask about customizing the {productName}.",
     "emailSubject": "Custom order — {productName}"
+  },
+  "shippingPage": {
+    "title": "Shipping",
+    "processingTime": "Processing Time",
+    "processingTimeBody": "In-stock pieces ship within 1–3 business days. Made-to-order and custom pieces are handcrafted first — {productionTime}. The exact estimate is shown on each product page.",
+    "ratesDestinations": "Rates & Destinations",
+    "ratesFinalizing": "Shipping rates are being finalized — check back soon, or contact us for a destination estimate.",
+    "tracking": "Tracking",
+    "trackingBody": "You'll receive a tracking link by email as soon as your order ships. Delivery time depends on destination — see the estimates above.",
+    "customsDuties": "Customs & Duties",
+    "customsDutiesBody": "Orders shipped outside the EU may be subject to local import duties and taxes, which are the responsibility of the recipient and are not included in our shipping charges.",
+    "adminNote": "Rates and regions above are managed in Store Admin → Shipping and should be reviewed against your business's actual shipping carriers before launch."
   }
 }

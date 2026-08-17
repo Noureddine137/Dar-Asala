@@ -13,6 +13,7 @@ import { BeforeYouOrder } from "@/components/product/before-you-order";
 import { ShippingInfo } from "@/components/product/shipping-info";
 import { ReviewsSection } from "@/components/product/reviews-section";
 import { RelatedProducts } from "@/components/product/related-products";
+import { getTranslations } from "next-intl/server";
 import { getProductBySlug, getRelatedProducts, getStoreReviewSummary } from "@/lib/commerce/products";
 import { getLocalizedStoreSettings } from "@/lib/content/store-settings";
 import { jsonLdScript } from "@/lib/utils/json-ld";
@@ -45,10 +46,11 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProductBySlug(slug, locale as Locale);
   if (!product) notFound();
 
-  const [related, storeReviews, settings] = await Promise.all([
+  const [related, storeReviews, settings, t] = await Promise.all([
     getRelatedProducts(product, locale as Locale),
     getStoreReviewSummary(locale as Locale),
     getLocalizedStoreSettings(locale as Locale),
+    getTranslations({ locale, namespace: "product" }),
   ]);
 
   const jsonLd = {
@@ -160,7 +162,7 @@ export default async function ProductPage({ params }: Props) {
         storeReviewCount={storeReviews.reviewCount}
       />
 
-      <RelatedProducts title="You May Also Like" products={related} />
+      <RelatedProducts title={t("youMayAlsoLike")} products={related} />
     </div>
   );
 }

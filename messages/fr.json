@@ -69,7 +69,7 @@
     "productReviews": "Avis sur le Produit",
     "storeReviews": "Avis sur la Boutique",
     "verifiedPurchase": "Achat Vérifié",
-    "youMayAlsoLike": "Vous Aimerez Aussi",
+    "youMayAlsoLike": "Vous aimerez aussi",
     "recentlyViewed": "Vus Récemment",
     "description": "Description",
     "materials": "Matériaux",
@@ -120,7 +120,70 @@
     "addToWishlistNamed": "Ajouter {name} à la liste de souhaits",
     "removeFromWishlistNamed": "Retirer {name} de la liste de souhaits",
     "removeFromCartNamed": "Retirer {name} du panier",
-    "madeToOrderShort": "Fabriqué sur commande"
+    "madeToOrderShort": "Fabriqué sur commande",
+    "howItWorksSteps": [
+      {
+        "title": "Vous commandez",
+        "copy": "Choisissez votre sac, sa couleur et ses options en ligne ou dans notre atelier."
+      },
+      {
+        "title": "Fabriqué à la main au Maroc",
+        "copy": "Votre pièce est coupée, cousue et finie à la main dans notre atelier."
+      },
+      {
+        "title": "Livré chez vous",
+        "copy": "Emballé avec soin et expédié avec suivi, où que vous soyez."
+      }
+    ],
+    "beforeYouOrderNotes": [
+      {
+        "title": "Le cuir varie naturellement",
+        "copy": "Le cuir naturel présente des variations de grain, de teinte et de texture. Deux peaux — et deux sacs — ne sont jamais parfaitement identiques."
+      },
+      {
+        "title": "Fait main signifie unique",
+        "copy": "De légères différences de couture et de finition sont la signature du travail artisanal, pas un défaut."
+      },
+      {
+        "title": "La couleur peut varier par rapport aux photos",
+        "copy": "Les réglages d'écran et le caractère naturel du cuir peuvent entraîner de légères différences par rapport aux photos présentées."
+      }
+    ],
+    "trustListItems": [
+      {
+        "title": "Fabriqué sur commande",
+        "copy": ""
+      },
+      {
+        "title": "En stock, prêt à expédier",
+        "copy": ""
+      },
+      {
+        "title": "Inspecté individuellement",
+        "copy": "Chaque pièce est vérifiée à la main avant expédition"
+      },
+      {
+        "title": "Arrivé endommagé ?",
+        "copy": "Nous le remplaçons, sans poser de questions"
+      },
+      {
+        "title": "Paiement sécurisé",
+        "copy": "Chiffré SSL, traité par Stripe"
+      },
+      {
+        "title": "Livraison internationale",
+        "copy": "Avec suivi pour chaque commande"
+      }
+    ],
+    "shippingTitle": "Livraison",
+    "freeOverThreshold": "Gratuit dès {threshold}",
+    "otherwise": "sinon {price}",
+    "zoomProductImage": "Zoomer sur l'image du produit",
+    "thumbnailsFor": "Miniatures pour {name}",
+    "viewImageOf": "Voir l'image {index} sur {total}",
+    "closeZoomedImage": "Fermer l'image agrandie",
+    "enlargedImage": "{name} — image agrandie",
+    "enlargedImageDescription": "Photo du produit agrandie"
   },
   "cart": {
     "yourBag": "Votre Panier",
@@ -276,5 +339,17 @@
     "emailAtelier": "Écrire à l'atelier",
     "whatsappMessage": "Bonjour Dar Asala, je souhaite me renseigner sur la personnalisation du {productName}.",
     "emailSubject": "Commande sur mesure — {productName}"
+  },
+  "shippingPage": {
+    "title": "Livraison",
+    "processingTime": "Délai de traitement",
+    "processingTimeBody": "Les pièces en stock sont expédiées sous 1 à 3 jours ouvrés. Les pièces sur mesure et personnalisées sont d'abord fabriquées à la main — {productionTime}. L'estimation exacte est indiquée sur chaque fiche produit.",
+    "ratesDestinations": "Tarifs & destinations",
+    "ratesFinalizing": "Les tarifs de livraison sont en cours de finalisation — revenez bientôt ou contactez-nous pour une estimation vers votre destination.",
+    "tracking": "Suivi",
+    "trackingBody": "Vous recevrez un lien de suivi par e-mail dès l'expédition de votre commande. Le délai de livraison dépend de la destination — voir les estimations ci-dessus.",
+    "customsDuties": "Douane & taxes",
+    "customsDutiesBody": "Les commandes expédiées hors de l'UE peuvent être soumises à des droits de douane et taxes locaux, à la charge du destinataire et non inclus dans nos frais de livraison.",
+    "adminNote": "Les tarifs et régions ci-dessus sont gérés dans l'Admin de la boutique → Livraison et doivent être vérifiés par rapport aux transporteurs réels de votre entreprise avant le lancement."
   }
 }

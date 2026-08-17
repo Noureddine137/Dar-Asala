@@ -84,6 +84,45 @@ export async function getShippingQuoteForCountry(
   };
 }
 
+export type ShippingZoneDisplay = {
+  id: string;
+  region: string;
+  estimate: string;
+  carrier: string | null;
+  countries: string;
+  price: number;
+  freeThreshold: number | null;
+};
+
+/**
+ * Full active-zone table for display (product page's Shipping accordion tile,
+ * /shipping page) — localized region/estimate, shared price/threshold/
+ * countries. Not used for pricing decisions; see getShippingQuoteForCountry.
+ */
+export async function getShippingZonesForDisplay(locale?: Locale): Promise<ShippingZoneDisplay[]> {
+  const zones = await prisma.shippingZone.findMany({ where: { active: true }, orderBy: { position: "asc" } });
+  const prismaLocale = locale ? toPrismaLocale(locale) : null;
+  const translations = prismaLocale
+    ? await prisma.shippingZoneTranslation.findMany({
+        where: { zoneId: { in: zones.map((z) => z.id) }, locale: prismaLocale },
+      })
+    : [];
+  const translationByZoneId = new Map(translations.map((t) => [t.zoneId, t]));
+
+  return zones.map((zone) => {
+    const localized = withTranslation(zone, translationByZoneId.get(zone.id), ZONE_TRANSLATION_KEYS);
+    return {
+      id: zone.id,
+      region: localized.region,
+      estimate: localized.estimate,
+      carrier: zone.carrier,
+      countries: zone.countries,
+      price: Number(zone.price),
+      freeThreshold: zone.freeThreshold != null ? Number(zone.freeThreshold) : null,
+    };
+  });
+}
+
 export type ShippingCountryOption = { code: string; region: string };
 
 /** Every country covered by an active zone — the storefront selector only offers these. */

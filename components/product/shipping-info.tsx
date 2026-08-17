@@ -1,14 +1,17 @@
-import { prisma } from "@/lib/db/prisma";
+import { getLocale, getTranslations } from "next-intl/server";
+import { getShippingZonesForDisplay } from "@/lib/commerce/shipping";
 import { formatPrice } from "@/lib/utils/format";
+import type { Locale } from "@/i18n/routing";
 
 export async function ShippingInfo() {
-  const zones = await prisma.shippingZone.findMany({ where: { active: true }, orderBy: { position: "asc" } });
+  const locale = (await getLocale()) as Locale;
+  const [zones, t] = await Promise.all([getShippingZonesForDisplay(locale), getTranslations("product")]);
 
   if (zones.length === 0) return null;
 
   return (
     <div>
-      <p className="mb-4 font-serif-display text-xl text-charcoal md:text-2xl">Shipping</p>
+      <p className="mb-4 font-serif-display text-xl text-charcoal md:text-2xl">{t("shippingTitle")}</p>
       <div className="divide-y divide-sand rounded-sm border border-sand bg-ivory">
         {zones.map((z) => (
           <div key={z.id} className="flex items-center justify-between gap-4 px-4 py-3.5">
@@ -22,12 +25,12 @@ export async function ShippingInfo() {
             <p className="shrink-0 text-right text-xs text-charcoal/80">
               {z.freeThreshold != null ? (
                 <>
-                  Free over {formatPrice(Number(z.freeThreshold))}
+                  {t("freeOverThreshold", { threshold: formatPrice(z.freeThreshold, "EUR", locale) })}
                   <br />
-                  <span className="text-muted">{formatPrice(Number(z.price))} otherwise</span>
+                  <span className="text-muted">{t("otherwise", { price: formatPrice(z.price, "EUR", locale) })}</span>
                 </>
               ) : (
-                formatPrice(Number(z.price))
+                formatPrice(z.price, "EUR", locale)
               )}
             </p>
           </div>

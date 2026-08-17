@@ -1,33 +1,18 @@
+"use client";
+
 import { Hammer, ShieldCheck, PackageCheck, Lock, Truck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ProductDetailDTO } from "@/lib/commerce/types";
 
+const ICONS = [Hammer, Hammer, PackageCheck, ShieldCheck, Lock, Truck];
+
 export function TrustList({ product }: { product: ProductDetailDTO }) {
+  const t = useTranslations("product");
+  const raw = t.raw("trustListItems") as { title: string; copy: string }[];
+
   const items = [
-    {
-      icon: Hammer,
-      title: product.isMadeToOrder ? "Made to order" : "In stock, ready to ship",
-      copy: product.productionTime,
-    },
-    {
-      icon: PackageCheck,
-      title: "Individually inspected",
-      copy: "Every piece checked by hand before dispatch",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Arrives damaged?",
-      copy: "We replace it, no questions asked",
-    },
-    {
-      icon: Lock,
-      title: "Secure checkout",
-      copy: "SSL encrypted, processed by Stripe",
-    },
-    {
-      icon: Truck,
-      title: "Worldwide shipping",
-      copy: "With tracking on every order",
-    },
+    { icon: ICONS[product.isMadeToOrder ? 0 : 1], title: raw[product.isMadeToOrder ? 0 : 1].title, copy: product.productionTime },
+    ...raw.slice(2).map((item, i) => ({ icon: ICONS[i + 2], title: item.title, copy: item.copy })),
   ];
 
   return (
