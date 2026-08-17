@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Star, BadgeCheck } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { ReviewDTO } from "@/lib/commerce/types";

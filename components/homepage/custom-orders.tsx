@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ButtonLink } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button-link";
 import { getStoreSettings } from "@/lib/content/store-settings";
 
 export async function CustomOrders() {

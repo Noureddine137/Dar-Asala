@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ProductCard } from "@/components/product/product-card";
 import { Button } from "@/components/ui/button";
 import type { ProductCardDTO } from "@/lib/commerce/types";

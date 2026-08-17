@@ -1,5 +1,5 @@
 import { ProductCard } from "@/components/product/product-card";
-import { ButtonLink } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button-link";
 import type { ProductCardDTO } from "@/lib/commerce/types";
 
 export function FeaturedProducts({ products }: { products: ProductCardDTO[] }) {

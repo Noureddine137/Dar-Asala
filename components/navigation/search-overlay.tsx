@@ -4,7 +4,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useUIStore } from "@/lib/store/ui-store";
 import { formatPrice } from "@/lib/utils/format";
 import type { ProductCardDTO } from "@/lib/commerce/types";

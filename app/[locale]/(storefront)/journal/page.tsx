@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { PageHeader } from "@/components/layout/page-header";
 import { JOURNAL_ARTICLES } from "@/lib/content/journal";
 

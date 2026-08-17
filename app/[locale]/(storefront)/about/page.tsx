@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { PageHeader } from "@/components/layout/page-header";
-import { ButtonLink } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button-link";
 import { getStoreSettings } from "@/lib/content/store-settings";
 
 export const metadata: Metadata = {

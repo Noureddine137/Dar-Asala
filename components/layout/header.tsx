@@ -1,11 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { Menu, Search, User, ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { useUIStore } from "@/lib/store/ui-store";
 import { useCartStore, cartCount } from "@/lib/store/cart-store";
 import { HEADER_PRIMARY_LINKS } from "@/lib/content/navigation";
+import { LanguageSwitcher } from "@/components/navigation/language-switcher";
 import { cn } from "@/lib/utils/cn";
 import { useMounted } from "@/lib/hooks/use-mounted";
 
@@ -16,6 +18,7 @@ export function Header() {
   const items = useCartStore((s) => s.items);
   const mounted = useMounted();
   const [scrolled, setScrolled] = useState(false);
+  const t = useTranslations("nav");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -38,7 +41,7 @@ export function Header() {
           <button
             type="button"
             onClick={openMenu}
-            aria-label="Open menu"
+            aria-label={t("openMenu")}
             className="flex h-10 w-10 items-center justify-center text-charcoal"
           >
             <Menu className="h-5 w-5" />
@@ -46,7 +49,7 @@ export function Header() {
           <button
             type="button"
             onClick={openSearch}
-            aria-label="Search"
+            aria-label={t("search")}
             className="flex h-10 w-10 items-center justify-center text-charcoal"
           >
             <Search className="h-5 w-5" />
@@ -60,7 +63,7 @@ export function Header() {
               href={link.href}
               className="text-sm tracking-wide text-charcoal/80 transition-colors hover:text-charcoal"
             >
-              {link.label}
+              {t(link.labelKey)}
             </Link>
           ))}
         </nav>
@@ -73,17 +76,22 @@ export function Header() {
         </Link>
 
         <div className="flex items-center gap-1">
+          <LanguageSwitcher
+            id="language-switcher-header"
+            className="hidden text-xs tracking-wide text-charcoal/70 md:inline-flex"
+            selectClassName="text-xs"
+          />
           <button
             type="button"
             onClick={openSearch}
-            aria-label="Search"
+            aria-label={t("search")}
             className="hidden h-10 w-10 items-center justify-center text-charcoal md:flex"
           >
             <Search className="h-5 w-5" />
           </button>
           <Link
             href="/account"
-            aria-label="Account"
+            aria-label={t("account")}
             className="hidden h-10 w-10 items-center justify-center text-charcoal md:flex"
           >
             <User className="h-5 w-5" />
@@ -91,7 +99,7 @@ export function Header() {
           <button
             type="button"
             onClick={openCart}
-            aria-label={`Open cart, ${count} item${count === 1 ? "" : "s"}`}
+            aria-label={t("openCart", { count })}
             className="relative flex h-10 w-10 items-center justify-center text-charcoal"
           >
             <ShoppingBag className="h-5 w-5" />

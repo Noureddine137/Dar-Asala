@@ -7,7 +7,8 @@ import { useMounted } from "@/lib/hooks/use-mounted";
 import { useShippingQuote } from "@/lib/hooks/use-shipping-quote";
 import { CartLineItem } from "./cart-line-item";
 import { ShippingCountrySelect } from "./shipping-country-select";
-import { ButtonLink, Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button-link";
 import { formatPrice } from "@/lib/utils/format";
 
 export function CartPageContent() {

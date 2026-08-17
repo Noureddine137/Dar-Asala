@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCartStore, cartSubtotal } from "@/lib/store/cart-store";
 import { useMounted } from "@/lib/hooks/use-mounted";
 import { formatPrice } from "@/lib/utils/format";
-import { ButtonLink } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button-link";
 
 export default function CheckoutPage() {
   const items = useCartStore((s) => s.items);

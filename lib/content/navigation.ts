@@ -1,79 +1,88 @@
-export type NavLink = { label: string; href: string };
+// Hrefs are locale-independent path segments — product/collection slugs stay
+// stable across languages (see checkpoint note on SEO-safe slugs), so no
+// per-locale mapping is needed here. Labels are translation keys resolved at
+// render time via useTranslations("nav") / useTranslations("footer"), not
+// literal English strings, so header/footer/mobile-menu render in the
+// active locale.
+export type NavLink = { labelKey: string; href: string };
 
 export const SHOP_LINKS: NavLink[] = [
-  { label: "All Bags", href: "/collections/all" },
-  { label: "New Arrivals", href: "/collections/new-arrivals" },
-  { label: "Best Sellers", href: "/collections/best-sellers" },
-  { label: "Handbags", href: "/collections/handbags" },
-  { label: "Shoulder Bags", href: "/collections/shoulder-bags" },
-  { label: "Crossbody Bags", href: "/collections/crossbody-bags" },
-  { label: "Tote Bags", href: "/collections/tote-bags" },
-  { label: "Mini Bags", href: "/collections/mini-bags" },
-  { label: "Leather Accessories", href: "/collections/leather-accessories" },
-  { label: "Custom & Made to Order", href: "/custom-orders" },
+  { labelKey: "allBags", href: "/collections/all" },
+  { labelKey: "newArrivals", href: "/collections/new-arrivals" },
+  { labelKey: "bestSellers", href: "/collections/best-sellers" },
+  { labelKey: "handbags", href: "/collections/handbags" },
+  { labelKey: "shoulderBags", href: "/collections/shoulder-bags" },
+  { labelKey: "crossbodyBags", href: "/collections/crossbody-bags" },
+  { labelKey: "toteBags", href: "/collections/tote-bags" },
+  { labelKey: "miniBags", href: "/collections/mini-bags" },
+  { labelKey: "leatherAccessories", href: "/collections/leather-accessories" },
+  { labelKey: "customOrders", href: "/custom-orders" },
 ];
 
 export const BRAND_LINKS: NavLink[] = [
-  { label: "Our Story", href: "/about" },
-  { label: "Craftsmanship", href: "/about/craftsmanship" },
-  { label: "Artisans", href: "/artisans" },
-  { label: "Materials", href: "/about/materials" },
-  { label: "Journal", href: "/journal" },
+  { labelKey: "ourStory", href: "/about" },
+  { labelKey: "craftsmanship", href: "/about/craftsmanship" },
+  { labelKey: "artisans", href: "/artisans" },
+  { labelKey: "materials", href: "/about/materials" },
+  { labelKey: "journal", href: "/journal" },
 ];
 
 export const HELP_LINKS: NavLink[] = [
-  { label: "Shipping", href: "/shipping" },
-  { label: "Returns & Refunds", href: "/returns" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Contact", href: "/contact" },
+  { labelKey: "shipping", href: "/shipping" },
+  { labelKey: "returns", href: "/returns" },
+  { labelKey: "faq", href: "/faq" },
+  { labelKey: "contact", href: "/contact" },
 ];
 
 export const HEADER_PRIMARY_LINKS: NavLink[] = [
-  { label: "All Bags", href: "/collections/all" },
-  { label: "Handbags", href: "/collections/handbags" },
-  { label: "Shoulder Bags", href: "/collections/shoulder-bags" },
-  { label: "Crossbody", href: "/collections/crossbody-bags" },
-  { label: "Totes", href: "/collections/tote-bags" },
-  { label: "Our Story", href: "/about" },
+  { labelKey: "allBags", href: "/collections/all" },
+  { labelKey: "handbags", href: "/collections/handbags" },
+  { labelKey: "shoulderBags", href: "/collections/shoulder-bags" },
+  { labelKey: "crossbody", href: "/collections/crossbody-bags" },
+  { labelKey: "totes", href: "/collections/tote-bags" },
+  { labelKey: "ourStory", href: "/about" },
 ];
 
-export const FOOTER_COLUMNS = [
+// headingKey resolves against the "footer" namespace; each link's labelKey
+// resolves against "nav" (the same labels used in the header/drawer).
+export const FOOTER_COLUMNS: { headingKey: string; links: NavLink[] }[] = [
   {
-    heading: "Shop",
+    headingKey: "shop",
     links: [
-      { label: "All Bags", href: "/collections/all" },
-      { label: "New Arrivals", href: "/collections/new-arrivals" },
-      { label: "Best Sellers", href: "/collections/best-sellers" },
-      { label: "Handbags", href: "/collections/handbags" },
-      { label: "Crossbody", href: "/collections/crossbody-bags" },
-      { label: "Tote Bags", href: "/collections/tote-bags" },
+      { labelKey: "allBags", href: "/collections/all" },
+      { labelKey: "newArrivals", href: "/collections/new-arrivals" },
+      { labelKey: "bestSellers", href: "/collections/best-sellers" },
+      { labelKey: "handbags", href: "/collections/handbags" },
+      { labelKey: "crossbody", href: "/collections/crossbody-bags" },
+      { labelKey: "toteBags", href: "/collections/tote-bags" },
     ],
   },
   {
-    heading: "Our World",
+    headingKey: "ourWorld",
     links: [
-      { label: "Our Story", href: "/about" },
-      { label: "Craftsmanship", href: "/about/craftsmanship" },
-      { label: "Artisans", href: "/artisans" },
-      { label: "Materials", href: "/about/materials" },
-      { label: "Journal", href: "/journal" },
+      { labelKey: "ourStory", href: "/about" },
+      { labelKey: "craftsmanship", href: "/about/craftsmanship" },
+      { labelKey: "artisans", href: "/artisans" },
+      { labelKey: "materials", href: "/about/materials" },
+      { labelKey: "journal", href: "/journal" },
     ],
   },
   {
-    heading: "Help",
+    headingKey: "help",
     links: [
-      { label: "FAQ", href: "/faq" },
-      { label: "Shipping", href: "/shipping" },
-      { label: "Returns & Refunds", href: "/returns" },
-      { label: "Contact", href: "/contact" },
-      { label: "Care Guide", href: "/about/materials" },
+      { labelKey: "faq", href: "/faq" },
+      { labelKey: "shipping", href: "/shipping" },
+      { labelKey: "returns", href: "/returns" },
+      { labelKey: "contact", href: "/contact" },
+      { labelKey: "careGuide", href: "/about/materials" },
     ],
   },
 ];
 
+// labelKey resolves against the "footer" namespace (terms/privacy/imprint/cookies).
 export const LEGAL_LINKS: NavLink[] = [
-  { label: "Terms", href: "/legal/terms" },
-  { label: "Privacy", href: "/legal/privacy" },
-  { label: "Imprint", href: "/legal/imprint" },
-  { label: "Cookies", href: "/legal/cookies" },
+  { labelKey: "terms", href: "/legal/terms" },
+  { labelKey: "privacy", href: "/legal/privacy" },
+  { labelKey: "imprint", href: "/legal/imprint" },
+  { labelKey: "cookies", href: "/legal/cookies" },
 ];

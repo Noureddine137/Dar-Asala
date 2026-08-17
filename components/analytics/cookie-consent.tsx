@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useConsentStore } from "@/lib/store/consent-store";
 import { useMounted } from "@/lib/hooks/use-mounted";
 import { Button } from "@/components/ui/button";

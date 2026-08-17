@@ -5,7 +5,7 @@ import { Heart } from "lucide-react";
 import { useWishlistStore } from "@/lib/store/wishlist-store";
 import { useMounted } from "@/lib/hooks/use-mounted";
 import { ProductGrid } from "@/components/collection/product-grid";
-import { ButtonLink } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button-link";
 import type { ProductCardDTO } from "@/lib/commerce/types";
 
 export function WishlistContent() {

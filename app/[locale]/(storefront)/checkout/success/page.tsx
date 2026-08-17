@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { useCartStore } from "@/lib/store/cart-store";
-import { ButtonLink } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button-link";
 
 export default function CheckoutSuccessPage() {
   const clear = useCartStore((s) => s.clear);

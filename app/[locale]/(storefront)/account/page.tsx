@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Heart, Package, UserCircle } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 
