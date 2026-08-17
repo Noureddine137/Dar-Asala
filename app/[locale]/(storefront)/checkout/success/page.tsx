@@ -2,10 +2,13 @@
 
 import { useEffect } from "react";
 import { CheckCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useCartStore } from "@/lib/store/cart-store";
 import { ButtonLink } from "@/components/ui/button-link";
 
 export default function CheckoutSuccessPage() {
+  const t = useTranslations("checkout");
+  const tCart = useTranslations("cart");
   const clear = useCartStore((s) => s.clear);
 
   useEffect(() => {
@@ -16,13 +19,10 @@ export default function CheckoutSuccessPage() {
   return (
     <div className="container-page flex flex-col items-center gap-4 py-24 text-center">
       <CheckCircle2 className="h-12 w-12 text-olive" />
-      <h1 className="font-serif-display text-3xl text-charcoal">Thank you for your order</h1>
-      <p className="max-w-md text-sm text-muted">
-        Your order has been placed. A confirmation email is on its way, and our artisans will begin
-        preparing your piece shortly.
-      </p>
+      <h1 className="font-serif-display text-3xl text-charcoal">{t("orderSuccessTitle")}</h1>
+      <p className="max-w-md text-sm text-muted">{t("orderSuccessBody")}</p>
       <ButtonLink href="/collections/all" className="mt-2">
-        Continue Shopping
+        {tCart("continueShopping")}
       </ButtonLink>
     </div>
   );

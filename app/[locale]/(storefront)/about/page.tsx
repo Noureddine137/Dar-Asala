@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 import { PageHeader } from "@/components/layout/page-header";
 import { ButtonLink } from "@/components/ui/button-link";
 import { getLocalizedStoreSettings } from "@/lib/content/store-settings";
@@ -14,13 +15,17 @@ type Props = { params: Promise<{ locale: string }> };
 
 export default async function AboutPage({ params }: Props) {
   const { locale } = await params;
-  const settings = await getLocalizedStoreSettings(locale as Locale);
+  const [settings, tNav, tHome] = await Promise.all([
+    getLocalizedStoreSettings(locale as Locale),
+    getTranslations({ locale, namespace: "nav" }),
+    getTranslations({ locale, namespace: "home" }),
+  ]);
   return (
     <div>
       <PageHeader
-        title="Our Story"
+        title={tNav("ourStory")}
         image="/images/brand/about-hero.webp"
-        breadcrumb={[{ label: "Home", href: "/" }, { label: "Our Story" }]}
+        breadcrumb={[{ label: tNav("home"), href: "/" }, { label: tNav("ourStory") }]}
       />
 
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 md:gap-16 md:py-20">
@@ -51,12 +56,10 @@ export default async function AboutPage({ params }: Props) {
       <div className="border-t border-sand/70 bg-cream py-14 md:py-20">
         <div className="container-page flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="font-serif-display text-2xl text-charcoal md:text-3xl">See how it&rsquo;s made</h2>
-            <p className="mt-2 max-w-md text-sm text-charcoal/80">
-              Go behind the workshop doors and follow a bag from raw hide to finished piece.
-            </p>
+            <h2 className="font-serif-display text-2xl text-charcoal md:text-3xl">{tHome("seeHowItsMade")}</h2>
+            <p className="mt-2 max-w-md text-sm text-charcoal/80">{tHome("seeHowItsMadeBody")}</p>
           </div>
-          <ButtonLink href="/about/craftsmanship">Our Craftsmanship</ButtonLink>
+          <ButtonLink href="/about/craftsmanship">{tHome("ourCraftsmanship")}</ButtonLink>
         </div>
       </div>
     </div>

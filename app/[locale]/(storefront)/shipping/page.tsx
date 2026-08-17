@@ -12,16 +12,17 @@ type Props = { params: Promise<{ locale: string }> };
 
 export default async function ShippingPage({ params }: Props) {
   const { locale } = await params;
-  const [zones, settings, t, tProduct] = await Promise.all([
+  const [zones, settings, t, tProduct, tNav] = await Promise.all([
     getShippingZonesForDisplay(locale as Locale),
     getStoreSettings(),
     getTranslations({ locale, namespace: "shippingPage" }),
     getTranslations({ locale, namespace: "product" }),
+    getTranslations({ locale, namespace: "nav" }),
   ]);
 
   return (
     <div>
-      <PageHeader title={t("title")} breadcrumb={[{ label: "Home", href: "/" }, { label: t("title") }]} />
+      <PageHeader title={t("title")} breadcrumb={[{ label: tNav("home"), href: "/" }, { label: t("title") }]} />
       <div className="container-page max-w-2xl space-y-8 pb-16 text-sm leading-relaxed text-charcoal/80 md:pb-24">
         <section>
           <h2 className="mb-2 font-serif-display text-xl text-charcoal">{t("processingTime")}</h2>

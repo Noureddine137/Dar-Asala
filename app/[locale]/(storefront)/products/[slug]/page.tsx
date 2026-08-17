@@ -46,11 +46,12 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProductBySlug(slug, locale as Locale);
   if (!product) notFound();
 
-  const [related, storeReviews, settings, t] = await Promise.all([
+  const [related, storeReviews, settings, t, tNav] = await Promise.all([
     getRelatedProducts(product, locale as Locale),
     getStoreReviewSummary(locale as Locale),
     getLocalizedStoreSettings(locale as Locale),
     getTranslations({ locale, namespace: "product" }),
+    getTranslations({ locale, namespace: "nav" }),
   ]);
 
   const jsonLd = {
@@ -83,8 +84,8 @@ export default async function ProductPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
-      { "@type": "ListItem", position: 2, name: "All Bags", item: `${siteUrl}/collections/all` },
+      { "@type": "ListItem", position: 1, name: tNav("home"), item: siteUrl },
+      { "@type": "ListItem", position: 2, name: tNav("allBags"), item: `${siteUrl}/collections/all` },
       { "@type": "ListItem", position: 3, name: product.name, item: `${siteUrl}/products/${product.slug}` },
     ],
   };
@@ -97,8 +98,8 @@ export default async function ProductPage({ params }: Props) {
       <div className="container-page pt-5">
         <Breadcrumb
           items={[
-            { label: "Home", href: "/" },
-            { label: "All Bags", href: "/collections/all" },
+            { label: tNav("home"), href: "/" },
+            { label: tNav("allBags"), href: "/collections/all" },
             { label: product.name },
           ]}
         />

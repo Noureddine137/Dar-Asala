@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 import { PageHeader } from "@/components/layout/page-header";
 import { CRAFTSMANSHIP_STEPS } from "@/lib/content/craftsmanship";
 
@@ -8,13 +9,25 @@ export const metadata: Metadata = {
   description: "How Dar Asala bags are hand-cut, hand-stitched and finished in small Moroccan workshops.",
 };
 
-export default function CraftsmanshipPage() {
+type Props = { params: Promise<{ locale: string }> };
+
+export default async function CraftsmanshipPage({ params }: Props) {
+  const { locale } = await params;
+  const [tNav, tHome] = await Promise.all([
+    getTranslations({ locale, namespace: "nav" }),
+    getTranslations({ locale, namespace: "home" }),
+  ]);
+
   return (
     <div>
       <PageHeader
-        title="Craftsmanship"
-        description="Five deliberate steps, and no shortcuts, stand between a raw hide and a finished Dar Asala bag."
-        breadcrumb={[{ label: "Home", href: "/" }, { label: "Our Story", href: "/about" }, { label: "Craftsmanship" }]}
+        title={tNav("craftsmanship")}
+        description={tHome("craftsmanshipTagline2")}
+        breadcrumb={[
+          { label: tNav("home"), href: "/" },
+          { label: tNav("ourStory"), href: "/about" },
+          { label: tNav("craftsmanship") },
+        ]}
       />
 
       <div className="container-page flex flex-col gap-16 pb-16 md:gap-24 md:pb-24">

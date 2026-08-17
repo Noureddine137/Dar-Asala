@@ -37,7 +37,8 @@
     "openMenu": "Menü öffnen",
     "closeMenu": "Menü schließen",
     "openCart": "Warenkorb öffnen, {count, plural, =0 {0 Artikel} one {# Artikel} other {# Artikel}}",
-    "language": "Sprache"
+    "language": "Sprache",
+    "home": "Startseite"
   },
   "footer": {
     "shop": "Shop",
@@ -225,7 +226,11 @@
     "backToBag": "Zurück zur Tasche",
     "selectDestinationTitle": "Lieferland auswählen",
     "selectDestinationBody": "Bitte wählen Sie Ihr Lieferland in Ihrer Tasche aus, bevor Sie zur Kasse gehen.",
-    "genericError": "Checkout konnte nicht gestartet werden."
+    "genericError": "Checkout konnte nicht gestartet werden.",
+    "orderSuccessTitle": "Vielen Dank für Ihre Bestellung",
+    "orderSuccessBody": "Ihre Bestellung wurde aufgegeben. Eine Bestätigungs-E-Mail ist unterwegs, und unsere Handwerker beginnen in Kürze mit der Anfertigung Ihres Stücks.",
+    "orderCancelledTitle": "Checkout abgebrochen",
+    "orderCancelledBody": "Ihre Bestellung wurde nicht abgeschlossen und Ihre Tasche ist weiterhin gespeichert. Sie können genau dort weitermachen, wo Sie aufgehört haben."
   },
   "search": {
     "search": "Suche",
@@ -233,7 +238,8 @@
     "searchPlaceholder": "Taschen, Farben, Kategorien suchen…",
     "searching": "Suche läuft…",
     "noProductsFound": "Keine Ergebnisse für „{query}“. Versuchen Sie einen anderen Begriff.",
-    "closeSearch": "Suche schließen"
+    "closeSearch": "Suche schließen",
+    "searchHint": "Versuchen Sie es mit einem Taschenstil, einer Farbe oder Kategorie."
   },
   "forms": {
     "name": "Name",
@@ -290,7 +296,9 @@
     "sortBy": "Sortieren nach",
     "noProductsMatch": "Keine Stücke entsprechen diesen Filtern",
     "noProductsMatchBody": "Erweitern Sie Ihre Auswahl oder durchstöbern Sie die gesamte Kollektion.",
-    "productCount": "{count, plural, one {# Produkt} other {# Produkte}}"
+    "productCount": "{count, plural, one {# Produkt} other {# Produkte}}",
+    "wishlistEmpty": "Ihre Wunschliste ist leer.",
+    "discoverCollection": "Kollektion entdecken"
   },
   "home": {
     "shopByCategory": "Nach Kategorie einkaufen",
@@ -320,7 +328,8 @@
     "handmadeInMorocco": "Handgefertigt in Marokko",
     "genuineLeather": "Echtes Leder",
     "smallBatchProduction": "Kleinserienproduktion",
-    "securePayments": "Sichere Zahlungen"
+    "securePayments": "Sichere Zahlungen",
+    "craftsmanshipTagline2": "Fünf bewusste Schritte, ganz ohne Abkürzungen, liegen zwischen der rohen Haut und einer fertigen Dar-Asala-Tasche."
   },
   "cookieConsent": {
     "label": "Cookie-Einwilligung",
@@ -377,5 +386,38 @@
     "customsDuties": "Zoll & Abgaben",
     "customsDutiesBody": "Bestellungen außerhalb der EU können lokalen Einfuhrzöllen und Steuern unterliegen, die vom Empfänger zu tragen sind und nicht in unseren Versandkosten enthalten sind.",
     "adminNote": "Die oben genannten Preise und Regionen werden in Store Admin → Versand verwaltet und sollten vor dem Launch mit Ihren tatsächlichen Versanddienstleistern abgeglichen werden."
+  },
+  "journal": {
+    "description": "Geschichten aus der Werkstatt, der Medina und der Entstehung jedes Dar-Asala-Stücks."
+  },
+  "account": {
+    "title": "Konto",
+    "description": "Kundenkonten kommen bald. In der Zwischenzeit wird Ihre Wunschliste automatisch auf diesem Gerät gespeichert.",
+    "wishlist": "Wunschliste",
+    "wishlistDescription": "Für später gespeicherte Stücke.",
+    "orderHistory": "Bestellhistorie",
+    "orderHistoryDescription": "Verfolgen und überprüfen Sie frühere Bestellungen.",
+    "profileAddresses": "Profil & Adressen",
+    "profileAddressesDescription": "Verwalten Sie Ihre gespeicherten Angaben.",
+    "profileBody": "Gespeicherte Profile und Adressen stehen zur Verfügung, sobald Kundenkonten verfügbar sind. In der Zwischenzeit werden Versanddaten sicher beim Checkout erfasst.",
+    "ordersBody": "Ihre Bestellhistorie erscheint hier, sobald Kundenkonten verfügbar sind. Für Details zu einer bestehenden Bestellung <contactLink>kontaktieren Sie uns</contactLink> bitte mit Ihrer Bestellbestätigung."
+  },
+  "contact": {
+    "description": "Fragen zu einer Bestellung, einer Sonderanfertigung oder allem anderen — wir helfen Ihnen gerne.",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "address": "Adresse",
+    "responseTime": "Antwortzeit",
+    "responseTimeValue": "1–2 Werktage, Montag bis Freitag.",
+    "customOrders": "Sonderanfertigungen",
+    "customOrdersBody": "Für individuelle Stücke besuchen Sie unsere Seite <customOrdersLink>Sonderanfertigungen</customOrdersLink>."
+  },
+  "customOrders": {
+    "description": "Wählen Sie Ihr Leder, Ihre Farbe, den Riemen und weitere Details, und unsere Handwerker fertigen ein Stück ganz nach Ihren Wünschen. Senden Sie das Formular unten ab, und ein Atelier-Spezialist meldet sich mit Optionen, Zeitplan und Preis — in der Regel innerhalb von 2–3 Werktagen.",
+    "pageTitle": "Für Sie gemacht"
+  },
+  "materialsPage": {
+    "whatWeUse": "Was wir verwenden",
+    "careGuideHeading": "Pflegehinweise"
   }
 }

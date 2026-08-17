@@ -37,7 +37,8 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "openCart": "Open cart, {count, plural, =0 {0 items} one {# item} other {# items}}",
-    "language": "Language"
+    "language": "Language",
+    "home": "Home"
   },
   "footer": {
     "shop": "Shop",
@@ -225,7 +226,11 @@
     "backToBag": "Back to Bag",
     "selectDestinationTitle": "Select a shipping destination",
     "selectDestinationBody": "Please choose your delivery country in your bag before checking out.",
-    "genericError": "Unable to start checkout."
+    "genericError": "Unable to start checkout.",
+    "orderSuccessTitle": "Thank you for your order",
+    "orderSuccessBody": "Your order has been placed. A confirmation email is on its way, and our artisans will begin preparing your piece shortly.",
+    "orderCancelledTitle": "Checkout cancelled",
+    "orderCancelledBody": "Your order was not completed and your bag is still saved. You can pick up right where you left off."
   },
   "search": {
     "search": "Search",
@@ -233,7 +238,8 @@
     "searchPlaceholder": "Search bags, colors, categories…",
     "searching": "Searching…",
     "noProductsFound": "No results for “{query}”. Try another word.",
-    "closeSearch": "Close search"
+    "closeSearch": "Close search",
+    "searchHint": "Try searching for a bag style, color or category."
   },
   "forms": {
     "name": "Name",
@@ -290,7 +296,9 @@
     "sortBy": "Sort by",
     "noProductsMatch": "No pieces match those filters",
     "noProductsMatchBody": "Try widening your selection, or browse the full collection instead.",
-    "productCount": "{count, plural, one {# product} other {# products}}"
+    "productCount": "{count, plural, one {# product} other {# products}}",
+    "wishlistEmpty": "Your wishlist is empty.",
+    "discoverCollection": "Discover the Collection"
   },
   "home": {
     "shopByCategory": "Shop by Category",
@@ -320,7 +328,8 @@
     "handmadeInMorocco": "Handmade in Morocco",
     "genuineLeather": "Genuine Leather",
     "smallBatchProduction": "Small-Batch Production",
-    "securePayments": "Secure Payments"
+    "securePayments": "Secure Payments",
+    "craftsmanshipTagline2": "Five deliberate steps, and no shortcuts, stand between a raw hide and a finished Dar Asala bag."
   },
   "cookieConsent": {
     "label": "Cookie consent",
@@ -377,5 +386,38 @@
     "customsDuties": "Customs & Duties",
     "customsDutiesBody": "Orders shipped outside the EU may be subject to local import duties and taxes, which are the responsibility of the recipient and are not included in our shipping charges.",
     "adminNote": "Rates and regions above are managed in Store Admin → Shipping and should be reviewed against your business's actual shipping carriers before launch."
+  },
+  "journal": {
+    "description": "Stories from the workshop, the medina, and the making of every Dar Asala piece."
+  },
+  "account": {
+    "title": "Account",
+    "description": "Customer accounts are coming soon. In the meantime, your wishlist is saved automatically on this device.",
+    "wishlist": "Wishlist",
+    "wishlistDescription": "Pieces you've saved for later.",
+    "orderHistory": "Order History",
+    "orderHistoryDescription": "Track and review past orders.",
+    "profileAddresses": "Profile & Addresses",
+    "profileAddressesDescription": "Manage your saved details.",
+    "profileBody": "Saved profiles and addresses will be available once customer accounts launch. Shipping details are collected securely at checkout in the meantime.",
+    "ordersBody": "Order history will appear here once customer accounts launch. If you need details on an existing order, please <contactLink>contact us</contactLink> with your order confirmation email."
+  },
+  "contact": {
+    "description": "Questions about an order, a custom piece, or anything else — we're glad to help.",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "responseTime": "Response Time",
+    "responseTimeValue": "1–2 business days, Monday to Friday.",
+    "customOrders": "Custom Orders",
+    "customOrdersBody": "For bespoke pieces, visit our <customOrdersLink>Custom Orders</customOrdersLink> page."
+  },
+  "customOrders": {
+    "description": "Choose your leather, color, strap and selected finishing details, and our artisans will hand-build a piece around your choices. Submit the form below and an atelier specialist will follow up with options, timeline and pricing — typically 2–3 business days.",
+    "pageTitle": "Made for You"
+  },
+  "materialsPage": {
+    "whatWeUse": "What we use",
+    "careGuideHeading": "Care Guide"
   }
 }

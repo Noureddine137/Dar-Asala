@@ -1,13 +1,21 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { PageHeader } from "@/components/layout/page-header";
+import { TranslationNotice } from "@/components/layout/translation-notice";
 
 export const metadata: Metadata = { title: "Returns" };
 
-export default function ReturnsPage() {
+type Props = { params: Promise<{ locale: string }> };
+
+export default async function ReturnsPage({ params }: Props) {
+  const { locale } = await params;
+  const tNav = await getTranslations({ locale, namespace: "nav" });
+
   return (
     <div>
-      <PageHeader title="Returns" breadcrumb={[{ label: "Home", href: "/" }, { label: "Returns" }]} />
+      <PageHeader title={tNav("returns")} breadcrumb={[{ label: tNav("home"), href: "/" }, { label: tNav("returns") }]} />
       <div className="container-page max-w-2xl space-y-8 pb-16 text-sm leading-relaxed text-charcoal/80 md:pb-24">
+        <TranslationNotice variant="legal" />
         <section>
           <h2 className="mb-2 font-serif-display text-xl text-charcoal">Return Window</h2>
           <p>

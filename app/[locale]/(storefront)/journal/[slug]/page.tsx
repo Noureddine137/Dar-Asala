@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 import { PageHeader } from "@/components/layout/page-header";
+import { TranslationNotice } from "@/components/layout/translation-notice";
 import { JOURNAL_ARTICLES } from "@/lib/content/journal";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ slug: string; locale: string }> };
 
 export function generateStaticParams() {
   return JOURNAL_ARTICLES.map((a) => ({ slug: a.slug }));
@@ -18,18 +20,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function JournalArticlePage({ params }: Props) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const article = JOURNAL_ARTICLES.find((a) => a.slug === slug);
   if (!article) notFound();
+  const tNav = await getTranslations({ locale, namespace: "nav" });
 
   return (
     <div>
       <PageHeader
         title={article.title}
         description={article.dek}
-        breadcrumb={[{ label: "Home", href: "/" }, { label: "Journal", href: "/journal" }, { label: article.title }]}
+        breadcrumb={[{ label: tNav("home"), href: "/" }, { label: tNav("journal"), href: "/journal" }, { label: article.title }]}
       />
       <div className="container-page max-w-2xl pb-16 md:pb-24">
+        <TranslationNotice variant="journal" />
         <div className="relative mb-10 aspect-[16/9] overflow-hidden rounded-sm">
           <Image src={article.image} alt={article.title} fill sizes="(min-width: 768px) 42rem, 100vw" className="object-cover" />
         </div>

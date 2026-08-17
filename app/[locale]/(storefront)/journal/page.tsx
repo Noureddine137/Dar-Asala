@@ -1,18 +1,27 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { PageHeader } from "@/components/layout/page-header";
 import { JOURNAL_ARTICLES } from "@/lib/content/journal";
 
 export const metadata: Metadata = { title: "Journal" };
 
-export default function JournalIndexPage() {
+type Props = { params: Promise<{ locale: string }> };
+
+export default async function JournalIndexPage({ params }: Props) {
+  const { locale } = await params;
+  const [tNav, tJournal] = await Promise.all([
+    getTranslations({ locale, namespace: "nav" }),
+    getTranslations({ locale, namespace: "journal" }),
+  ]);
+
   return (
     <div>
       <PageHeader
-        title="The Journal"
-        description="Stories from the workshop, the medina, and the making of every Dar Asala piece."
-        breadcrumb={[{ label: "Home", href: "/" }, { label: "Journal" }]}
+        title={tNav("journal")}
+        description={tJournal("description")}
+        breadcrumb={[{ label: tNav("home"), href: "/" }, { label: tNav("journal") }]}
       />
       <div className="container-page grid gap-10 pb-16 md:grid-cols-3 md:gap-8 md:pb-24">
         {JOURNAL_ARTICLES.map((a) => (

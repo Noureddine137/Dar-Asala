@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 import { PageHeader } from "@/components/layout/page-header";
 import { getLocalizedStoreSettings } from "@/lib/content/store-settings";
 import type { Locale } from "@/i18n/routing";
@@ -31,13 +32,16 @@ type Props = { params: Promise<{ locale: string }> };
 
 export default async function ArtisansPage({ params }: Props) {
   const { locale } = await params;
-  const settings = await getLocalizedStoreSettings(locale as Locale);
+  const [settings, tNav] = await Promise.all([
+    getLocalizedStoreSettings(locale as Locale),
+    getTranslations({ locale, namespace: "nav" }),
+  ]);
   return (
     <div>
       <PageHeader
-        title="Our Artisans"
+        title={tNav("artisans")}
         description={`Dar Asala works with a small number of independent leather workshops across ${settings.brandWorkshopLocations} — we don't publish invented biographies, but every bag is made by real hands, in small batches, start to finish.`}
-        breadcrumb={[{ label: "Home", href: "/" }, { label: "Artisans" }]}
+        breadcrumb={[{ label: tNav("home"), href: "/" }, { label: tNav("artisans") }]}
       />
 
       <div className="container-page grid gap-10 pb-16 md:grid-cols-3 md:gap-8 md:pb-24">

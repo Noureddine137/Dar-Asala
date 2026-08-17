@@ -37,7 +37,8 @@
     "openMenu": "Ouvrir le menu",
     "closeMenu": "Fermer le menu",
     "openCart": "Ouvrir le panier, {count, plural, =0 {0 article} one {# article} other {# articles}}",
-    "language": "Langue"
+    "language": "Langue",
+    "home": "Accueil"
   },
   "footer": {
     "shop": "Boutique",
@@ -225,7 +226,11 @@
     "backToBag": "Retour au Panier",
     "selectDestinationTitle": "Sélectionnez une destination de livraison",
     "selectDestinationBody": "Veuillez choisir votre pays de livraison dans votre panier avant de passer commande.",
-    "genericError": "Impossible de démarrer le paiement."
+    "genericError": "Impossible de démarrer le paiement.",
+    "orderSuccessTitle": "Merci pour votre commande",
+    "orderSuccessBody": "Votre commande a été passée. Un e-mail de confirmation est en route, et nos artisans vont bientôt commencer à préparer votre pièce.",
+    "orderCancelledTitle": "Paiement annulé",
+    "orderCancelledBody": "Votre commande n'a pas été finalisée et votre sac est toujours enregistré. Vous pouvez reprendre exactement là où vous en étiez."
   },
   "search": {
     "search": "Recherche",
@@ -233,7 +238,8 @@
     "searchPlaceholder": "Rechercher sacs, couleurs, catégories…",
     "searching": "Recherche en cours…",
     "noProductsFound": "Aucun résultat pour « {query} ». Essayez un autre mot.",
-    "closeSearch": "Fermer la recherche"
+    "closeSearch": "Fermer la recherche",
+    "searchHint": "Essayez de rechercher un style de sac, une couleur ou une catégorie."
   },
   "forms": {
     "name": "Nom",
@@ -290,7 +296,9 @@
     "sortBy": "Trier par",
     "noProductsMatch": "Aucune pièce ne correspond à ces filtres",
     "noProductsMatchBody": "Élargissez votre sélection ou parcourez l'ensemble de la collection.",
-    "productCount": "{count, plural, one {# produit} other {# produits}}"
+    "productCount": "{count, plural, one {# produit} other {# produits}}",
+    "wishlistEmpty": "Votre liste de souhaits est vide.",
+    "discoverCollection": "Découvrir la collection"
   },
   "home": {
     "shopByCategory": "Acheter par Catégorie",
@@ -320,7 +328,8 @@
     "handmadeInMorocco": "Fabriqué à la main au Maroc",
     "genuineLeather": "Cuir véritable",
     "smallBatchProduction": "Production en petites séries",
-    "securePayments": "Paiements sécurisés"
+    "securePayments": "Paiements sécurisés",
+    "craftsmanshipTagline2": "Cinq étapes réfléchies, sans aucun raccourci, séparent la peau brute d'un sac Dar Asala terminé."
   },
   "cookieConsent": {
     "label": "Consentement aux cookies",
@@ -377,5 +386,38 @@
     "customsDuties": "Douane & taxes",
     "customsDutiesBody": "Les commandes expédiées hors de l'UE peuvent être soumises à des droits de douane et taxes locaux, à la charge du destinataire et non inclus dans nos frais de livraison.",
     "adminNote": "Les tarifs et régions ci-dessus sont gérés dans l'Admin de la boutique → Livraison et doivent être vérifiés par rapport aux transporteurs réels de votre entreprise avant le lancement."
+  },
+  "journal": {
+    "description": "Récits de l'atelier, de la médina et de la fabrication de chaque pièce Dar Asala."
+  },
+  "account": {
+    "title": "Compte",
+    "description": "Les comptes clients arrivent bientôt. En attendant, votre liste de souhaits est enregistrée automatiquement sur cet appareil.",
+    "wishlist": "Liste de souhaits",
+    "wishlistDescription": "Les pièces que vous avez enregistrées pour plus tard.",
+    "orderHistory": "Historique des commandes",
+    "orderHistoryDescription": "Suivez et consultez vos commandes passées.",
+    "profileAddresses": "Profil & adresses",
+    "profileAddressesDescription": "Gérez vos informations enregistrées.",
+    "profileBody": "Les profils et adresses enregistrés seront disponibles dès le lancement des comptes clients. En attendant, les informations de livraison sont recueillies en toute sécurité lors du paiement.",
+    "ordersBody": "L'historique de vos commandes apparaîtra ici dès le lancement des comptes clients. Pour toute question sur une commande existante, veuillez <contactLink>nous contacter</contactLink> avec votre e-mail de confirmation de commande."
+  },
+  "contact": {
+    "description": "Des questions sur une commande, une pièce sur mesure ou autre chose — nous sommes ravis de vous aider.",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "responseTime": "Délai de réponse",
+    "responseTimeValue": "1 à 2 jours ouvrés, du lundi au vendredi.",
+    "customOrders": "Commandes sur mesure",
+    "customOrdersBody": "Pour une pièce sur mesure, consultez notre page <customOrdersLink>Commandes sur mesure</customOrdersLink>."
+  },
+  "customOrders": {
+    "description": "Choisissez votre cuir, sa couleur, la bandoulière et les finitions souhaitées, et nos artisans fabriqueront une pièce à la main selon vos choix. Envoyez le formulaire ci-dessous et un spécialiste de l'atelier vous recontactera avec les options, le délai et le tarif — généralement sous 2 à 3 jours ouvrés.",
+    "pageTitle": "Fait pour vous"
+  },
+  "materialsPage": {
+    "whatWeUse": "Ce que nous utilisons",
+    "careGuideHeading": "Guide d'entretien"
   }
 }

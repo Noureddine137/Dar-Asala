@@ -1,23 +1,32 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Heart, Package, UserCircle } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 
 export const metadata: Metadata = { title: "Account", robots: { index: false, follow: true } };
 
-const LINKS = [
-  { href: "/wishlist", label: "Wishlist", description: "Pieces you've saved for later.", icon: Heart },
-  { href: "/account/orders", label: "Order History", description: "Track and review past orders.", icon: Package },
-  { href: "/account/profile", label: "Profile & Addresses", description: "Manage your saved details.", icon: UserCircle },
-];
+type Props = { params: Promise<{ locale: string }> };
 
-export default function AccountPage() {
+export default async function AccountPage({ params }: Props) {
+  const { locale } = await params;
+  const [tNav, t] = await Promise.all([
+    getTranslations({ locale, namespace: "nav" }),
+    getTranslations({ locale, namespace: "account" }),
+  ]);
+
+  const LINKS = [
+    { href: "/wishlist", label: t("wishlist"), description: t("wishlistDescription"), icon: Heart },
+    { href: "/account/orders", label: t("orderHistory"), description: t("orderHistoryDescription"), icon: Package },
+    { href: "/account/profile", label: t("profileAddresses"), description: t("profileAddressesDescription"), icon: UserCircle },
+  ];
+
   return (
     <div>
       <PageHeader
-        title="Account"
-        description="Customer accounts are coming soon. In the meantime, your wishlist is saved automatically on this device."
-        breadcrumb={[{ label: "Home", href: "/" }, { label: "Account" }]}
+        title={t("title")}
+        description={t("description")}
+        breadcrumb={[{ label: tNav("home"), href: "/" }, { label: t("title") }]}
       />
       <div className="container-page grid gap-4 pb-16 sm:grid-cols-3 md:pb-24">
         {LINKS.map(({ href, label, description, icon: Icon }) => (

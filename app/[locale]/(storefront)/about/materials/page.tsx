@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { PageHeader } from "@/components/layout/page-header";
 
 export const metadata: Metadata = {
@@ -38,17 +39,29 @@ const CARE = [
   "Allow a wet bag to air dry naturally — never use direct heat to speed up drying.",
 ];
 
-export default function MaterialsPage() {
+type Props = { params: Promise<{ locale: string }> };
+
+export default async function MaterialsPage({ params }: Props) {
+  const { locale } = await params;
+  const [tNav, t] = await Promise.all([
+    getTranslations({ locale, namespace: "nav" }),
+    getTranslations({ locale, namespace: "materialsPage" }),
+  ]);
+
   return (
     <div>
       <PageHeader
-        title="Materials & Care"
-        breadcrumb={[{ label: "Home", href: "/" }, { label: "Our Story", href: "/about" }, { label: "Materials" }]}
+        title={tNav("materials")}
+        breadcrumb={[
+          { label: tNav("home"), href: "/" },
+          { label: tNav("ourStory"), href: "/about" },
+          { label: tNav("materials") },
+        ]}
       />
 
       <div className="container-page grid gap-16 pb-16 md:grid-cols-2 md:gap-20 md:pb-24">
         <div>
-          <h2 className="font-serif-display text-2xl text-charcoal md:text-3xl">What we use</h2>
+          <h2 className="font-serif-display text-2xl text-charcoal md:text-3xl">{t("whatWeUse")}</h2>
           <div className="mt-6 space-y-6">
             {MATERIALS.map((m) => (
               <div key={m.title}>
@@ -59,7 +72,7 @@ export default function MaterialsPage() {
           </div>
         </div>
         <div>
-          <h2 className="font-serif-display text-2xl text-charcoal md:text-3xl">Care Guide</h2>
+          <h2 className="font-serif-display text-2xl text-charcoal md:text-3xl">{t("careGuideHeading")}</h2>
           <ol className="mt-6 space-y-3">
             {CARE.map((step, i) => (
               <li key={i} className="flex gap-3 text-sm leading-relaxed text-charcoal/80">

@@ -1,15 +1,15 @@
+import { getTranslations } from "next-intl/server";
 import { ButtonLink } from "@/components/ui/button-link";
 
-export default function CheckoutCancelPage() {
+export default async function CheckoutCancelPage() {
+  const t = await getTranslations("checkout");
+
   return (
     <div className="container-page flex flex-col items-center gap-4 py-24 text-center">
-      <h1 className="font-serif-display text-3xl text-charcoal">Checkout cancelled</h1>
-      <p className="max-w-md text-sm text-muted">
-        Your order was not completed and your bag is still saved. You can pick up right where you
-        left off.
-      </p>
+      <h1 className="font-serif-display text-3xl text-charcoal">{t("orderCancelledTitle")}</h1>
+      <p className="max-w-md text-sm text-muted">{t("orderCancelledBody")}</p>
       <ButtonLink href="/cart" className="mt-2">
-        Back to Bag
+        {t("backToBag")}
       </ButtonLink>
     </div>
   );
