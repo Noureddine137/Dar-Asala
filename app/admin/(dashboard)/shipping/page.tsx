@@ -66,7 +66,7 @@ export default async function AdminShippingPage() {
                 </div>
               </form>
               <form action={boundDelete} className="mt-2 border-t border-sand/60 pt-2">
-                <ConfirmSubmitButton confirmMessage={`Delete the "${z.region}" shipping zone?`} className="text-xs text-terracotta underline">
+                <ConfirmSubmitButton confirmMessage={`Delete the "${z.region}" shipping zone?`} className="admin-danger-link">
                   Delete Zone
                 </ConfirmSubmitButton>
               </form>

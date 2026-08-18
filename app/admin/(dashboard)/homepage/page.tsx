@@ -199,7 +199,7 @@ export default async function AdminHomepagePage() {
                 </div>
 
                 <form action={boundDelete} className="mt-3 border-t border-sand/60 pt-2">
-                  <ConfirmSubmitButton confirmMessage="Delete this testimonial?" className="text-xs text-terracotta underline">
+                  <ConfirmSubmitButton confirmMessage="Delete this testimonial?" className="admin-danger-link">
                     Delete
                   </ConfirmSubmitButton>
                 </form>

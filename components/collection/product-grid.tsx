@@ -24,7 +24,9 @@ export function ProductGrid({ products }: { products: ProductCardDTO[] }) {
   }
 
   return (
-    <div className="grid flex-1 grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 md:gap-x-6 lg:grid-cols-3 xl:grid-cols-4">
+    <div
+      className="grid flex-1 grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 md:gap-x-6 md:[grid-template-columns:repeat(auto-fit,minmax(15rem,1fr))]"
+    >
       {products.map((product, i) => (
         <ProductCard key={product.id} product={product} priority={i < 2} />
       ))}

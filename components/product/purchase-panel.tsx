@@ -8,7 +8,9 @@ import { colorLabel, colorSwatchHex, formatPrice, hardwareLabel, sizeLabel, stra
 import { dimensionOptions, defaultSelection, findVariant, type VariantSelection } from "@/lib/commerce/variant-utils";
 import { useCartStore } from "@/lib/store/cart-store";
 import { useUIStore } from "@/lib/store/ui-store";
+import { useConsentStore } from "@/lib/store/consent-store";
 import { useWishlistStore } from "@/lib/store/wishlist-store";
+import { useMounted } from "@/lib/hooks/use-mounted";
 import { Button } from "@/components/ui/button";
 import { StickyMobileCartBar } from "./sticky-cart-bar";
 import type { ProductDetailDTO } from "@/lib/commerce/types";
@@ -23,6 +25,12 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useUIStore((s) => s.openCart);
   const anyOverlayOpen = useUIStore((s) => s.overlay !== null);
+  const consentChoice = useConsentStore((s) => s.choice);
+  const mounted = useMounted();
+  // The cookie banner and the sticky mobile Add to Cart bar both anchor to
+  // the bottom of the screen — while consent is still pending (banner
+  // visible), keep the sticky bar off so they never overlap.
+  const consentPending = mounted && consentChoice === null;
   const isWishlisted = useWishlistStore((s) => s.has(product.slug));
   const toggleWishlist = useWishlistStore((s) => s.toggle);
   const [justAdded, setJustAdded] = useState(false);
@@ -267,7 +275,7 @@ export function PurchasePanel({ product }: { product: ProductDetailDTO }) {
       <p className={cn("mt-4 text-sm", variant.isMadeToOrder ? "text-olive" : "text-charcoal/80")}>{statusLabel}</p>
 
       <StickyMobileCartBar
-        show={showSticky && !anyOverlayOpen}
+        show={showSticky && !anyOverlayOpen && !consentPending}
         image={image?.url ?? ""}
         imageAlt={image?.alt ?? product.name}
         name={product.name}

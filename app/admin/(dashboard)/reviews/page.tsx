@@ -61,7 +61,7 @@ export default async function AdminReviewsPage() {
                       </button>
                     </form>
                     <form action={boundDelete}>
-                      <ConfirmSubmitButton confirmMessage="Delete this review permanently?" className="text-terracotta underline">
+                      <ConfirmSubmitButton confirmMessage="Delete this review permanently?" className="admin-danger-link">
                         Delete
                       </ConfirmSubmitButton>
                     </form>

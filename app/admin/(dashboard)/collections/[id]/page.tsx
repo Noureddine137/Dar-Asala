@@ -146,7 +146,7 @@ export default async function EditCollectionPage({ params }: Props) {
                       </button>
                     </form>
                     <form action={boundRemove}>
-                      <ConfirmSubmitButton confirmMessage="Remove this product from the collection?" className="text-terracotta underline">
+                      <ConfirmSubmitButton confirmMessage="Remove this product from the collection?" className="admin-danger-link">
                         Remove
                       </ConfirmSubmitButton>
                     </form>
@@ -176,15 +176,15 @@ export default async function EditCollectionPage({ params }: Props) {
         )}
       </div>
 
-      <div className="mt-10 rounded-sm border border-sand p-5">
-        <h2 className="font-serif-display text-lg">Danger Zone</h2>
+      <div className="mt-10 rounded-sm border border-terracotta/30 bg-terracotta/[0.03] p-6">
+        <h2 className="font-serif-display text-lg text-terracotta">Danger Zone</h2>
         <p className="mt-2 text-sm text-muted">
           Deletes the collection. Products stay in the catalog — only the collection grouping is removed.
         </p>
         <form action={boundDelete} className="mt-3">
           <ConfirmSubmitButton
             confirmMessage={`Delete the "${collection.title}" collection?`}
-            className="rounded-sm border border-terracotta px-4 py-2 text-xs text-terracotta"
+            className="rounded-sm border border-terracotta bg-terracotta/5 px-4 py-2 text-xs font-medium text-terracotta hover:bg-terracotta hover:text-ivory"
           >
             Delete Collection
           </ConfirmSubmitButton>

@@ -59,24 +59,28 @@ export default async function AdminDashboard() {
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {stats.map((s) => (
-          <Link key={s.label} href={s.href} className="rounded-sm border border-sand p-5 hover:border-charcoal">
+          <Link
+            key={s.label}
+            href={s.href}
+            className="admin-card block p-5 transition-shadow hover:shadow-[0_1px_2px_rgba(44,42,38,0.06),0_10px_24px_rgba(44,42,38,0.09)]"
+          >
             <p className="text-xs uppercase tracking-wide text-muted">{s.label}</p>
             <p className="mt-2 font-serif-display text-3xl">{s.value}</p>
           </Link>
         ))}
       </div>
 
-      <div className="mt-12 grid gap-10 lg:grid-cols-2">
-        <div>
-          <h2 className="mb-4 font-serif-display text-xl">Best-Selling Products</h2>
+      <div className="mt-10 grid gap-6 lg:grid-cols-2">
+        <div className="admin-card p-5">
+          <h2 className="mb-4 font-serif-display text-lg">Best-Selling Products</h2>
           {bestSellingProducts.filter((b) => b.product).length === 0 ? (
             <p className="text-sm text-muted">No sales yet.</p>
           ) : (
-            <ol className="space-y-2 text-sm">
+            <ol className="space-y-1 text-sm">
               {bestSellingProducts
                 .filter((b) => b.product)
                 .map((b, i) => (
-                  <li key={b.product!.id} className="flex items-center justify-between border-b border-sand/60 py-2">
+                  <li key={b.product!.id} className="flex items-center justify-between rounded-sm px-1.5 py-2 hover:bg-sand/30">
                     <span>
                       <span className="text-muted">{i + 1}.</span>{" "}
                       <Link href={`/admin/products/${b.product!.id}`} className="underline">
@@ -90,14 +94,14 @@ export default async function AdminDashboard() {
           )}
         </div>
 
-        <div>
-          <h2 className="mb-4 font-serif-display text-xl">Low Stock (≤ {LOW_STOCK_THRESHOLD})</h2>
+        <div className="admin-card p-5">
+          <h2 className="mb-4 font-serif-display text-lg">Low Stock (≤ {LOW_STOCK_THRESHOLD})</h2>
           {lowStockVariants.length === 0 ? (
             <p className="text-sm text-muted">No variants at or below the low-stock threshold.</p>
           ) : (
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-1 text-sm">
               {lowStockVariants.map((v) => (
-                <li key={v.id} className="flex items-center justify-between border-b border-sand/60 py-2">
+                <li key={v.id} className="flex items-center justify-between rounded-sm px-1.5 py-2 hover:bg-sand/30">
                   <Link href={`/admin/products/${v.product.id}`} className="underline">
                     {v.product.name} — {colorLabel(v.color)} / {sizeLabel(v.size)}
                   </Link>
@@ -111,37 +115,37 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      <div className="mt-12">
-        <div className="flex items-center justify-between">
-          <h2 className="font-serif-display text-xl">Recent Orders</h2>
+      <div className="mt-10">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="font-serif-display text-lg">Recent Orders</h2>
           <Link href="/admin/orders" className="text-sm text-muted underline">
             View all
           </Link>
         </div>
         {recentOrders.length === 0 ? (
-          <p className="mt-4 text-sm text-muted">No orders yet.</p>
+          <p className="admin-card p-5 text-sm text-muted">No orders yet.</p>
         ) : (
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full min-w-[560px] text-left text-sm">
+          <div className="admin-card overflow-x-auto">
+            <table className="admin-table w-full min-w-[560px] text-left text-sm">
               <thead>
-                <tr className="border-b border-sand text-xs uppercase tracking-wide text-muted">
-                  <th className="py-2 font-medium">Order</th>
-                  <th className="py-2 font-medium">Email</th>
-                  <th className="py-2 font-medium">Status</th>
-                  <th className="py-2 font-medium">Total</th>
+                <tr>
+                  <th className="pl-5 pr-3">Order</th>
+                  <th className="px-3">Email</th>
+                  <th className="px-3">Status</th>
+                  <th className="pl-3 pr-5">Total</th>
                 </tr>
               </thead>
               <tbody>
                 {recentOrders.map((o) => (
-                  <tr key={o.id} className="border-b border-sand/60">
-                    <td className="py-2.5">
+                  <tr key={o.id}>
+                    <td className="pl-5 pr-3">
                       <Link href={`/admin/orders/${o.id}`} className="underline">
                         {o.orderNumber}
                       </Link>
                     </td>
-                    <td className="py-2.5">{o.email}</td>
-                    <td className="py-2.5">{ORDER_STATUS_LABELS[o.status] ?? o.status}</td>
-                    <td className="py-2.5">{formatPrice(Number(o.total), o.currency)}</td>
+                    <td className="px-3">{o.email}</td>
+                    <td className="px-3">{ORDER_STATUS_LABELS[o.status] ?? o.status}</td>
+                    <td className="pl-3 pr-5">{formatPrice(Number(o.total), o.currency)}</td>
                   </tr>
                 ))}
               </tbody>

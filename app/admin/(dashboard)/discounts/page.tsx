@@ -41,7 +41,7 @@ export default async function AdminDiscountsPage() {
                   </button>
                 </form>
                 <form action={boundDelete}>
-                  <ConfirmSubmitButton confirmMessage={`Delete code ${c.code}?`} className="text-terracotta underline">
+                  <ConfirmSubmitButton confirmMessage={`Delete code ${c.code}?`} className="admin-danger-link">
                     Delete
                   </ConfirmSubmitButton>
                 </form>

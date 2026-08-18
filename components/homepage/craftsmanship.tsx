@@ -18,7 +18,7 @@ export async function Craftsmanship() {
             key={step.slug}
             className={`grid items-center gap-8 md:grid-cols-2 md:gap-14 ${i % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""}`}
           >
-            <div className="relative aspect-[4/3] overflow-hidden rounded-sm">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
               <Image
                 src={step.image}
                 alt={step.title}

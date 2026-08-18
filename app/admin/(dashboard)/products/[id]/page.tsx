@@ -66,7 +66,7 @@ export default async function EditProductPage({ params }: Props) {
         </Link>
       </div>
 
-      <div className="mt-8">
+      <div className="admin-card mt-8 p-6">
         <h2 className="mb-1 font-serif-display text-xl">Details</h2>
         <p className="mb-4 text-xs text-muted">
           Commerce data — shared across every language, never duplicated per translation.
@@ -142,7 +142,7 @@ export default async function EditProductPage({ params }: Props) {
         </form>
       </div>
 
-      <div className="mt-12">
+      <div className="admin-card mt-8 p-6">
         <h2 className="mb-1 font-serif-display text-xl">Content</h2>
         <p className="mb-4 text-xs text-muted">
           Customer-visible copy, translated per language. English is the fallback shown wherever a
@@ -187,8 +187,8 @@ export default async function EditProductPage({ params }: Props) {
         />
       </div>
 
-      <div className="mt-10 rounded-sm border border-sand p-5">
-        <h2 className="font-serif-display text-lg">Danger Zone</h2>
+      <div className="mt-8 rounded-sm border border-terracotta/30 bg-terracotta/[0.03] p-6">
+        <h2 className="font-serif-display text-lg text-terracotta">Danger Zone</h2>
         {orderItemCount > 0 ? (
           <p className="mt-2 text-sm text-muted">
             This product appears in {orderItemCount} order{orderItemCount === 1 ? "" : "s"}, so it can&rsquo;t
@@ -203,7 +203,7 @@ export default async function EditProductPage({ params }: Props) {
             <form action={boundDelete} className="mt-3">
               <ConfirmSubmitButton
                 confirmMessage={`Permanently delete "${product.name}"? This cannot be undone.`}
-                className="rounded-sm border border-terracotta px-4 py-2 text-xs text-terracotta"
+                className="rounded-sm border border-terracotta bg-terracotta/5 px-4 py-2 text-xs font-medium text-terracotta hover:bg-terracotta hover:text-ivory"
               >
                 Delete Product
               </ConfirmSubmitButton>
@@ -212,7 +212,7 @@ export default async function EditProductPage({ params }: Props) {
         )}
       </div>
 
-      <div className="mt-12">
+      <div className="admin-card mt-8 p-6">
         <h2 className="mb-1 font-serif-display text-xl">Variants &amp; Stock</h2>
         <p className="mb-4 text-xs text-muted">
           Each row is one purchasable SKU. Combinations are created and removed here — no code changes needed.
@@ -302,10 +302,7 @@ export default async function EditProductPage({ params }: Props) {
                 </div>
               </form>
               <form action={boundVariantDelete} className="mt-2 border-t border-sand/60 pt-2">
-                <ConfirmSubmitButton
-                  confirmMessage={`Delete variant ${v.sku}?`}
-                  className="text-xs text-terracotta underline"
-                >
+                <ConfirmSubmitButton confirmMessage={`Delete variant ${v.sku}?`} className="admin-danger-link">
                   Delete Variant
                 </ConfirmSubmitButton>
               </form>
@@ -368,7 +365,7 @@ export default async function EditProductPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="mt-12">
+      <div className="admin-card mt-8 p-6">
         <h2 className="mb-1 font-serif-display text-xl">Images</h2>
         <p className="mb-4 text-xs text-muted">
           Upload photos directly below, or add by URL for an existing asset. Order, alt text, kind
@@ -434,7 +431,7 @@ export default async function EditProductPage({ params }: Props) {
                     </button>
                   </form>
                   <form action={boundDelete}>
-                    <ConfirmSubmitButton confirmMessage="Delete this image?" className="text-terracotta underline">
+                    <ConfirmSubmitButton confirmMessage="Delete this image?" className="admin-danger-link">
                       Delete
                     </ConfirmSubmitButton>
                   </form>
